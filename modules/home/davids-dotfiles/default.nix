@@ -1,13 +1,18 @@
-{ self, pkgs, config, system, ... }:
+{ self, pkgs, config, system, lib, ... }:
+with lib;
 let 
   unmanagedFile = f : ''
     # Unmanaged local overrides
     [[ -s "$HOME/.local/share/${f}" ]] && source "$HOME/.local/share/${f}"
   '';
+  net = with pkgs; [ curl ];
+  disk = with pkgs; [ ncdu ];
+  files = with pkgs; [ bat delta ripgrep yq jq minio-client fswatch rsync tree ];
+  dev = with pkgs; [ devenv ];
 in
 {
   imports = [
-    ../macos
+    ./macos
     # fzf
     ({pkgs, ...}: {
       home.packages = with pkgs; [ fzf ];
@@ -31,90 +36,115 @@ in
         GH_PAGER = "cat";
       };
     })
+    # k8s
+    ({pkgs, config, ...}: {
+      options = {
+        davids.k8stools = {
+          enable = mkEnableOption "Kubernetes tools";
+        };
+      };
+      config = mkIf config.davids.k8stools.enable {
+        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd sops ];
+        programs.zsh.shellAliases = {
+          k = "kubectl";
+        };
+      };
+    })
     # Emacs
-    ({pkgs, ...}: {
-      # Only adding wrappers for now
-      home.file.".files/bin/ect" = {
-        text = ''
-          #!/bin/sh
-          exec emacsclient --tty "$@"
-        '';
-        executable = true;
+    ({pkgs, config, ...}: {
+      options = {
+        davids.emacs = {
+          enable = mkEnableOption "Emacs";
+        };
       };
-      home.file.".files/bin/ecw" = {
-        text = ''
-          #!/bin/sh
-          exec emacsclient --reuse-frame -a "" "$@"
-        '';
-        executable = true;
-      };
-      home.file.".files/bin/ec" = {
-        text = ''
-          #!/bin/sh
-          exec emacsclient "$@"
-        '';
-        executable = true;
+      config = mkIf config.davids.emacs.enable {
+        # Only adding wrappers for now
+        home.file.".files/bin/ect" = {
+          text = ''
+            #!/bin/sh
+            exec emacsclient --tty "$@"
+          '';
+          executable = true;
+        };
+        home.file.".files/bin/ecw" = {
+          text = ''
+            #!/bin/sh
+            exec emacsclient --reuse-frame -a "" "$@"
+          '';
+          executable = true;
+        };
+        home.file.".files/bin/ec" = {
+          text = ''
+            #!/bin/sh
+            exec emacsclient "$@"
+          '';
+          executable = true;
+        };
+        programs.zsh.shellAliases = {
+          e = "ect";
+        };
       };
     })
   ];
-  home = {
-    packages = (with pkgs; [ delta devenv ncdu jq yq bat ripgrep ]);
-    file.".gitconfig".source = ./my.gitconfig;
-    file.".global.gitignore".source = ./my.global.gitignore;
-    file.".vimrc".source = ./my.vimrc;
-    sessionVariables = {
-      EDITOR = "vim";
-    };
-  };
-  programs = {
-    vim = {
-        enable = true;
-        plugins = with pkgs.vimPlugins; [ vim-airline vim-fugitive vim-surround nerdcommenter ctrlp-vim syntastic srcery-vim editorconfig-vim tagbar ];
-        settings = { ignorecase = true; };
-        extraConfig = builtins.readFile ./my.vimrc;
-    };
-
-    direnv = {
-      enable = true;
-      enableBashIntegration = true;
-      enableZshIntegration = true;
-      nix-direnv.enable = true;
-    };
-
-    bash = {
-      enable = true;
-      bashrcExtra = unmanagedFile "bashrc";
-      profileExtra = ''
-        export PATH="$HOME/.files/bin:$PATH" 
-      '' + unmanagedFile "env";
-    };
-
-    zsh = {
-      enable = true;
-      enableCompletion = true;
-      autosuggestion.enable = true;
-      syntaxHighlighting.enable = true;
-
-      history = {
-        path = "$HOME/.histfile";
+  config = {
+    home = {
+      packages = lists.flatten [ net disk files dev ];
+      file.".gitconfig".source = ./my.gitconfig;
+      file.".global.gitignore".source = ./my.global.gitignore;
+      file.".vimrc".source = ./my.vimrc;
+      sessionVariables = {
+        EDITOR = "vim";
       };
-      
-      initExtra = unmanagedFile "zshrc";
-      envExtra = ''
-        export PATH="$HOME/.files/bin:$PATH" 
-      '' + unmanagedFile "env";
-
-      oh-my-zsh = {
-        enable = true;
-        plugins = [ "git" "direnv" ];
-        theme = "clean";
+    };
+    programs = {
+      vim = {
+          enable = true;
+          plugins = with pkgs.vimPlugins; [ vim-airline vim-fugitive vim-surround nerdcommenter ctrlp-vim syntastic srcery-vim editorconfig-vim tagbar ];
+          settings = { ignorecase = true; };
+          extraConfig = builtins.readFile ./my.vimrc;
       };
 
-      shellAliases = {
-        la = "ls -la";
-        g = "git";
-        v = "vim";
-        e = "ect";
+      direnv = {
+        enable = true;
+        enableBashIntegration = true;
+        enableZshIntegration = true;
+        nix-direnv.enable = true;
+      };
+
+      bash = {
+        enable = true;
+        bashrcExtra = unmanagedFile "bashrc";
+        profileExtra = ''
+          export PATH="$HOME/.files/bin:$PATH" 
+        '' + unmanagedFile "env";
+      };
+
+      zsh = {
+        enable = true;
+        enableCompletion = true;
+        autosuggestion.enable = true;
+        syntaxHighlighting.enable = true;
+
+        history = {
+          path = "$HOME/.histfile";
+        };
+        
+        initExtra = unmanagedFile "zshrc";
+        envExtra = ''
+          export PATH="$HOME/.files/bin:$PATH" 
+        '' + unmanagedFile "env";
+
+        oh-my-zsh = {
+          enable = true;
+          plugins = [ "git" "direnv" ];
+          theme = "clean";
+        };
+
+        shellAliases = {
+          la = "ls -la";
+          g = "git";
+          v = "vim";
+        };
       };
     };
   };

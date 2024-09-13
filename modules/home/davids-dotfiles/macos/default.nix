@@ -1,11 +1,11 @@
 { pkgs, config, system, ... }:
 with pkgs; with lib;
 let 
-  brew = config.programs.brew;
+  brew = config.davids.brew;
 in
 {
   options = with types; {
-    programs.brew = {
+    davids.brew = {
       enable = mkEnableOption "Homebrew integration";
       prefix = mkOption {
         type = str;

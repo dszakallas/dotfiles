@@ -19,10 +19,13 @@
 
     programs.home-manager.enable = true;
 
-    # Impure programs
-    programs.brew = {
+    # Impure brew programs
+    davids.brew = {
       enable = true;
       prefix = "/opt/homebrew";
     };
+
+    davids.k8stools.enable = true;
+    davids.emacs.enable = true;
   };
 }
