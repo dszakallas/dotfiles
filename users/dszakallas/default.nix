@@ -1,19 +1,19 @@
 {self, pkgs, ...}:
 {
-  users.users.davidszakallas = {
-    name = "davidszakallas";
-    home = "/Users/davidszakallas";
+  users.users.dszakallas = {
+    name = "dszakallas";
+    home = "/Users/dszakallas";
     shell = pkgs.zsh;
   };
 
-  home-manager.users.davidszakallas = {
+  home-manager.users.dszakallas = {
     imports = [
       "${self}/modules/home/davids-dotfiles"
     ];
 
     home = {
-      username = "davidszakallas";
-      homeDirectory = "/Users/davidszakallas";
+      username = "dszakallas";
+      homeDirectory = "/Users/dszakallas";
       stateVersion = "24.05";
     };
 

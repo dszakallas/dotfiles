@@ -54,7 +54,7 @@ in
     ({pkgs, config, ...}: {
       options = {
         davids.emacs = {
-          enable = mkEnableOption "Emacs";
+          enable = mkEnableOption "Emacs (wrappers)";
         };
       };
       config = mkIf config.davids.emacs.enable {
@@ -115,7 +115,7 @@ in
         enable = true;
         bashrcExtra = unmanagedFile "bashrc";
         profileExtra = ''
-          export PATH="$HOME/.files/bin:$PATH" 
+          export PATH="$HOME/.files/bin:$PATH"
         '' + unmanagedFile "env";
       };
 
@@ -128,10 +128,10 @@ in
         history = {
           path = "$HOME/.histfile";
         };
-        
+
         initExtra = unmanagedFile "zshrc";
         envExtra = ''
-          export PATH="$HOME/.files/bin:$PATH" 
+          export PATH="$HOME/.files/bin:$PATH"
         '' + unmanagedFile "env";
 
         oh-my-zsh = {

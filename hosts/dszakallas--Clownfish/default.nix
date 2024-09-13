@@ -1,6 +1,6 @@
 { self, ... }:
 let
-  myUsername = "davidszakallas";
+  myUsername = "dszakallas";
 in
 {
   imports = [

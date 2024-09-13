@@ -19,22 +19,23 @@
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }:
-  let 
-    system = "aarch64-darwin"; 
+  let
+    system = "aarch64-darwin";
+    mkDarwinCfg = name: nix-darwin.lib.darwinSystem {
+      inherit system;
+      specialArgs = {
+          inherit self home-manager system;
+      };
+      modules = [
+        home-manager.darwinModules.home-manager
+        ./hosts/${name}
+      ];
+    };
   in
   {
     darwinConfigurations = {
-      Jellyfish = nix-darwin.lib.darwinSystem {
-        inherit system;
-        specialArgs = { 
-            inherit self home-manager system;
-        };
-        modules = [
-          home-manager.darwinModules.home-manager
-          ./hosts/jellyfish
-          ./users/davidszakallas
-        ];
-      };
+      Jellyfish = mkDarwinCfg "Jellyfish";
+      "dszakallas--Clownfish" = mkDarwinCfg "dszakallas--Clownfish";
     };
   };
 }
