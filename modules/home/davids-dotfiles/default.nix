@@ -1,6 +1,6 @@
 { self, pkgs, config, system, lib, ... }:
 with lib;
-let 
+let
   unmanagedFile = f : ''
     # Unmanaged local overrides
     [[ -s "$HOME/.local/share/${f}" ]] && source "$HOME/.local/share/${f}"
@@ -80,6 +80,7 @@ in
           '';
           executable = true;
         };
+        home.file.".spacemacs.d".source = ./his.spacemacs.d;
         programs.zsh.shellAliases = {
           e = "ect";
         };
@@ -89,9 +90,9 @@ in
   config = {
     home = {
       packages = lists.flatten [ net disk files dev ];
-      file.".gitconfig".source = ./my.gitconfig;
-      file.".global.gitignore".source = ./my.global.gitignore;
-      file.".vimrc".source = ./my.vimrc;
+      file.".gitconfig".source = ./his.gitconfig;
+      file.".global.gitignore".source = ./his.global.gitignore;
+      file.".vimrc".source = ./his.vimrc;
       sessionVariables = {
         EDITOR = "vim";
       };
@@ -101,7 +102,7 @@ in
           enable = true;
           plugins = with pkgs.vimPlugins; [ vim-airline vim-fugitive vim-surround nerdcommenter ctrlp-vim syntastic srcery-vim editorconfig-vim tagbar ];
           settings = { ignorecase = true; };
-          extraConfig = builtins.readFile ./my.vimrc;
+          extraConfig = builtins.readFile ./his.vimrc;
       };
 
       direnv = {
