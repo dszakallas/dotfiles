@@ -5,10 +5,11 @@ let
     # Unmanaged local overrides
     [[ -s "$HOME/.local/share/${f}" ]] && source "$HOME/.local/share/${f}"
   '';
-  net = with pkgs; [ curl ];
-  disk = with pkgs; [ ncdu ];
-  files = with pkgs; [ bat delta ripgrep yq jq minio-client fswatch rsync tree ];
-  dev = with pkgs; [ devenv ];
+  net = with pkgs; [ minio-client ];
+  files = with pkgs; [
+    bat findutils fswatch gawk ncdu ripgrep rsync tree
+  ];
+  dev = with pkgs; [ devenv delta jq yq ];
 in
 {
   imports = [
@@ -89,7 +90,7 @@ in
   ];
   config = {
     home = {
-      packages = lists.flatten [ net disk files dev ];
+      packages = lists.flatten [ net files dev ];
       file.".gitconfig".source = ./his.gitconfig;
       file.".global.gitignore".source = ./his.global.gitignore;
       file.".vimrc".source = ./his.vimrc;

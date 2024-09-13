@@ -1,7 +1,7 @@
 # Shared configuration across my darwins.
 { self, pkgs, input, system, ... }:
 {
-  environment.systemPackages = with pkgs; [ vim git ];
+  environment.systemPackages = with pkgs; [ curl vim git ];
 
   environment.shells = with pkgs; [ bash zsh ];
 
