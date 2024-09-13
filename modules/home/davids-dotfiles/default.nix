@@ -96,6 +96,7 @@ in
       file.".vimrc".source = ./his.vimrc;
       sessionVariables = {
         EDITOR = "vim";
+        LANG = "en_US.UTF-8";
       };
     };
     programs = {

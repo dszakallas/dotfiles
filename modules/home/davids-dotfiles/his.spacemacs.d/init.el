@@ -34,6 +34,7 @@ This function should only modify configuration layer settings."
        nginx
        ansible
        docker
+       earthly
        kubernetes
        (shell :variables
          shell-default-shell 'multiterm
@@ -42,10 +43,7 @@ This function should only modify configuration layer settings."
        (terraform :variables
          terraform-auto-format-on-save t
          terraform-backend 'lsp)
-       (nixos :variables
-         nix-backend 'lsp)
-
-       earthly
+       nixos
 
        ;; Markup
        html
@@ -86,14 +84,13 @@ This function should only modify configuration layer settings."
          cmake-backend 'lsp
          cmake-enable-cmake-ide-support t)
        cscope
-
        (typescript :variables
          typescript-fmt-on-save t
          typescript-backend 'lsp
          typescript-linter 'eslint
          typescript-fmt-tool 'prettier)
-
        (shell-scripts :variables shell-scripts-backend 'lsp)
+       vimscript
 
        ;; VCS
        version-control
@@ -127,7 +124,7 @@ This function should only modify configuration layer settings."
        helm
 
        ;; AI services
-       (github-copilot)
+       github-copilot
        (gptel :variables
          gptel-backend "ChatGPT"
          gptel-model "gpt-4-1106-preview"

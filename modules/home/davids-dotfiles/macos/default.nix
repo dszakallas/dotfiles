@@ -1,6 +1,6 @@
 { pkgs, config, system, ... }:
 with pkgs; with lib;
-let 
+let
   brew = config.davids.brew;
 in
 {
