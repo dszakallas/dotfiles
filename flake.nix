@@ -1,4 +1,4 @@
-{
+rec {
   description = "my-darwin";
 
   inputs = {
@@ -24,7 +24,7 @@
     mkDarwinCfg = name: nix-darwin.lib.darwinSystem {
       inherit system;
       specialArgs = {
-          inherit self home-manager system;
+          inherit self home-manager system nixConfig;
       };
       modules = [
         home-manager.darwinModules.home-manager

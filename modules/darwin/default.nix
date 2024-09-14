@@ -1,5 +1,5 @@
 # Shared configuration across my darwins.
-{ self, pkgs, input, system, ... }:
+{ self, pkgs, system, nixConfig, ... }:
 {
   environment.systemPackages = with pkgs; [ curl vim git ];
 
@@ -27,14 +27,7 @@
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
 
-  nix.settings = {
-    extra-experimental-features = [ "nix-command" "flakes" ];
-    extra-substituters = [ "https://nix-community.cachix.org" "https://devenv.cachix.org" ];
-    extra-trusted-public-keys = [
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
-    ];
-  };
+  nix.settings = nixConfig; 
 
   home-manager = {
     useGlobalPkgs = true;
