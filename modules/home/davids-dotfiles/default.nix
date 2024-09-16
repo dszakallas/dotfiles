@@ -45,7 +45,7 @@ in
         };
       };
       config = mkIf config.davids.k8stools.enable {
-        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd sops ];
+        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd sops kustomize ];
         programs.zsh.shellAliases = {
           k = "kubectl";
         };
