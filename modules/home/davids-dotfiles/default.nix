@@ -45,7 +45,7 @@ in
         };
       };
       config = mkIf config.davids.k8stools.enable {
-        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd sops ];
+        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd sops kustomize ];
         programs.zsh.shellAliases = {
           k = "kubectl";
         };
@@ -118,7 +118,7 @@ in
         enable = true;
         bashrcExtra = unmanagedFile "bashrc";
         profileExtra = ''
-          export PATH="$HOME/.files/bin:$PATH"
+          export PATH="$HOME/.local/bin:$PATH"
         '' + unmanagedFile "env";
       };
 
@@ -134,7 +134,7 @@ in
 
         initExtra = unmanagedFile "zshrc";
         envExtra = ''
-          export PATH="$HOME/.files/bin:$PATH"
+          export PATH="$HOME/.local/bin:$PATH"
         '' + unmanagedFile "env";
 
         oh-my-zsh = {
