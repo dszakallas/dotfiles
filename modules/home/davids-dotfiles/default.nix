@@ -7,7 +7,7 @@ let
   '';
   net = with pkgs; [ minio-client ];
   files = with pkgs; [
-    bat findutils fswatch gawk ncdu ripgrep rsync tree
+    age bat findutils fswatch gawk ncdu ripgrep rsync tree
   ];
   dev = with pkgs; [ devenv delta jq yq ];
 in
