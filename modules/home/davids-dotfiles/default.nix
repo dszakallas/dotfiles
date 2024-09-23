@@ -7,8 +7,10 @@ let
   '';
   net = with pkgs; [ minio-client ];
   files = with pkgs; [
-    bat findutils fswatch gawk ncdu ripgrep rsync tree
+    age bat findutils fswatch gawk ripgrep rsync sops tree
   ];
+  adm = with pkgs; [ htop ncdu ];
+  nix = with pkgs; [ nixfmt-classic ];
   dev = with pkgs; [ devenv delta jq yq ];
 in
 {
@@ -45,7 +47,7 @@ in
         };
       };
       config = mkIf config.davids.k8stools.enable {
-        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd sops kustomize ];
+        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd kustomize ];
         programs.zsh.shellAliases = {
           k = "kubectl";
         };
@@ -90,7 +92,7 @@ in
   ];
   config = {
     home = {
-      packages = lists.flatten [ net files dev ];
+      packages = lists.flatten [ adm net files dev nix ];
       file.".gitconfig".source = ./his.gitconfig;
       file.".global.gitignore".source = ./his.global.gitignore;
       file.".vimrc".source = ./his.vimrc;
