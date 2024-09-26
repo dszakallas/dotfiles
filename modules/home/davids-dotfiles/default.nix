@@ -10,8 +10,8 @@ let
     age bat findutils fswatch gawk ripgrep rsync sops tree
   ];
   adm = with pkgs; [ htop ncdu ];
-  nix = with pkgs; [ nixfmt-classic ];
-  dev = with pkgs; [ devenv delta jq yq ];
+  nix = with pkgs; [ nixfmt-classic devenv ];
+  dev = with pkgs; [ delta jq yq ];
 in
 {
   imports = [
@@ -47,7 +47,7 @@ in
         };
       };
       config = mkIf config.davids.k8stools.enable {
-        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd kustomize ];
+        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd kustomize vcluster skopeo oras ];
         programs.zsh.shellAliases = {
           k = "kubectl";
         };
