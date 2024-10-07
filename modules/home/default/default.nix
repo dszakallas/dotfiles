@@ -93,7 +93,7 @@ in
   config = {
     home = {
       packages = lists.flatten [ adm net files dev nix ];
-      file.".gitconfig".source = ./his.gitconfig;
+      file.".gitconfig".text = builtins.readFile ./his.gitconfig;
       file.".global.gitignore".source = ./his.global.gitignore;
       file.".vimrc".source = ./his.vimrc;
       sessionVariables = {

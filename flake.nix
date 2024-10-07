@@ -1,5 +1,5 @@
 rec {
-  description = "my-darwin";
+  description = "My personal Nix configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -7,6 +7,10 @@ rec {
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    davids-dotfiles-private.url = "git+file:vendor/davids-dotfiles-private";
+    davids-dotfiles-private.inputs.nixpkgs.follows = "nixpkgs";
+    poetry2nix.url = "github:nix-community/poetry2nix";
+    poetry2nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   nixConfig = {
@@ -18,13 +22,19 @@ rec {
     ];
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, davids-dotfiles-private, poetry2nix, ... }:
   let
+    inherit (nixpkgs) lib;
     system = "aarch64-darwin";
+    subDirs = d: lib.foldlAttrs (a: k: v: a // (if v == "directory" then {${k} = d + "/${k}";} else {})) {} (builtins.readDir d);
+    davids-dotfiles = {
+      darwinModules = subDirs ./modules/darwin;
+      homeModules = subDirs ./modules/home;
+    };
     mkDarwinCfg = name: nix-darwin.lib.darwinSystem {
       inherit system;
       specialArgs = {
-          inherit self home-manager system nixConfig;
+          inherit self home-manager davids-dotfiles davids-dotfiles-private poetry2nix system nixConfig;
       };
       modules = [
         home-manager.darwinModules.home-manager

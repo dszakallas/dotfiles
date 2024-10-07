@@ -1,10 +1,10 @@
-{ self, ... }:
+{ self, davids-dotfiles, ... }:
 let
   myUsername = "davidszakallas";
 in
 {
   imports = [
-    "${self}/modules/darwin"
+    davids-dotfiles.darwinModules.default
     "${self}/users/${myUsername}"
   ];
 

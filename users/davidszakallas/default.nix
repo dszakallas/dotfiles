@@ -1,4 +1,4 @@
-{self, pkgs, ...}:
+{self, pkgs, davids-dotfiles, ...}:
 {
   users.users.davidszakallas = {
     name = "davidszakallas";
@@ -8,7 +8,7 @@
 
   home-manager.users.davidszakallas = {
     imports = [
-      "${self}/modules/home/davids-dotfiles"
+      davids-dotfiles.homeModules.default
     ];
 
     home = {
