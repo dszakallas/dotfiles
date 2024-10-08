@@ -25,27 +25,32 @@ rec {
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, davids-dotfiles-private, poetry2nix, ... }:
   let
     inherit (nixpkgs) lib;
-    system = "aarch64-darwin";
     subDirs = d: lib.foldlAttrs (a: k: v: a // (if v == "directory" then {${k} = d + "/${k}";} else {})) {} (builtins.readDir d);
     davids-dotfiles = {
       darwinModules = subDirs ./modules/darwin;
       homeModules = subDirs ./modules/home;
     };
-    mkDarwinCfg = name: nix-darwin.lib.darwinSystem {
-      inherit system;
+    mkDarwin = {host, arch, ...}: nix-darwin.lib.darwinSystem rec {
+      system = "${arch}-darwin";
       specialArgs = {
           inherit self home-manager davids-dotfiles davids-dotfiles-private poetry2nix system nixConfig;
       };
       modules = [
         home-manager.darwinModules.home-manager
-        ./hosts/${name}
+        ./hosts/${host}
       ];
     };
   in
   {
     darwinConfigurations = {
-      Jellyfish = mkDarwinCfg "Jellyfish";
-      "dszakallas--Clownfish" = mkDarwinCfg "dszakallas--Clownfish";
+      Jellyfish = mkDarwin {
+        host = "Jellyfish";
+        arch = "aarch64";
+      };
+      "dszakallas--Clownfish" = mkDarwin {
+        host = "dszakallas--Clownfish";
+        arch = "aarch64";
+      };
     };
   };
 }
