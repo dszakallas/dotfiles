@@ -1,15 +1,17 @@
 { self, pkgs, config, system, lib, ... }:
 with lib;
 let
-  unmanagedFile = f : ''
+  unmanagedFile = f: ''
     # Unmanaged local overrides
     [[ -s "$HOME/.local/share/${f}" ]] && source "$HOME/.local/share/${f}"
   '';
   net = with pkgs; [ minio-client ];
   files = with pkgs; [
-    age bat findutils fswatch gawk ncdu ripgrep rsync tree
+    age bat findutils fswatch gawk minio-client ripgrep rsync sops tree
   ];
-  dev = with pkgs; [ devenv delta jq yq ];
+  adm = with pkgs; [ htop ncdu ];
+  nix = with pkgs; [ nixfmt-classic devenv ];
+  dev = with pkgs; [ delta jq yq ];
 in
 {
   imports = [
@@ -45,7 +47,7 @@ in
         };
       };
       config = mkIf config.davids.k8stools.enable {
-        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd sops kustomize ];
+        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd kustomize vcluster skopeo oras ];
         programs.zsh.shellAliases = {
           k = "kubectl";
         };
@@ -90,8 +92,8 @@ in
   ];
   config = {
     home = {
-      packages = lists.flatten [ net files dev ];
-      file.".gitconfig".source = ./his.gitconfig;
+      packages = lists.flatten [ adm net files dev nix ];
+      file.".gitconfig".text = builtins.readFile ./his.gitconfig;
       file.".global.gitignore".source = ./his.global.gitignore;
       file.".vimrc".source = ./his.vimrc;
       sessionVariables = {

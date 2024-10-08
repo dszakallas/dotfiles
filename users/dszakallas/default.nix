@@ -1,4 +1,10 @@
-{self, pkgs, ...}:
+{ self
+, pkgs
+, davids-dotfiles
+, davids-dotfiles-private
+, poetry2nix
+, ...
+}:
 {
   users.users.dszakallas = {
     name = "dszakallas";
@@ -6,9 +12,14 @@
     shell = pkgs.zsh;
   };
 
+  home-manager = {
+    extraSpecialArgs = { inherit poetry2nix; };
+  };
+
   home-manager.users.dszakallas = {
     imports = [
-      "${self}/modules/home/davids-dotfiles"
+      davids-dotfiles.homeModules.default
+      davids-dotfiles-private.homeModules.pure
     ];
 
     home = {
@@ -27,5 +38,6 @@
 
     davids.k8stools.enable = true;
     davids.emacs.enable = true;
+    davids.pure.enable = true;
   };
 }

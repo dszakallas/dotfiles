@@ -27,7 +27,7 @@
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
 
-  nix.settings = nixConfig; 
+  nix.settings = nixConfig;
 
   home-manager = {
     useGlobalPkgs = true;
