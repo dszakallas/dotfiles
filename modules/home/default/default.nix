@@ -11,7 +11,7 @@ let
   ];
   adm = with pkgs; [ htop ncdu ];
   nix = with pkgs; [ nixfmt-classic devenv ];
-  dev = with pkgs; [ delta jq yq ];
+  dev = with pkgs; [ delta jq yq-go ];
 in
 {
   imports = [
