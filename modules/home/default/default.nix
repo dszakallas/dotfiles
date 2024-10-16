@@ -116,6 +116,12 @@ in
         nix-direnv.enable = true;
       };
 
+      ssh = {
+        enable = true;
+        # Unmanaged local overrides
+        includes = [ "~/.local/share/ssh/config" ];
+      };
+
       bash = {
         enable = true;
         bashrcExtra = unmanagedFile "bashrc";
