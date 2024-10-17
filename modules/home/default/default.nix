@@ -11,7 +11,8 @@ let
   ];
   adm = with pkgs; [ htop ncdu ];
   nix = with pkgs; [ nixfmt-classic devenv ];
-  dev = with pkgs; [ delta jq yq-go ];
+  dev = with pkgs; [ delta jq yq-go pipx ];
+  av = with pkgs; [ ffmpeg ];
 in
 {
   imports = [
@@ -92,7 +93,7 @@ in
   ];
   config = {
     home = {
-      packages = lists.flatten [ adm net files dev nix ];
+      packages = lists.flatten [ adm av net files dev nix ];
       file.".gitconfig".text = builtins.readFile ./his.gitconfig;
       file.".global.gitignore".source = ./his.global.gitignore;
       file.".vimrc".source = ./his.vimrc;
