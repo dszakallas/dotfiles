@@ -1,4 +1,9 @@
-{self, pkgs, davids-dotfiles, ...}:
+{ self
+, pkgs
+, davids-dotfiles
+, davids-dotfiles-private
+, ...
+}:
 {
   users.users.davidszakallas = {
     name = "davidszakallas";
@@ -9,6 +14,8 @@
   home-manager.users.davidszakallas = {
     imports = [
       davids-dotfiles.homeModules.default
+      davids-dotfiles-private.homeModules.default
+      davids-dotfiles-private.homeModules.jupiter
     ];
 
     home = {
@@ -27,5 +34,6 @@
 
     davids.k8stools.enable = true;
     davids.emacs.enable = true;
+    davids.jupiter.enable = true;
   };
 }

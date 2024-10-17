@@ -16,6 +16,7 @@
   home-manager.users.dszakallas = {
     imports = [
       davids-dotfiles.homeModules.default
+      davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.pure
     ];
 
