@@ -38,6 +38,7 @@ rec {
       modules = [
         home-manager.darwinModules.home-manager
         ./hosts/${host}
+        {home-manager = {extraSpecialArgs = specialArgs;};}
       ];
     };
   in

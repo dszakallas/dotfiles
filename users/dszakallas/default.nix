@@ -3,6 +3,7 @@
 , davids-dotfiles
 , davids-dotfiles-private
 , poetry2nix
+, system
 , ...
 }:
 {
@@ -10,10 +11,6 @@
     name = "dszakallas";
     home = "/Users/dszakallas";
     shell = pkgs.zsh;
-  };
-
-  home-manager = {
-    extraSpecialArgs = { inherit poetry2nix; };
   };
 
   home-manager.users.dszakallas = {
