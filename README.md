@@ -6,6 +6,7 @@ Structure:
 
 ```
 ├── hosts                  # host configurations
+├── lib                    # library functions
 ├── modules                       
 │   ├── darwin             # reusable modules for macOS
 │   └── home               # reusable modules for home manager

@@ -1,24 +1,31 @@
-{ self, pkgs, config, system, lib, ... }:
+{ self, pkgs, config, system, lib, hostPlatform, ... }:
 with lib;
 let
   unmanagedFile = f: ''
     # Unmanaged local overrides
     [[ -s "$HOME/.local/share/${f}" ]] && source "$HOME/.local/share/${f}"
   '';
-  net = with pkgs; [ minio-client ];
+  net = with pkgs; [ ];
   files = with pkgs; [
-    age bat findutils fswatch gawk minio-client ripgrep rsync sops tree
+    age
+    bat
+    findutils
+    fswatch
+    gawk
+    minio-client
+    ripgrep
+    rsync
+    sops
+    tree
   ];
   adm = with pkgs; [ htop ncdu ];
-  nix = with pkgs; [ nixfmt-classic devenv ];
-  dev = with pkgs; [ delta jq yq-go pipx ];
+  nix = with pkgs; [ devenv nixfmt-classic ];
+  dev = with pkgs; [ delta git-lfs jq pipx yq-go ];
   av = with pkgs; [ ffmpeg ];
-in
-{
+in {
   imports = [
-    ./macos
     # fzf
-    ({pkgs, ...}: {
+    ({ pkgs, ... }: {
       home.packages = with pkgs; [ fzf ];
       programs.bash.bashrcExtra = ''
         eval "$(fzf --bash)";
@@ -27,7 +34,7 @@ in
       programs.vim.plugins = with pkgs.vimPlugins; [ fzf-vim ];
     })
     # GitHub CLI
-    ({pkgs, ...}: {
+    ({ pkgs, ... }: {
       home.packages = with pkgs; [ gh ];
       home.file.".files/share/gh.zsh".source = ./gh.zsh;
       programs.zsh = {
@@ -36,30 +43,31 @@ in
         '';
         oh-my-zsh.plugins = [ "gh" ];
       };
-      home.sessionVariables = {
-        GH_PAGER = "cat";
-      };
+      home.sessionVariables = { GH_PAGER = "cat"; };
     })
     # k8s
-    ({pkgs, config, ...}: {
+    ({ pkgs, config, ... }: {
       options = {
-        davids.k8stools = {
-          enable = mkEnableOption "Kubernetes tools";
-        };
+        davids.k8stools = { enable = mkEnableOption "Kubernetes tools"; };
       };
       config = mkIf config.davids.k8stools.enable {
-        home.packages = with pkgs; [ kubectl kubernetes-helm k9s fluxcd kustomize vcluster skopeo oras ];
-        programs.zsh.shellAliases = {
-          k = "kubectl";
-        };
+        home.packages = with pkgs; [
+          kubectl
+          kubernetes-helm
+          k9s
+          fluxcd
+          kustomize
+          vcluster
+          skopeo
+          oras
+        ];
+        programs.zsh.shellAliases = { k = "kubectl"; };
       };
     })
     # Emacs
-    ({pkgs, config, ...}: {
+    ({ pkgs, config, ... }: {
       options = {
-        davids.emacs = {
-          enable = mkEnableOption "Emacs (wrappers)";
-        };
+        davids.emacs = { enable = mkEnableOption "Emacs (wrappers)"; };
       };
       config = mkIf config.davids.emacs.enable {
         # Only adding wrappers for now
@@ -85,12 +93,10 @@ in
           executable = true;
         };
         home.file.".spacemacs.d".source = ./his.spacemacs.d;
-        programs.zsh.shellAliases = {
-          e = "ect";
-        };
+        programs.zsh.shellAliases = { e = "ect"; };
       };
     })
-  ];
+  ] ++ (lib.optionals hostPlatform.isDarwin [ ./darwin ]);
   config = {
     home = {
       packages = lists.flatten [ adm av net files dev nix ];
@@ -104,10 +110,20 @@ in
     };
     programs = {
       vim = {
-          enable = true;
-          plugins = with pkgs.vimPlugins; [ vim-airline vim-fugitive vim-surround nerdcommenter ctrlp-vim syntastic srcery-vim editorconfig-vim tagbar ];
-          settings = { ignorecase = true; };
-          extraConfig = builtins.readFile ./his.vimrc;
+        enable = true;
+        plugins = with pkgs.vimPlugins; [
+          vim-airline
+          vim-fugitive
+          vim-surround
+          nerdcommenter
+          ctrlp-vim
+          syntastic
+          srcery-vim
+          editorconfig-vim
+          tagbar
+        ];
+        settings = { ignorecase = true; };
+        extraConfig = builtins.readFile ./his.vimrc;
       };
 
       direnv = {
@@ -137,9 +153,7 @@ in
         autosuggestion.enable = true;
         syntaxHighlighting.enable = true;
 
-        history = {
-          path = "$HOME/.histfile";
-        };
+        history = { path = "$HOME/.histfile"; };
 
         initExtra = unmanagedFile "zshrc";
         envExtra = ''

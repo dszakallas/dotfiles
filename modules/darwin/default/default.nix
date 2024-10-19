@@ -1,6 +1,5 @@
 # Shared configuration across my darwins.
-{ self, pkgs, system, nixConfig, ... }:
-{
+{ self, pkgs, system, nixConfig, ... }: {
   environment.systemPackages = with pkgs; [ curl vim git ];
 
   environment.shells = with pkgs; [ bash zsh ];
@@ -9,7 +8,7 @@
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh = {
-    enable = true;  # default shell on catalina
+    enable = true; # default shell on catalina
     shellInit = ''
       if [ -x /usr/libexec/path_helper ]; then
         eval `/usr/libexec/path_helper -s`

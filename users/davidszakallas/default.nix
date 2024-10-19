@@ -1,10 +1,4 @@
-{ self
-, pkgs
-, davids-dotfiles
-, davids-dotfiles-private
-, ...
-}:
-{
+{ self, pkgs, davids-dotfiles, davids-dotfiles-private, ... }: {
   users.users.davidszakallas = {
     name = "davidszakallas";
     home = "/Users/davidszakallas";

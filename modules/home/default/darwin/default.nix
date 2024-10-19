@@ -1,9 +1,8 @@
 { pkgs, config, system, ... }:
-with pkgs; with lib;
-let
-  brew = config.davids.brew;
-in
-{
+with pkgs;
+with lib;
+let brew = config.davids.brew;
+in {
   options = with types; {
     davids.brew = {
       enable = mkEnableOption "Homebrew integration";
