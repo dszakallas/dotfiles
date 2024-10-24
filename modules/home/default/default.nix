@@ -97,6 +97,15 @@ in {
       };
     })
   ] ++ (lib.optionals hostPlatform.isDarwin [ ./darwin ]);
+  options = {
+    davids.ssh.enable = mkEnableOption "SSH goodies";
+    davids.ssh.knownHostsLines = with types;
+      mkOption {
+        description = "Managed known_host file lines";
+        type = lines;
+        default = "";
+      };
+  };
   config = {
     home = {
       packages = lists.flatten [ adm av net files dev nix ];
@@ -106,6 +115,9 @@ in {
       sessionVariables = {
         EDITOR = "vim";
         LANG = "en_US.UTF-8";
+      };
+      file.".ssh/davids.known_hosts" = mkIf config.davids.ssh.enable {
+        text = config.davids.ssh.knownHostsLines;
       };
     };
     programs = {
@@ -133,10 +145,13 @@ in {
         nix-direnv.enable = true;
       };
 
-      ssh = {
+      ssh = mkIf config.davids.ssh.enable {
         enable = true;
         # Unmanaged local overrides
         includes = [ "~/.local/share/ssh/config" ];
+
+        # default ~/.ssh/known_hosts is unmanaged. ~/.ssh/davids.known_hosts is managed by this module
+        userKnownHostsFile = "~/.ssh/known_hosts ~/.ssh/davids.known_hosts";
       };
 
       bash = {

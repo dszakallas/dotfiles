@@ -29,5 +29,6 @@
     davids.k8stools.enable = true;
     davids.emacs.enable = true;
     davids.jupiter.enable = true;
+    davids.ssh.enable = true;
   };
 }
