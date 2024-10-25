@@ -14,6 +14,31 @@ in {
     };
   };
 
+  config.targets.darwin.defaults = {
+    NSGlobalDomain = {
+      NSAutomaticCapitalizationEnabled = false;
+      NSAutomaticDashSubstitutionEnabled = false;
+      NSAutomaticPeriodSubstitutionEnabled = false;
+      NSAutomaticQuoteSubstitutionEnabled = false;
+      NSAutomaticSpellingCorrectionEnabled = false;
+
+      AppleMetricUnits = true;
+      AppleLocale = "en_US";
+    };
+
+    "com.apple.desktopservices" = {
+      DSDontWriteNetworkStores = true;
+      DSDontWriteUSBStores = true;
+    };
+
+    "com.apple.finder" = {
+      AppleShowAllFiles = true;
+      ShowPathBar = true;
+      ShowStatusBar = true;
+    };
+
+  };
+
   config.programs.zsh.envExtra = mkIf brew.enable ''
     export HOMEBREW_PREFIX="${brew.prefix}"
     export PATH="${brew.prefix}/bin:$PATH"

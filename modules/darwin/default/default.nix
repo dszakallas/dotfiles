@@ -6,6 +6,10 @@
 
   services.nix-daemon.enable = true;
 
+  homebrew.enable = true;
+
+  homebrew.casks = [ "gpg-suite" "iterm2" ];
+
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh = {
     enable = true; # default shell on catalina
