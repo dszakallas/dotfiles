@@ -7,14 +7,16 @@ insert_final_newline = true
 indent_style = space
 indent_size = 2
 
-[*.gitconfig]
-indent_style = tab
-
-[*.{sh,zsh}]
+[*.{sh,zsh,bash}]
 indent_style = space
 indent_size = 2
 
-# 2 space indentation
 [*.{json,y{a,}ml,toml}]
 indent_style = space
 indent_size = 2
+
+[{gitconfig,*.gitconfig}]
+indent_style = tab
+
+[{hosts,*.hosts}]
+indent_style = tab

@@ -1,8 +1,17 @@
 # Shared configuration across my darwins.
-{ self, pkgs, system, nixConfig, ... }: {
+{ self, pkgs, system, nixConfig, davids-dotfiles, ... }: {
   environment.systemPackages = with pkgs; [ curl vim git ];
 
   environment.shells = with pkgs; [ bash zsh ];
+
+  environment.etc."hosts" = {
+    enable =
+      false; # TODO Linking the hosts file to /etc/hosts in darwin doesn't work.
+    text = davids-dotfiles.lib.textRegion {
+      name = "davids-dotfiles/default";
+      content = (builtins.readFile ./hosts);
+    };
+  };
 
   services.nix-daemon.enable = true;
 

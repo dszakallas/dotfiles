@@ -1,4 +1,4 @@
-{ self, pkgs, config, system, lib, hostPlatform, ... }:
+{ self, pkgs, config, system, lib, hostPlatform, davids-dotfiles, ... }:
 with lib;
 let
   unmanagedFile = f: ''
@@ -22,6 +22,7 @@ let
   nix = with pkgs; [ devenv nixfmt-classic ];
   dev = with pkgs; [ delta git-lfs jq pipx yq-go ];
   av = with pkgs; [ ffmpeg ];
+  moduleName = "davids-dotfiles/default";
 in {
   imports = [
     # fzf
@@ -109,16 +110,28 @@ in {
   config = {
     home = {
       packages = lists.flatten [ adm av net files dev nix ];
-      file.".gitconfig".text = builtins.readFile ./his.gitconfig;
-      file.".global.gitignore".source = ./his.global.gitignore;
-      file.".vimrc".source = ./his.vimrc;
+      file.".gitconfig".text = davids-dotfiles.lib.textRegion {
+        name = moduleName;
+        content = builtins.readFile ./his.gitconfig;
+      };
+      file.".global.gitignore".text = davids-dotfiles.lib.textRegion {
+        name = moduleName;
+        content = builtins.readFile ./his.global.gitignore;
+      };
+      file.".vimrc".text = davids-dotfiles.lib.textRegion {
+        name = moduleName;
+        comment-char = ''"'';
+        content = builtins.readFile ./his.vimrc;
+      };
       sessionVariables = {
         EDITOR = "vim";
         LANG = "en_US.UTF-8";
       };
-      file.".ssh/davids.known_hosts" = mkIf config.davids.ssh.enable {
-        text = config.davids.ssh.knownHostsLines;
-      };
+      file.".ssh/davids.known_hosts".text = mkIf config.davids.ssh.enable
+        (davids-dotfiles.lib.textRegion {
+          name = moduleName;
+          content = config.davids.ssh.knownHostsLines;
+        });
     };
     programs = {
       vim = {

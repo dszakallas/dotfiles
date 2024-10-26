@@ -28,8 +28,12 @@ rec {
     let
       davids-dotfiles = rec {
         lib = import ./lib { inherit (nixpkgs) lib; };
-        darwinModules = lib.subDirs ./modules/darwin;
-        homeModules = lib.subDirs ./modules/home;
+        darwinModules =
+          builtins.mapAttrs (_: v: import v) (lib.subDirs ./modules/darwin);
+        systemModules =
+          builtins.mapAttrs (_: v: import v) (lib.subDirirs ./modules/system);
+        homeModules =
+          builtins.mapAttrs (_: v: import v) (lib.subDirs ./modules/home);
       };
       mkDarwin = { host, arch, ... }:
         nix-darwin.lib.darwinSystem rec {
