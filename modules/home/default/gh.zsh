@@ -1,3 +1,5 @@
+# shellcheck disable=all
+
 ghcs() {
 	FUNCNAME="$funcstack[1]"
 	TARGET="shell"
