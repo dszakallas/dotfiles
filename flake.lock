@@ -10,11 +10,11 @@
         "poetry2nix": "poetry2nix"
       },
       "locked": {
-        "lastModified": 1729936368,
-        "narHash": "sha256-Gnxq4XfNiPbT+jKHidGpvHJ6QNPfkO3JmIt1xI/YphI=",
+        "lastModified": 1730659620,
+        "narHash": "sha256-qo2p4KutPvkcIr8O3hYTqZxrQvacIRh21meKpKTJJ/U=",
         "ref": "refs/heads/main",
-        "rev": "2fe0113cfdfe9923473b76484dc67ebcdf5befe1",
-        "revCount": 29,
+        "rev": "c11077b364157f2ae50e1526400fe96fb7e71794",
+        "revCount": 36,
         "type": "git",
         "url": "file:vendor/davids-dotfiles-private"
       },
@@ -197,6 +197,22 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1730642263,
+        "narHash": "sha256-UXqvGZOHUDeAo8Sv5A5oObiQgBPELVgHQi130TU0jMU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "650fe87347086b30a6dbcc32b55987ce5a23c6ae",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable-small",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "poetry2nix": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -226,24 +242,21 @@
       "inputs": {
         "flake-utils": "flake-utils_3",
         "nix-github-actions": "nix-github-actions_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
+        "nixpkgs": "nixpkgs_2",
         "systems": "systems_5",
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1729173771,
-        "narHash": "sha256-rT2Vz1kFSj+NKHetVY7PJUACX+qBETdnuPSklzFKCsc=",
+        "lastModified": 1730284601,
+        "narHash": "sha256-eHYcKVLIRRv3J1vjmxurS6HVdGphB53qxUeAkylYrZY=",
         "owner": "nix-community",
         "repo": "poetry2nix",
-        "rev": "e67cc181b5bdf5aa46f1340fa9acd3910f6fb122",
+        "rev": "43a898b4d76f7f3f70df77a2cc2d40096bc9d75e",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
-        "repo": "poetry2nix",
-        "type": "github"
+        "id": "poetry2nix",
+        "type": "indirect"
       }
     },
     "root": {

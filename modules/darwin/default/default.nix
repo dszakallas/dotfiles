@@ -1,18 +1,5 @@
-# Shared configuration across my darwins.
-{ self, pkgs, system, nixConfig, davids-dotfiles, ... }: {
-  environment.systemPackages = with pkgs; [ curl vim git ];
-
-  environment.shells = with pkgs; [ bash zsh ];
-
-  environment.etc."hosts" = {
-    enable =
-      false; # TODO Linking the hosts file to /etc/hosts in darwin doesn't work.
-    text = davids-dotfiles.lib.textRegion {
-      name = "davids-dotfiles/default";
-      content = (builtins.readFile ./hosts);
-    };
-  };
-
+{ self, davids-dotfiles, ... }:
+{ pkgs, system, nixConfig, ... }: {
   services.nix-daemon.enable = true;
 
   homebrew.enable = true;
@@ -22,6 +9,8 @@
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh = {
     enable = true; # default shell on catalina
+
+    # Add back the original contents
     shellInit = ''
       if [ -x /usr/libexec/path_helper ]; then
         eval `/usr/libexec/path_helper -s`
@@ -35,15 +24,4 @@
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
-
-  # The platform the configuration will be used on.
-  nixpkgs.hostPlatform = system;
-
-  nix.settings = nixConfig;
-
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    backupFileExtension = "hm.bak";
-  };
 }

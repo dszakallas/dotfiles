@@ -1,4 +1,5 @@
-{ self, pkgs, config, system, lib, hostPlatform, davids-dotfiles, ... }:
+{ self, davids-dotfiles, ... }:
+{ pkgs, config, system, lib, hostPlatform, ... }:
 with lib;
 let
   unmanagedFile = f: ''

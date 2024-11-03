@@ -9,8 +9,6 @@ rec {
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     davids-dotfiles-private.url = "git+file:vendor/davids-dotfiles-private";
     davids-dotfiles-private.inputs.nixpkgs.follows = "nixpkgs";
-    poetry2nix.url = "github:nix-community/poetry2nix";
-    poetry2nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   nixConfig = {
@@ -26,40 +24,39 @@ rec {
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager
     , davids-dotfiles-private, poetry2nix, ... }:
     let
-      davids-dotfiles = rec {
-        lib = import ./lib { inherit (nixpkgs) lib; };
-        darwinModules =
-          builtins.mapAttrs (_: v: import v) (lib.subDirs ./modules/darwin);
-        systemModules =
-          builtins.mapAttrs (_: v: import v) (lib.subDirirs ./modules/system);
-        homeModules =
-          builtins.mapAttrs (_: v: import v) (lib.subDirs ./modules/home);
-      };
+      importChildren = d:
+        builtins.mapAttrs (_: v: import v (inputs // outputs))
+        (outputs.davids-dotfiles.lib.subDirs d);
       mkDarwin = { host, arch, ... }:
         nix-darwin.lib.darwinSystem rec {
           system = "${arch}-darwin";
           specialArgs = let
             hostPlatform = nixpkgs.legacyPackages.${system}.stdenv.hostPlatform;
-          in {
-            inherit self home-manager hostPlatform davids-dotfiles
-              davids-dotfiles-private poetry2nix system nixConfig;
-          };
+          in { inherit home-manager hostPlatform system nixConfig; };
           modules = [
             home-manager.darwinModules.home-manager
-            ./hosts/${host}
+            (import ./hosts/${host} (inputs // outputs))
             { home-manager = { extraSpecialArgs = specialArgs; }; }
           ];
         };
-    in {
-      darwinConfigurations = {
-        Jellyfish = mkDarwin {
-          host = "Jellyfish";
-          arch = "aarch64";
+      outputs = {
+        davids-dotfiles = rec {
+          lib = import ./lib { inherit (nixpkgs) lib; };
+          darwinModules = importChildren ./modules/darwin;
+          systemModules = importChildren ./modules/system;
+          homeModules = importChildren ./modules/home;
+          users = importChildren ./users;
         };
-        "dszakallas--Clownfish" = mkDarwin {
-          host = "dszakallas--Clownfish";
-          arch = "aarch64";
+        darwinConfigurations = {
+          Jellyfish = mkDarwin {
+            host = "Jellyfish";
+            arch = "aarch64";
+          };
+          "dszakallas--Clownfish" = mkDarwin {
+            host = "dszakallas--Clownfish";
+            arch = "aarch64";
+          };
         };
       };
-    };
+    in outputs;
 }
