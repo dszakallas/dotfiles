@@ -10,11 +10,11 @@
         "poetry2nix": "poetry2nix"
       },
       "locked": {
-        "lastModified": 1730659620,
-        "narHash": "sha256-qo2p4KutPvkcIr8O3hYTqZxrQvacIRh21meKpKTJJ/U=",
+        "lastModified": 1730754284,
+        "narHash": "sha256-Nn8xvH/+uQ7Wetak6TamEfW0wuzBl98DfaV/G2YEXQM=",
         "ref": "refs/heads/main",
-        "rev": "c11077b364157f2ae50e1526400fe96fb7e71794",
-        "revCount": 36,
+        "rev": "e47ed44d717706791fe4e84ea93f445158ed003c",
+        "revCount": 37,
         "type": "git",
         "url": "file:vendor/davids-dotfiles-private"
       },
