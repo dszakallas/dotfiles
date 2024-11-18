@@ -1,5 +1,5 @@
 { self, davids-dotfiles, ... }:
-{ pkgs, system, nixConfig, ... }: {
+{ pkgs, system, nixConfig, hostName, ... }: {
   services.nix-daemon.enable = true;
 
   homebrew.enable = true;

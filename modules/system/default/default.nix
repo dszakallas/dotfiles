@@ -9,10 +9,7 @@
 
   nix = {
     settings = nixConfig;
-    nixPath = if config.nix.channel.enable then
-      [ "nixpkgs-overlays=${self}/overlays-compat/" ]
-    else
-      [ ];
+    nixPath = [ "nixpkgs=flake:nixpkgs" ];
   };
 
   home-manager = {
