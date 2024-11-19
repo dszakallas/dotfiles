@@ -133,7 +133,8 @@ This function should only modify configuration layer settings."
             gptel-api-key (getenv "OPENAI_API_KEY"))
      (chatgpt-shell :variables
                     chatgpt-shell-system-prompt 2
-                    chatgpt-shell-openai-key (lambda () (getenv "OPENAI_API_KEY")))
+                    chatgpt-shell-openai-key (lambda () (getenv "OPENAI_API_KEY"))
+                    chatgpt-shell-google-key (lambda () (getenv "GEMINI_API_KEY")))
 
      ;; Other utils
      xclipboard
