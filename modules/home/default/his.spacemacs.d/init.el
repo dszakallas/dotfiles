@@ -140,15 +140,23 @@ This function should only modify configuration layer settings."
      xclipboard
      direnv
      (exec-path-from-shell :variables
-                           exec-path-from-shell-variables '("PATH" "HOMEBREW_PREFIX"
-                                                            "GOPATH"
-                                                            "JAVA_HOME" "SBT_HOME" "SDKMAN_DIR"
-                                                            "NVM_DIR"
-                                                            "PYENV_ROOT"
-                                                            "GEM_HOME" "GEM_PATH" "rvm_prefix" "rvm_path"
-                                                            "LANG" "LC_CTYPE"
-                                                            "OPENAI_API_KEY"
-                                                            "SSH_AUTH_SOCK" "SSH_AGENT_PID" "GPG_AGENT_INFO")
+                           exec-path-from-shell-variables '(
+                                                             "GEMINI_API_KEY"
+                                                             "GPG_AGENT_INFO"
+                                                             "HOME"
+                                                             "HOMEBREW_PREFIX"
+                                                             "LANG"
+                                                             "LC_CTYPE"
+                                                             "NIX_CONFIG"
+                                                             "NIX_PATH"
+                                                             "NIX_PROFILES"
+                                                             "NIX_REMOTE"
+                                                             "NIX_SSL_CERT_FILE"
+                                                             "NIX_USER_PROFILE_DIR"
+                                                             "OPENAI_API_KEY"
+                                                             "PATH"
+                                                             "SSH_AGENT_PID"
+                                                             "SSH_AUTH_SOCK")
                            exec-path-from-shell-arguments '()))
 
    ;; List of additional packages that will be installed without being
