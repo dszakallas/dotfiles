@@ -31,5 +31,7 @@
     davids.emacs.enable = true;
     davids.jupiter.enable = true;
     davids.ssh.enable = true;
+
+    programs.zsh.shellAliases = { docker = "podman"; };
   };
 }
