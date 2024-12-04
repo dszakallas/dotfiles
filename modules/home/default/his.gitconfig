@@ -25,6 +25,7 @@
 	st = status
 	p = push
 	psuh = push
+	head = rev-parse HEAD
 [push]
 	default = simple
 [hub]
