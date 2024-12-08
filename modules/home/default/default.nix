@@ -7,21 +7,11 @@ let
     [[ -s "$HOME/.local/share/${f}" ]] && source "$HOME/.local/share/${f}"
   '';
   net = with pkgs; [ ];
-  files = with pkgs; [
-    age
-    bat
-    findutils
-    fswatch
-    gawk
-    minio-client
-    ripgrep
-    rsync
-    sops
-    tree
-  ];
+  cloud = with pkgs; [ awscli2 minio-client backblaze-b2 ];
+  files = with pkgs; [ age bat findutils fswatch gawk ripgrep rsync sops tree ];
   adm = with pkgs; [ htop ncdu ];
   nix = with pkgs; [ devenv nixfmt-classic ];
-  dev = with pkgs; [ delta git-lfs jq pipx yq-go ];
+  dev = with pkgs; [ delta git-lfs jq pipx yq-go asciinema ];
   av = with pkgs; [ ffmpeg ];
   moduleName = "davids-dotfiles/default";
 in {
@@ -110,7 +100,7 @@ in {
   };
   config = {
     home = {
-      packages = lists.flatten [ adm av net files dev nix ];
+      packages = lists.flatten [ adm av net files cloud dev nix ];
       file.".gitconfig".text = davids-dotfiles.lib.textRegion {
         name = moduleName;
         content = builtins.readFile ./his.gitconfig;
