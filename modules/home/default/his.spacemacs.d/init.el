@@ -141,22 +141,22 @@ This function should only modify configuration layer settings."
      direnv
      (exec-path-from-shell :variables
                            exec-path-from-shell-variables '(
-                                                             "GEMINI_API_KEY"
-                                                             "GPG_AGENT_INFO"
-                                                             "HOME"
-                                                             "HOMEBREW_PREFIX"
-                                                             "LANG"
-                                                             "LC_CTYPE"
-                                                             "NIX_CONFIG"
-                                                             "NIX_PATH"
-                                                             "NIX_PROFILES"
-                                                             "NIX_REMOTE"
-                                                             "NIX_SSL_CERT_FILE"
-                                                             "NIX_USER_PROFILE_DIR"
-                                                             "OPENAI_API_KEY"
-                                                             "PATH"
-                                                             "SSH_AGENT_PID"
-                                                             "SSH_AUTH_SOCK")
+                                                            "GEMINI_API_KEY"
+                                                            "GPG_AGENT_INFO"
+                                                            "HOME"
+                                                            "HOMEBREW_PREFIX"
+                                                            "LANG"
+                                                            "LC_CTYPE"
+                                                            "NIX_CONFIG"
+                                                            "NIX_PATH"
+                                                            "NIX_PROFILES"
+                                                            "NIX_REMOTE"
+                                                            "NIX_SSL_CERT_FILE"
+                                                            "NIX_USER_PROFILE_DIR"
+                                                            "OPENAI_API_KEY"
+                                                            "PATH"
+                                                            "SSH_AGENT_PID"
+                                                            "SSH_AUTH_SOCK")
                            exec-path-from-shell-arguments '()))
 
    ;; List of additional packages that will be installed without being
@@ -647,6 +647,9 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
   ;; activate direnv activation on buffer change
   (direnv-mode)
+
+  ;; Use emacs as editor in multiterm etc.
+  (setenv "EDITOR" "ec")
 
   (setq initial-buffer-choice (lambda () (get-buffer "*scratch*")))
 
