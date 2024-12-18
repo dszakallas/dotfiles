@@ -1,3 +1,0 @@
-[submodule "vendor/davids-dotfiles-private"]
-	path = vendor/davids-dotfiles-private
-	url = git@github.com:dszakallas/davids-dotfiles-private.git

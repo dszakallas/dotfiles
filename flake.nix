@@ -7,8 +7,11 @@ rec {
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    davids-dotfiles-private.url = "git+file:vendor/davids-dotfiles-private";
+    poetry2nix.url = "github:nix-community/poetry2nix";
+    poetry2nix.inputs.nixpkgs.follows = "nixpkgs";
+    davids-dotfiles-private.url = "github:dszakallas/davids-dotfiles-private";
     davids-dotfiles-private.inputs.nixpkgs.follows = "nixpkgs";
+    davids-dotfiles-private.inputs.poetry2nix.follows = "poetry2nix";
   };
 
   nixConfig = {

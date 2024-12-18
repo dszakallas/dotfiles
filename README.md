@@ -12,8 +12,7 @@ Structure:
 │   ├── nixos              # reusable modules for nixOS
 │   ├── system             # reusable modules for unix-like systems (nixOS, darwin, etc.)
 │   └── home               # reusable modules for home manager
-├── users                  # user configurations (can be shared across hosts)
-└── vendor                 # vendored flake dependencies in git submodules
+└── users                  # user configurations (can be shared across hosts)
 ```
 
 Some configurations are not publicly shared, so you need to adjust the flake to your needs.
