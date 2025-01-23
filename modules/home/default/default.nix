@@ -162,6 +162,8 @@ in {
         enable = true;
         bashrcExtra = unmanagedFile "bashrc";
         profileExtra = ''
+          export PATH="$HOME/.files/bin:$PATH"
+          # Unmanaged executables
           export PATH="$HOME/.local/bin:$PATH"
         '' + unmanagedFile "env";
       };
@@ -176,6 +178,8 @@ in {
 
         initExtra = unmanagedFile "zshrc";
         envExtra = ''
+          export PATH="$HOME/.files/bin:$PATH"
+          # Unmanaged executables
           export PATH="$HOME/.local/bin:$PATH"
         '' + unmanagedFile "env";
 
