@@ -12,11 +12,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1737729953,
-        "narHash": "sha256-omIidRzvR2HaG8wjfXAjT+ClDc6vUkt4hPA73ekCSoE=",
+        "lastModified": 1737742382,
+        "narHash": "sha256-sHt6Mzn8QqjLG5UiX4u60ZJx7vQCsjzon99aScMjYjM=",
         "owner": "dszakallas",
         "repo": "davids-dotfiles-private",
-        "rev": "13f3a547e8fef290657d78737184abce38f9ba75",
+        "rev": "fe5597588c3af556fcc4fb2da652eb4249a59164",
         "type": "github"
       },
       "original": {
