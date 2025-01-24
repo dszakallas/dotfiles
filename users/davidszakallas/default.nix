@@ -1,5 +1,11 @@
-{ self, davids-dotfiles, davids-dotfiles-private, ... }:
-{ pkgs, ... }: {
+{
+  self,
+  davids-dotfiles,
+  davids-dotfiles-private,
+  ...
+}:
+{ pkgs, ... }:
+{
   users.users.davidszakallas = {
     name = "davidszakallas";
     home = "/Users/davidszakallas";
@@ -32,6 +38,8 @@
     davids.jupiter.enable = true;
     davids.ssh.enable = true;
 
-    programs.zsh.shellAliases = { docker = "podman"; };
+    programs.zsh.shellAliases = {
+      docker = "podman";
+    };
   };
 }

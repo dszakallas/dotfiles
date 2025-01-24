@@ -1,10 +1,20 @@
 { self, davids-dotfiles, ... }:
-{ pkgs, system, nixConfig, hostName, ... }: {
+{
+  pkgs,
+  system,
+  nixConfig,
+  hostName,
+  ...
+}:
+{
   services.nix-daemon.enable = true;
 
   homebrew.enable = true;
 
-  homebrew.casks = [ "gpg-suite" "iterm2" ];
+  homebrew.casks = [
+    "gpg-suite"
+    "iterm2"
+  ];
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh = {

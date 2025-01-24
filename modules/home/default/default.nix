@@ -1,5 +1,12 @@
 { self, davids-dotfiles, ... }:
-{ pkgs, config, system, lib, hostPlatform, ... }:
+{
+  pkgs,
+  config,
+  system,
+  lib,
+  hostPlatform,
+  ...
+}:
 with lib;
 let
   unmanagedFile = f: ''
@@ -7,91 +14,142 @@ let
     [[ -s "$HOME/.local/share/${f}" ]] && source "$HOME/.local/share/${f}"
   '';
   net = with pkgs; [ ];
-  cloud = with pkgs; [ awscli2 minio-client backblaze-b2 ];
-  files = with pkgs; [ age bat findutils fswatch gawk ripgrep rsync sops tree ];
-  adm = with pkgs; [ htop ncdu ];
-  nix = with pkgs; [ devenv nixfmt-classic ];
-  dev = with pkgs; [ delta git-lfs jq pipx yq-go asciinema ];
+  cloud = with pkgs; [
+    awscli2
+    minio-client
+    backblaze-b2
+  ];
+  files = with pkgs; [
+    age
+    bat
+    findutils
+    fswatch
+    gawk
+    ripgrep
+    rsync
+    sops
+    tree
+  ];
+  adm = with pkgs; [
+    htop
+    ncdu
+  ];
+  nix = with pkgs; [
+    devenv
+    nixfmt-classic
+  ];
+  dev = with pkgs; [
+    delta
+    git-lfs
+    jq
+    pipx
+    yq-go
+    asciinema
+  ];
   av = with pkgs; [ ffmpeg ];
   moduleName = "davids-dotfiles/default";
-in {
+in
+{
   imports = [
     # fzf
-    ({ pkgs, ... }: {
-      home.packages = with pkgs; [ fzf ];
-      programs.bash.bashrcExtra = ''
-        eval "$(fzf --bash)";
-      '';
-      programs.zsh.oh-my-zsh.plugins = [ "fzf" ];
-      programs.vim.plugins = with pkgs.vimPlugins; [ fzf-vim ];
-    })
-    # GitHub CLI
-    ({ pkgs, ... }: {
-      home.packages = with pkgs; [ gh ];
-      home.file.".files/share/gh.zsh".source = ./gh.zsh;
-      programs.zsh = {
-        initExtra = ''
-          source "$HOME/.files/share/gh.zsh";
+    (
+      { pkgs, ... }:
+      {
+        home.packages = with pkgs; [ fzf ];
+        programs.bash.bashrcExtra = ''
+          eval "$(fzf --bash)";
         '';
-        oh-my-zsh.plugins = [ "gh" ];
-      };
-      home.sessionVariables = { GH_PAGER = "cat"; };
-    })
+        programs.zsh.oh-my-zsh.plugins = [ "fzf" ];
+        programs.vim.plugins = with pkgs.vimPlugins; [ fzf-vim ];
+      }
+    )
+    # GitHub CLI
+    (
+      { pkgs, ... }:
+      {
+        home.packages = with pkgs; [ gh ];
+        home.file.".files/share/gh.zsh".source = ./gh.zsh;
+        programs.zsh = {
+          initExtra = ''
+            source "$HOME/.files/share/gh.zsh";
+          '';
+          oh-my-zsh.plugins = [ "gh" ];
+        };
+        home.sessionVariables = {
+          GH_PAGER = "cat";
+        };
+      }
+    )
     # k8s
-    ({ pkgs, config, ... }: {
-      options = {
-        davids.k8stools = { enable = mkEnableOption "Kubernetes tools"; };
-      };
-      config = mkIf config.davids.k8stools.enable {
-        home.packages = with pkgs; [
-          kubectl
-          kubernetes-helm
-          k9s
-          fluxcd
-          kustomize
-          vcluster
-          skopeo
-          oras
-        ];
-        programs.zsh.shellAliases = { k = "kubectl"; };
-      };
-    })
+    (
+      { pkgs, config, ... }:
+      {
+        options = {
+          davids.k8stools = {
+            enable = mkEnableOption "Kubernetes tools";
+          };
+        };
+        config = mkIf config.davids.k8stools.enable {
+          home.packages = with pkgs; [
+            kubectl
+            kubernetes-helm
+            k9s
+            fluxcd
+            kustomize
+            vcluster
+            skopeo
+            oras
+          ];
+          programs.zsh.shellAliases = {
+            k = "kubectl";
+          };
+        };
+      }
+    )
     # Emacs
-    ({ pkgs, config, ... }: {
-      options = {
-        davids.emacs = { enable = mkEnableOption "Emacs (wrappers)"; };
-      };
-      config = mkIf config.davids.emacs.enable {
-        # Only adding wrappers for now
-        home.file.".files/bin/ect" = {
-          text = ''
-            #!/bin/sh
-            exec emacsclient --tty "$@"
-          '';
-          executable = true;
+    (
+      { pkgs, config, ... }:
+      {
+        options = {
+          davids.emacs = {
+            enable = mkEnableOption "Emacs (wrappers)";
+          };
         };
-        home.file.".files/bin/ecw" = {
-          text = ''
-            #!/bin/sh
-            exec emacsclient --reuse-frame -a "" "$@"
-          '';
-          executable = true;
+        config = mkIf config.davids.emacs.enable {
+          # Only adding wrappers for now
+          home.file.".files/bin/ect" = {
+            text = ''
+              #!/bin/sh
+              exec emacsclient --tty "$@"
+            '';
+            executable = true;
+          };
+          home.file.".files/bin/ecw" = {
+            text = ''
+              #!/bin/sh
+              exec emacsclient --reuse-frame -a "" "$@"
+            '';
+            executable = true;
+          };
+          home.file.".files/bin/ec" = {
+            text = ''
+              #!/bin/sh
+              exec emacsclient "$@"
+            '';
+            executable = true;
+          };
+          home.file.".spacemacs.d".source = ./his.spacemacs.d;
+          programs.zsh.shellAliases = {
+            e = "ect";
+          };
         };
-        home.file.".files/bin/ec" = {
-          text = ''
-            #!/bin/sh
-            exec emacsclient "$@"
-          '';
-          executable = true;
-        };
-        home.file.".spacemacs.d".source = ./his.spacemacs.d;
-        programs.zsh.shellAliases = { e = "ect"; };
-      };
-    })
+      }
+    )
   ] ++ (lib.optionals hostPlatform.isDarwin [ ./darwin ]);
   options = {
     davids.ssh.enable = mkEnableOption "SSH goodies";
-    davids.ssh.knownHostsLines = with types;
+    davids.ssh.knownHostsLines =
+      with types;
       mkOption {
         description = "Managed known_host file lines";
         type = lines;
@@ -100,7 +158,15 @@ in {
   };
   config = {
     home = {
-      packages = lists.flatten [ adm av net files cloud dev nix ];
+      packages = lists.flatten [
+        adm
+        av
+        net
+        files
+        cloud
+        dev
+        nix
+      ];
       file.".gitconfig".text = davids-dotfiles.lib.textRegion {
         name = moduleName;
         content = builtins.readFile ./his.gitconfig;
@@ -118,11 +184,12 @@ in {
         EDITOR = "vim";
         LANG = "en_US.UTF-8";
       };
-      file.".ssh/davids.known_hosts".text = mkIf config.davids.ssh.enable
-        (davids-dotfiles.lib.textRegion {
+      file.".ssh/davids.known_hosts".text = mkIf config.davids.ssh.enable (
+        davids-dotfiles.lib.textRegion {
           name = moduleName;
           content = config.davids.ssh.knownHostsLines;
-        });
+        }
+      );
     };
     programs = {
       vim = {
@@ -138,7 +205,9 @@ in {
           editorconfig-vim
           tagbar
         ];
-        settings = { ignorecase = true; };
+        settings = {
+          ignorecase = true;
+        };
         extraConfig = builtins.readFile ./his.vimrc;
       };
 
@@ -161,11 +230,13 @@ in {
       bash = {
         enable = true;
         bashrcExtra = unmanagedFile "bashrc";
-        profileExtra = ''
-          export PATH="$HOME/.files/bin:$PATH"
-          # Unmanaged executables
-          export PATH="$HOME/.local/bin:$PATH"
-        '' + unmanagedFile "env";
+        profileExtra =
+          ''
+            export PATH="$HOME/.files/bin:$PATH"
+            # Unmanaged executables
+            export PATH="$HOME/.local/bin:$PATH"
+          ''
+          + unmanagedFile "env";
       };
 
       zsh = {
@@ -174,18 +245,25 @@ in {
         autosuggestion.enable = true;
         syntaxHighlighting.enable = true;
 
-        history = { path = "$HOME/.histfile"; };
+        history = {
+          path = "$HOME/.histfile";
+        };
 
         initExtra = unmanagedFile "zshrc";
-        envExtra = ''
-          export PATH="$HOME/.files/bin:$PATH"
-          # Unmanaged executables
-          export PATH="$HOME/.local/bin:$PATH"
-        '' + unmanagedFile "env";
+        envExtra =
+          ''
+            export PATH="$HOME/.files/bin:$PATH"
+            # Unmanaged executables
+            export PATH="$HOME/.local/bin:$PATH"
+          ''
+          + unmanagedFile "env";
 
         oh-my-zsh = {
           enable = true;
-          plugins = [ "git" "direnv" ];
+          plugins = [
+            "git"
+            "direnv"
+          ];
           theme = "clean";
         };
 

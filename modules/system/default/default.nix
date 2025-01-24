@@ -1,9 +1,23 @@
 { self, davids-dotfiles, ... }:
-{ pkgs, config, system, nixConfig, ... }: {
+{
+  pkgs,
+  config,
+  system,
+  nixConfig,
+  ...
+}:
+{
 
-  environment.shells = with pkgs; [ bash zsh ];
+  environment.shells = with pkgs; [
+    bash
+    zsh
+  ];
 
-  environment.systemPackages = with pkgs; [ curl vim git ];
+  environment.systemPackages = with pkgs; [
+    curl
+    vim
+    git
+  ];
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
 
@@ -27,4 +41,3 @@
     };
   };
 }
-

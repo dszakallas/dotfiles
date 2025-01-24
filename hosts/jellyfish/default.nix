@@ -1,6 +1,13 @@
-{ self, davids-dotfiles, davids-dotfiles-private, ... }@inputs:
-let myUsername = "davidszakallas";
-in {
+{
+  self,
+  davids-dotfiles,
+  davids-dotfiles-private,
+  ...
+}@inputs:
+let
+  myUsername = "davidszakallas";
+in
+{
   imports = [
     davids-dotfiles.systemModules.default
     davids-dotfiles.darwinModules.default
@@ -10,7 +17,10 @@ in {
     davids-dotfiles.users.${myUsername}
   ];
 
-  nix.settings.trusted-users = [ "root" myUsername ];
+  nix.settings.trusted-users = [
+    "root"
+    myUsername
+  ];
 
   davids.jupiter = {
     enable = true;
