@@ -13,7 +13,6 @@ let
     # Unmanaged local overrides
     [[ -s "$HOME/.local/share/${f}" ]] && source "$HOME/.local/share/${f}"
   '';
-  net = with pkgs; [ ];
   cloud = with pkgs; [
     awscli2
     minio-client
@@ -33,6 +32,8 @@ let
   adm = with pkgs; [
     htop
     ncdu
+    nmap
+    tmux
   ];
   nix = with pkgs; [
     devenv
@@ -161,7 +162,6 @@ in
       packages = lists.flatten [
         adm
         av
-        net
         files
         cloud
         dev
