@@ -7,10 +7,12 @@ rec {
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    flake-utils.url = "github:numtide/flake-utils";
     poetry2nix.url = "github:nix-community/poetry2nix";
     poetry2nix.inputs.nixpkgs.follows = "nixpkgs";
     davids-dotfiles-private.url = "github:dszakallas/davids-dotfiles-private";
     davids-dotfiles-private.inputs.nixpkgs.follows = "nixpkgs";
+    davids-dotfiles-private.inputs.flake-utils.follows = "flake-utils";
     davids-dotfiles-private.inputs.poetry2nix.follows = "poetry2nix";
   };
 
@@ -37,6 +39,7 @@ rec {
       home-manager,
       davids-dotfiles-private,
       poetry2nix,
+      flake-utils,
       ...
     }:
     let
@@ -75,6 +78,16 @@ rec {
           systemModules = importChildren ./modules/system;
           homeModules = importChildren ./modules/home;
           users = importChildren ./users;
+          packages = (
+            flake-utils.lib.eachDefaultSystem (
+              system:
+              let
+                pkgs = nixpkgs.legacyPackages.${system};
+                packages = lib.callPackageDirWith ./pkgs (inputs // pkgs);
+              in
+              packages
+            )
+          );
         };
         darwinConfigurations = {
           Jellyfish = mkDarwin {

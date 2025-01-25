@@ -2,7 +2,9 @@
   "nodes": {
     "davids-dotfiles-private": {
       "inputs": {
-        "flake-utils": "flake-utils",
+        "flake-utils": [
+          "flake-utils"
+        ],
         "home-manager": "home-manager",
         "nixpkgs": [
           "nixpkgs"
@@ -186,6 +188,7 @@
     "root": {
       "inputs": {
         "davids-dotfiles-private": "davids-dotfiles-private",
+        "flake-utils": "flake-utils",
         "home-manager": "home-manager_2",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
