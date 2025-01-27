@@ -22,6 +22,11 @@ in
     myUsername
   ];
 
+  davids.emacs = {
+    enable = true;
+    version = "30";
+  };
+
   davids.jupiter = {
     enable = true;
     amalthea.staticIP.v4 = "192.168.1.244";

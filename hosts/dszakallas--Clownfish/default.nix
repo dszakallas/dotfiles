@@ -9,6 +9,11 @@ in
     davids-dotfiles.users.${myUsername}
   ];
 
+  davids.emacs = {
+    enable = true;
+    version = "29";
+  };
+
   nix.settings.trusted-users = [
     "root"
     myUsername

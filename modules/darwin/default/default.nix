@@ -1,37 +1,59 @@
 { self, davids-dotfiles, ... }:
 {
   pkgs,
+  config,
   system,
   nixConfig,
   hostName,
+  lib,
   ...
 }:
 {
-  services.nix-daemon.enable = true;
-
-  homebrew.enable = true;
-
-  homebrew.casks = [
-    "gpg-suite"
-    "iterm2"
-  ];
-
-  # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh = {
-    enable = true; # default shell on catalina
-
-    # Add back the original contents
-    shellInit = ''
-      if [ -x /usr/libexec/path_helper ]; then
-        eval `/usr/libexec/path_helper -s`
-      fi
-    '';
+  options = with lib; {
+    davids.emacs = {
+      enable = mkEnableOption "Emacs configuration (system-wide)";
+      version = mkOption {
+        default = "29";
+        type = types.str;
+        description = "Emacs major version";
+      };
+    };
   };
+  config = {
+    services.nix-daemon.enable = true;
 
-  # Set Git commit hash for darwin-version.
-  system.configurationRevision = self.rev or self.dirtyRev or null;
+    homebrew.enable = true;
 
-  # Used for backwards compatibility, please read the changelog before changing.
-  # $ darwin-rebuild changelog
-  system.stateVersion = 4;
+    homebrew.casks = [
+      "gpg-suite"
+      "iterm2"
+    ];
+
+    homebrew.brews = lib.optionals config.davids.emacs.enable [
+      "emacs-plus@${config.davids.emacs.version}"
+    ];
+
+    homebrew.taps = lib.optionals config.davids.emacs.enable [
+      "d12frosted/emacs-plus"
+    ];
+
+    # Create /etc/zshrc that loads the nix-darwin environment.
+    programs.zsh = {
+      enable = true; # default shell on catalina
+
+      # Add back the original contents
+      shellInit = ''
+        if [ -x /usr/libexec/path_helper ]; then
+          eval `/usr/libexec/path_helper -s`
+        fi
+      '';
+    };
+
+    # Set Git commit hash for darwin-version.
+    system.configurationRevision = self.rev or self.dirtyRev or null;
+
+    # Used for backwards compatibility, please read the changelog before changing.
+    # $ darwin-rebuild changelog
+    system.stateVersion = 4;
+  };
 }
