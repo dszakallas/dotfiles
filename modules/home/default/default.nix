@@ -129,7 +129,8 @@ in
             spacemacs = davids-dotfiles.packages.spacemacs.${system};
             loadSpacemacsInit = f: ''
               (setq spacemacs-start-directory "${spacemacs.out}/share/spacemacs/")
-              (load-file (concat spacemacs-start-directory "${f}"))
+              (add-to-list 'load-path spacemacs-start-directory)
+              (load "${f}" nil t)
             '';
           in
           {
@@ -162,13 +163,13 @@ in
               source = ./his.spacemacs.d;
             };
             home.file.".emacs.d/init.el" = mkIf config.davids.emacs.spacemacs.enable {
-              text = loadSpacemacsInit "init.el";
+              text = loadSpacemacsInit "init";
             };
             home.file.".emacs.d/early-init.el" = mkIf config.davids.emacs.spacemacs.enable {
-              text = loadSpacemacsInit "early-init.el";
+              text = loadSpacemacsInit "early-init";
             };
             home.file.".emacs.d/dump-init.el" = mkIf config.davids.emacs.spacemacs.enable {
-              text = loadSpacemacsInit "dump-init.el";
+              text = loadSpacemacsInit "dump-init";
             };
           }
         );
