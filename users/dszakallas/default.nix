@@ -1,11 +1,5 @@
-{
-  self,
-  davids-dotfiles,
-  davids-dotfiles-private,
-  ...
-}:
-{ pkgs, system, ... }:
-{
+{ self, davids-dotfiles, davids-dotfiles-private, ... }:
+{ pkgs, system, ... }: {
   users.users.dszakallas = {
     name = "dszakallas";
     home = "/Users/dszakallas";
@@ -34,7 +28,10 @@
     };
 
     davids.k8stools.enable = true;
-    davids.emacs.enable = true;
+    davids.emacs = {
+      enable = true;
+      spacemacs.enable = true;
+    };
     davids.pure.enable = true;
     davids.ssh.enable = true;
   };
