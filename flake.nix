@@ -17,77 +17,42 @@ rec {
   };
 
   nixConfig = {
-    extra-experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
-    extra-substituters = [
-      "https://nix-community.cachix.org"
-      "https://devenv.cachix.org"
-    ];
+    extra-experimental-features = [ "nix-command" "flakes" ];
+    extra-substituters =
+      [ "https://nix-community.cachix.org" "https://devenv.cachix.org" ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
     ];
   };
 
-  outputs =
-    inputs@{
-      self,
-      nix-darwin,
-      nixpkgs,
-      home-manager,
-      davids-dotfiles-private,
-      poetry2nix,
-      flake-utils,
-      ...
-    }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager
+    , davids-dotfiles-private, poetry2nix, flake-utils, ... }:
     let
-      importChildren =
-        d: builtins.mapAttrs (_: v: import v (inputs // outputs)) (outputs.davids-dotfiles.lib.subDirs d);
-      mkDarwin =
-        { host, arch, ... }:
+      mkDarwin = { host, arch, ... }:
         nix-darwin.lib.darwinSystem rec {
           system = "${arch}-darwin";
-          specialArgs =
-            let
-              hostPlatform = nixpkgs.legacyPackages.${system}.stdenv.hostPlatform;
-            in
-            {
-              inherit
-                home-manager
-                hostPlatform
-                system
-                nixConfig
-                ;
-            };
+          specialArgs = let
+            hostPlatform = nixpkgs.legacyPackages.${system}.stdenv.hostPlatform;
+          in { inherit home-manager hostPlatform system nixConfig; };
           modules = [
             home-manager.darwinModules.home-manager
             (import ./hosts/${host} (inputs // outputs))
-            {
-              home-manager = {
-                extraSpecialArgs = specialArgs;
-              };
-            }
+            { home-manager = { extraSpecialArgs = specialArgs; }; }
           ];
         };
       outputs = {
         davids-dotfiles = rec {
           lib = import ./lib { inherit (nixpkgs) lib; };
-          darwinModules = importChildren ./modules/darwin;
-          systemModules = importChildren ./modules/system;
-          homeModules = importChildren ./modules/home;
-          users = importChildren ./users;
-          packages = (
-            flake-utils.lib.eachDefaultSystem (
-              system:
-              let
-                pkgs = nixpkgs.legacyPackages.${system};
-                packages = lib.callPackageDirWith ./pkgs (inputs // pkgs);
-              in
-              packages
-            )
-          );
+          darwinModules = lib.importDir ./modules/darwin (inputs // outputs);
+          systemModules = lib.importDir ./modules/system (inputs // outputs);
+          homeModules = lib.importDir ./modules/home (inputs // outputs);
+          users = lib.importDir ./users (inputs // outputs);
+          packages = (flake-utils.lib.eachDefaultSystem (system:
+            let
+              pkgs = nixpkgs.legacyPackages.${system};
+              packages = lib.callPackageDirWith ./pkgs (inputs // pkgs);
+            in packages));
         };
         darwinConfigurations = {
           Jellyfish = mkDarwin {
@@ -100,6 +65,5 @@ rec {
           };
         };
       };
-    in
-    outputs;
+    in outputs;
 }
