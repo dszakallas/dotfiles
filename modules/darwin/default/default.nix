@@ -30,7 +30,10 @@
     ];
 
     homebrew.brews = lib.optionals config.davids.emacs.enable [
-      "emacs-plus@${config.davids.emacs.version}"
+      {
+        name = "emacs-plus@${config.davids.emacs.version}";
+        args = [ "with-native-comp" ];
+      }
     ];
 
     homebrew.taps = lib.optionals config.davids.emacs.enable [
