@@ -128,14 +128,9 @@ This function should only modify configuration layer settings."
 
      ;; AI services
      github-copilot
-     (gptel :variables
-            gptel-backend "ChatGPT"
-            gptel-model "gpt-4-1106-preview"
-            gptel-max-tokens 4096
-            gptel-temperature 0.5
-            gptel-api-key (getenv "OPENAI_API_KEY"))
      (chatgpt-shell :variables
                     chatgpt-shell-system-prompt 2
+                    chatgpt-shell-model-version "gemini-2.0-flash-exp"
                     chatgpt-shell-openai-key (lambda () (getenv "OPENAI_API_KEY"))
                     chatgpt-shell-google-key (lambda () (getenv "GEMINI_API_KEY")))
 
