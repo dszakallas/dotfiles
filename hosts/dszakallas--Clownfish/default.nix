@@ -1,6 +1,8 @@
 { self, davids-dotfiles, ... }:
-let myUsername = "dszakallas";
-in {
+let
+  myUsername = "dszakallas";
+in
+{
   imports = [
     davids-dotfiles.systemModules.default
     davids-dotfiles.darwinModules.default
@@ -9,8 +11,11 @@ in {
 
   davids.emacs = {
     enable = true;
-    version = "30";
+    version = "29";
   };
 
-  nix.settings.trusted-users = [ "root" myUsername ];
+  nix.settings.trusted-users = [
+    "root"
+    myUsername
+  ];
 }
