@@ -42,8 +42,9 @@ let
   dev = with pkgs; [
     delta
     git-lfs
+    nodejs_23 # Needed for certain emacs packages such as lsp
     jq
-    pipx
+    pipx # I am managing some Python tools with this, should get rid of it in the future
     yq-go
     asciinema
   ];
