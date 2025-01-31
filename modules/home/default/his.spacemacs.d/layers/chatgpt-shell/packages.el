@@ -25,7 +25,7 @@
     "acXt" 'chatgpt-shell-generate-unit-test
     "acXs" 'chatgpt-shell-send-region
     "acXS" 'chatgpt-shell-send-and-review-region
-  )
+    )
 
   (spacemacs/declare-prefix-for-mode 'chatgpt-shell-mode "mC" "configure")
   (spacemacs/declare-prefix-for-mode 'chatgpt-shell-mode "mM" "load/save")
@@ -52,9 +52,9 @@
     ;; settings
     "Cp" 'chatgpt-shell-swap-system-prompt
     "CP" 'chatgpt-shell-load-awesome-prompts
-    "Cm" 'chatgpt-shell-swap-model-version
+    "Cm" 'chatgpt-shell-swap-model
     "C1" 'chatgpt-shell-set-as-primary-shell
     "Cr" 'chatgpt-shell-rename-buffer
     )
 
-)
+  )
