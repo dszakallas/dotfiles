@@ -23,6 +23,9 @@
       username = "davidszakallas";
       homeDirectory = "/Users/davidszakallas";
       stateVersion = "24.05";
+      shellAliases = {
+        docker = "podman";
+      };
     };
 
     programs.home-manager.enable = true;
@@ -40,9 +43,5 @@
     };
     davids.jupiter.enable = true;
     davids.ssh.enable = true;
-
-    programs.zsh.shellAliases = {
-      docker = "podman";
-    };
   };
 }

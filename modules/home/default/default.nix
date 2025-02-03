@@ -214,6 +214,11 @@ in
         EDITOR = "vim";
         LANG = "en_US.UTF-8";
       };
+      shellAliases = {
+        la = "ls -la";
+        g = "git";
+        v = "vim";
+      };
       file.".ssh/davids.known_hosts".text = mkIf config.davids.ssh.enable (
         davids-dotfiles.lib.textRegion {
           name = moduleName;
@@ -295,12 +300,6 @@ in
             "direnv"
           ];
           theme = "clean";
-        };
-
-        shellAliases = {
-          la = "ls -la";
-          g = "git";
-          v = "vim";
         };
       };
     };

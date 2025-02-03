@@ -23,6 +23,9 @@
       username = "dszakallas";
       homeDirectory = "/Users/dszakallas";
       stateVersion = "24.05";
+      shellAliases = {
+        docker = "podman";
+      };
     };
 
     programs.home-manager.enable = true;
