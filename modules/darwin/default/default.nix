@@ -15,7 +15,7 @@
 
     homebrew.enable = true;
 
-    homebrew.casks = [ "gpg-suite" "iterm2" "keepassxc" ];
+    homebrew.casks = [ "gpg-suite" "iterm2" "firefox" "keepassxc" ];
 
     homebrew.brews = lib.optionals config.davids.emacs.enable [{
       name = "emacs-plus@${config.davids.emacs.version}";
