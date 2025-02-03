@@ -1,14 +1,5 @@
 { self, davids-dotfiles, ... }:
-{
-  pkgs,
-  config,
-  system,
-  nixConfig,
-  hostName,
-  lib,
-  ...
-}:
-{
+{ pkgs, config, system, nixConfig, hostName, lib, ... }: {
   options = with lib; {
     davids.emacs = {
       enable = mkEnableOption "Emacs configuration (system-wide)";
@@ -24,21 +15,15 @@
 
     homebrew.enable = true;
 
-    homebrew.casks = [
-      "gpg-suite"
-      "iterm2"
-    ];
+    homebrew.casks = [ "gpg-suite" "iterm2" "keepassxc" ];
 
-    homebrew.brews = lib.optionals config.davids.emacs.enable [
-      {
-        name = "emacs-plus@${config.davids.emacs.version}";
-        args = [ "with-native-comp" ];
-      }
-    ];
+    homebrew.brews = lib.optionals config.davids.emacs.enable [{
+      name = "emacs-plus@${config.davids.emacs.version}";
+      args = [ "with-native-comp" ];
+    }];
 
-    homebrew.taps = lib.optionals config.davids.emacs.enable [
-      "d12frosted/emacs-plus"
-    ];
+    homebrew.taps =
+      lib.optionals config.davids.emacs.enable [ "d12frosted/emacs-plus" ];
 
     # Create /etc/zshrc that loads the nix-darwin environment.
     programs.zsh = {
