@@ -19,4 +19,7 @@ in
     "root"
     myUsername
   ];
+
+  # TODO: Replace with fine-grained and mergable alternative
+  nixpkgs.config.allowUnfree = true;
 }
