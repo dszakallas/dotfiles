@@ -1,8 +1,7 @@
-{ self, davids-dotfiles, ... }:
+{ self, davids-dotfiles, ... }@ctx:
 {
   pkgs,
   config,
-  system,
   lib,
   hostPlatform,
   ...
@@ -16,7 +15,7 @@ let
   cloud = with pkgs; [
     awscli2
     minio-client
-    backblaze-b2
+    # TODO error building backblaze-b2
   ];
   files = with pkgs; [
     age
@@ -37,7 +36,6 @@ let
   ];
   nix = with pkgs; [
     devenv
-    nixfmt-classic
   ];
   dev = with pkgs; [
     delta
@@ -53,130 +51,11 @@ let
 in
 {
   imports = [
-    # fzf
-    (
-      { pkgs, ... }:
-      {
-        home.packages = with pkgs; [ fzf ];
-        programs.bash.bashrcExtra = ''
-          eval "$(fzf --bash)";
-        '';
-        programs.zsh.oh-my-zsh.plugins = [ "fzf" ];
-        programs.vim.plugins = with pkgs.vimPlugins; [ fzf-vim ];
-      }
-    )
-    # GitHub CLI
-    (
-      { pkgs, ... }:
-      {
-        home.packages = with pkgs; [ gh ];
-        home.file.".files/share/gh.zsh".source = ./gh.zsh;
-        programs.zsh = {
-          initExtra = ''
-            source "$HOME/.files/share/gh.zsh";
-          '';
-          oh-my-zsh.plugins = [ "gh" ];
-        };
-        home.sessionVariables = {
-          GH_PAGER = "cat";
-        };
-      }
-    )
-    # k8s
-    (
-      { pkgs, config, ... }:
-      {
-        options = {
-          davids.k8stools = {
-            enable = mkEnableOption "Kubernetes tools";
-          };
-        };
-        config = mkIf config.davids.k8stools.enable {
-          home.packages = with pkgs; [
-            kubectl
-            kubernetes-helm
-            k9s
-            fluxcd
-            kustomize
-            vcluster
-            skopeo
-            oras
-          ];
-          programs.zsh.shellAliases = {
-            k = "kubectl";
-          };
-        };
-      }
-    )
-    # Emacs
-    (
-      { pkgs, config, ... }:
-      {
-        options = {
-          davids.emacs = {
-            enable = mkEnableOption "Emacs configuration";
-            spacemacs = mkOption {
-              default = { };
-              type = types.submodule {
-                options = {
-                  enable = mkEnableOption "Enable Spacemacs management";
-                };
-              };
-            };
-          };
-        };
-        config = mkIf config.davids.emacs.enable (
-          let
-            spacemacs = davids-dotfiles.packages.spacemacs.${system};
-            loadSpacemacsInit = f: ''
-              (setq spacemacs-start-directory "${spacemacs.out}/share/spacemacs/")
-              (add-to-list 'load-path spacemacs-start-directory)
-              (load "${f}" nil t)
-            '';
-          in
-          {
-            home.packages = [ spacemacs ];
-            home.file.".files/bin/ect" = {
-              text = ''
-                #!/bin/sh
-                exec emacsclient --tty "$@"
-              '';
-              executable = true;
-            };
-            home.file.".files/bin/ecw" = {
-              text = ''
-                #!/bin/sh
-                exec emacsclient --reuse-frame -a "" "$@"
-              '';
-              executable = true;
-            };
-            home.file.".files/bin/ec" = {
-              text = ''
-                #!/bin/sh
-                exec emacsclient "$@"
-              '';
-              executable = true;
-            };
-            programs.zsh.shellAliases = {
-              e = "ect";
-            };
-            home.file.".spacemacs.d" = mkIf config.davids.emacs.spacemacs.enable {
-              source = ./his.spacemacs.d;
-            };
-            home.file.".emacs.d/init.el" = mkIf config.davids.emacs.spacemacs.enable {
-              text = loadSpacemacsInit "init";
-            };
-            home.file.".emacs.d/early-init.el" = mkIf config.davids.emacs.spacemacs.enable {
-              text = loadSpacemacsInit "early-init";
-            };
-            home.file.".emacs.d/dump-init.el" = mkIf config.davids.emacs.spacemacs.enable {
-              text = loadSpacemacsInit "dump-init";
-            };
-          }
-        );
-      }
-    )
-  ] ++ (lib.optionals hostPlatform.isDarwin [ ./darwin ]);
+    (import ./fzf.nix ctx)
+    (import ./github.nix ctx)
+    (import ./k8s.nix ctx)
+    (import ./emacs.nix ctx)
+  ] ++ (lib.optionals hostPlatform.isDarwin [ (import ./darwin ctx) ]);
   options = {
     davids.ssh.enable = mkEnableOption "SSH goodies";
     davids.ssh.knownHostsLines =
@@ -267,7 +146,7 @@ in
         bashrcExtra = unmanagedFile "bashrc";
         profileExtra =
           ''
-            export PATH="$HOME/.files/bin:$PATH"
+            export PATH="$HOME/.davids/bin:$PATH"
             # Unmanaged executables
             export PATH="$HOME/.local/bin:$PATH"
           ''
@@ -287,7 +166,7 @@ in
         initExtra = unmanagedFile "zshrc";
         envExtra =
           ''
-            export PATH="$HOME/.files/bin:$PATH"
+            export PATH="$HOME/.davids/bin:$PATH"
             # Unmanaged executables
             export PATH="$HOME/.local/bin:$PATH"
           ''

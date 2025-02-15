@@ -105,7 +105,9 @@ This function should only modify configuration layer settings."
                   tree-sitter-indent-enable t)
      syntax-checking
      ;; spell-checking
-     auto-completion
+     (auto-completion :variables
+                      auto-completion-return-key-behavior nil
+                      auto-completion-tab-key-behavior 'complete)
      ;; (parinfer :variables
      ;;           parinfer-auto-download nil
      ;;           parinfer-library "~/.local/lib/libparinfer_rust.so")
@@ -785,15 +787,13 @@ before packages are loaded."
      '(projectile-ignored-projects '("~/"))
      '(projectile-create-missing-test-files t)))
 
-  (with-eval-after-load 'company
-    ;; disable inline previews
-    (delq 'company-preview-if-just-one-frontend company-frontends))
+  ;; (with-eval-after-load 'company
+  ;;   ;; disable inline previews
+  ;;   (delq 'company-preview-if-just-one-frontend company-frontends))
 
   (with-eval-after-load 'copilot
-    (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-    (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
-    (define-key copilot-completion-map (kbd "C-TAB") 'copilot-accept-completion-by-word)
-    (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion-by-word))
+    (define-key copilot-completion-map (kbd "<backtab>") 'copilot-accept-completion)
+    (define-key copilot-completion-map (kbd "C-<backtab>") 'copilot-accept-completion-by-word))
 
   (add-to-list 'warning-suppress-types '(copilot))
 

@@ -43,6 +43,7 @@ rec {
       ...
     }:
     let
+      ctx = (inputs // outputs);
       mkDarwin =
         { host, arch, ... }:
         nix-darwin.lib.darwinSystem rec {
@@ -61,7 +62,7 @@ rec {
             };
           modules = [
             home-manager.darwinModules.home-manager
-            (import ./hosts/${host} (inputs // outputs))
+            (import ./hosts/${host} ctx)
             {
               home-manager = {
                 extraSpecialArgs = specialArgs;
@@ -72,10 +73,10 @@ rec {
       outputs = {
         davids-dotfiles = rec {
           lib = import ./lib { inherit (nixpkgs) lib; };
-          darwinModules = lib.importDir ./modules/darwin (inputs // outputs);
-          systemModules = lib.importDir ./modules/system (inputs // outputs);
-          homeModules = lib.importDir ./modules/home (inputs // outputs);
-          users = lib.importDir ./users (inputs // outputs);
+          darwinModules = lib.importDir ./modules/darwin ctx;
+          systemModules = lib.importDir ./modules/system ctx;
+          homeModules = lib.importDir ./modules/home ctx;
+          users = lib.importDir ./users ctx;
           packages = (
             flake-utils.lib.eachDefaultSystem (
               system:

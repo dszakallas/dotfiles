@@ -20,6 +20,8 @@ in
     myUsername
   ];
 
+  ids.gids.nixbld = 350;
+
   # TODO: Replace with fine-grained and mergable alternative
   nixpkgs.config.allowUnfree = true;
 }
