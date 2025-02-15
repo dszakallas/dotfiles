@@ -10,7 +10,7 @@ rec {
     flake-utils.url = "github:numtide/flake-utils";
     poetry2nix.url = "github:nix-community/poetry2nix";
     poetry2nix.inputs.nixpkgs.follows = "nixpkgs";
-    davids-dotfiles-private.url = "github:dszakallas/davids-dotfiles-private";
+    davids-dotfiles-private.url = "github:dszakallas/dotfiles-private";
     davids-dotfiles-private.inputs.nixpkgs.follows = "nixpkgs";
     davids-dotfiles-private.inputs.flake-utils.follows = "flake-utils";
     davids-dotfiles-private.inputs.poetry2nix.follows = "poetry2nix";
