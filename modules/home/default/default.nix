@@ -40,7 +40,6 @@ let
   dev = with pkgs; [
     delta
     git-lfs
-    nodejs_23 # Needed for certain emacs packages such as lsp
     jq
     yq-go
     asciinema

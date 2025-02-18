@@ -31,7 +31,10 @@ with lib;
       '';
     in
     {
-      home.packages = [ spacemacs ];
+      home.packages = [
+        pkgs.nodejs_23 # Needed for certain emacs packages such as lsp
+        spacemacs
+      ];
       home.file.".davids/bin/ect" = {
         text = ''
           #!/bin/sh
