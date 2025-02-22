@@ -1,4 +1,4 @@
-{ davids-dotfiles, ... }:
+{ packages, ... }:
 {
   pkgs,
   config,
@@ -23,7 +23,7 @@ with lib;
   };
   config = mkIf config.davids.emacs.enable (
     let
-      spacemacs = davids-dotfiles.packages.spacemacs.${system};
+      spacemacs = packages.${system}.spacemacs;
       loadSpacemacsInit = f: ''
         (setq spacemacs-start-directory "${spacemacs.out}/share/spacemacs/")
         (add-to-list 'load-path spacemacs-start-directory)

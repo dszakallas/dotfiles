@@ -1,4 +1,4 @@
-{ self, davids-dotfiles, ... }:
+{ self, lib, ... }:
 {
   pkgs,
   config,
@@ -35,7 +35,7 @@
   environment.etc."hosts" = {
     # TODO Linking the hosts file to /etc/hosts in darwin doesn't work.
     enable = if pkgs.stdenv.hostPlatform.isDarwin then false else true;
-    text = davids-dotfiles.lib.textRegion {
+    text = lib.textRegion {
       name = "davids-dotfiles/default";
       content = (builtins.readFile ./hosts);
     };

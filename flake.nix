@@ -70,35 +70,35 @@ rec {
             }
           ];
         };
-      outputs = {
-        davids-dotfiles = rec {
-          lib = import ./lib { inherit (nixpkgs) lib; };
+      lib = import ./lib { inherit (nixpkgs) lib; };
+      outputs =
+        flake-utils.lib.eachDefaultSystem (system: {
+          packages = (
+            let
+              pkgs = nixpkgs.legacyPackages.${system};
+              packages = lib.callPackageDirWith ./pkgs (inputs // pkgs);
+            in
+            packages
+          );
+        })
+        // flake-utils.lib.eachDefaultSystemPassThrough (system: {
+          inherit lib;
           darwinModules = lib.importDir ./modules/darwin ctx;
           systemModules = lib.importDir ./modules/system ctx;
           homeModules = lib.importDir ./modules/home ctx;
           users = lib.importDir ./users ctx;
-          packages = (
-            flake-utils.lib.eachDefaultSystem (
-              system:
-              let
-                pkgs = nixpkgs.legacyPackages.${system};
-                packages = lib.callPackageDirWith ./pkgs (inputs // pkgs);
-              in
-              packages
-            )
-          );
-        };
-        darwinConfigurations = {
-          Jellyfish = mkDarwin {
-            host = "Jellyfish";
-            arch = "aarch64";
+
+          darwinConfigurations = {
+            Jellyfish = mkDarwin {
+              host = "Jellyfish";
+              arch = "aarch64";
+            };
+            "dszakallas--Clownfish" = mkDarwin {
+              host = "dszakallas--Clownfish";
+              arch = "aarch64";
+            };
           };
-          "dszakallas--Clownfish" = mkDarwin {
-            host = "dszakallas--Clownfish";
-            arch = "aarch64";
-          };
-        };
-      };
+        });
     in
     outputs;
 }

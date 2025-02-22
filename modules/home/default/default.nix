@@ -1,4 +1,4 @@
-{ self, davids-dotfiles, ... }@ctx:
+{ self, ... }@ctx:
 {
   pkgs,
   config,
@@ -74,15 +74,15 @@ in
         dev
         nix
       ];
-      file.".gitconfig".text = davids-dotfiles.lib.textRegion {
+      file.".gitconfig".text = ctx.lib.textRegion {
         name = moduleName;
         content = builtins.readFile ./his.gitconfig;
       };
-      file.".global.gitignore".text = davids-dotfiles.lib.textRegion {
+      file.".global.gitignore".text = ctx.lib.textRegion {
         name = moduleName;
         content = builtins.readFile ./his.global.gitignore;
       };
-      file.".vimrc".text = davids-dotfiles.lib.textRegion {
+      file.".vimrc".text = ctx.lib.textRegion {
         name = moduleName;
         comment-char = ''"'';
         content = builtins.readFile ./his.vimrc;
@@ -97,7 +97,7 @@ in
         v = "vim";
       };
       file.".ssh/davids.known_hosts".text = mkIf config.davids.ssh.enable (
-        davids-dotfiles.lib.textRegion {
+        ctx.lib.textRegion {
           name = moduleName;
           content = config.davids.ssh.knownHostsLines;
         }

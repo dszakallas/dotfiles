@@ -1,4 +1,4 @@
-{ self, davids-dotfiles, ... }:
+{ self, ... }:
 {
   pkgs,
   config,

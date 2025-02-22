@@ -1,7 +1,9 @@
 {
   self,
-  davids-dotfiles,
   davids-dotfiles-private,
+  systemModules,
+  darwinModules,
+  users,
   ...
 }@inputs:
 let
@@ -9,13 +11,13 @@ let
 in
 {
   imports = [
-    davids-dotfiles.systemModules.default
-    davids-dotfiles.darwinModules.default
-    davids-dotfiles.darwinModules.homeapps
-    davids-dotfiles.darwinModules.p10y
+    systemModules.default
+    darwinModules.default
+    darwinModules.homeapps
+    darwinModules.p10y
     davids-dotfiles-private.systemModules.jupiter
     davids-dotfiles-private.systemModules.kolobok
-    davids-dotfiles.users.${myUsername}
+    users.${myUsername}
   ];
 
   nix.settings.trusted-users = [

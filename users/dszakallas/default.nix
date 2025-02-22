@@ -1,7 +1,7 @@
 {
   self,
-  davids-dotfiles,
   davids-dotfiles-private,
+  homeModules,
   ...
 }:
 { pkgs, system, ... }:
@@ -14,7 +14,7 @@
 
   home-manager.users.dszakallas = {
     imports = [
-      davids-dotfiles.homeModules.default
+      homeModules.default
       davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.pure
     ];

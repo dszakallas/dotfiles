@@ -1,13 +1,19 @@
-{ self, davids-dotfiles, ... }:
+{
+  self,
+  systemModules,
+  darwinModules,
+  users,
+  ...
+}:
 let
   myUsername = "dszakallas";
 in
 {
   imports = [
-    davids-dotfiles.systemModules.default
-    davids-dotfiles.darwinModules.default
-    davids-dotfiles.darwinModules.p10y
-    davids-dotfiles.users.${myUsername}
+    systemModules.default
+    darwinModules.default
+    darwinModules.p10y
+    users.${myUsername}
   ];
 
   davids.emacs = {
