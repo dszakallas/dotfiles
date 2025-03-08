@@ -40,7 +40,7 @@ This function should only modify configuration layer settings."
      earthly
      kubernetes
      (shell :variables
-            shell-default-shell 'multiterm
+            shell-default-shell 'multi-vterm
             shell-default-position 'bottom
             shell-default-width 40)
      (terraform :variables
@@ -677,6 +677,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (setq vterm-always-compile-module t)
   )
 
 

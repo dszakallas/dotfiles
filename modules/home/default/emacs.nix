@@ -32,8 +32,12 @@ with lib;
     in
     {
       home.packages = [
-        pkgs.nodejs_23 # Needed for certain emacs packages such as lsp
         spacemacs
+        # lsp dependencies
+        pkgs.nodejs_23
+        # vterm build dependencies
+        pkgs.cmakeMinimal
+        pkgs.glibtool
       ];
       home.file.".davids/bin/ect" = {
         text = ''
