@@ -15,6 +15,7 @@ stdenvNoCC.mkDerivation {
 
   patches = [
     ./elpa-in-userdir.diff
+    ./quelpa-build-writable.diff
   ];
 
   installPhase = ''

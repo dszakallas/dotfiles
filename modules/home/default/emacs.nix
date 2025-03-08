@@ -58,13 +58,12 @@ with lib;
       '';
     in
     {
-      home.packages = [
-        spacemacs
+      home.packages = with pkgs; [
         # lsp dependencies
-        pkgs.nodejs_23
+        nodejs_23
         # vterm build dependencies
-        pkgs.cmakeMinimal
-        pkgs.glibtool
+        cmakeMinimal
+        glibtool
       ];
       home.file.".davids/bin/ect" = {
         text = ''
@@ -90,18 +89,16 @@ with lib;
       programs.zsh.shellAliases = {
         e = "ect";
       };
-    }
-    // lib.mkIf config.davids.emacs.spacemacs.enable {
-      home.file.".spacemacs.d" = {
+      home.file.".spacemacs.d" = lib.mkIf config.davids.emacs.spacemacs.enable {
         source = ./his.spacemacs.d;
       };
-      home.file.".emacs.d/init.el" = {
+      home.file.".emacs.d/init.el" = lib.mkIf config.davids.emacs.spacemacs.enable {
         text = loadSpacemacsInit "init";
       };
-      home.file.".emacs.d/early-init.el" = {
+      home.file.".emacs.d/early-init.el" = lib.mkIf config.davids.emacs.spacemacs.enable {
         text = loadSpacemacsInit "early-init";
       };
-      home.file.".emacs.d/dump-init.el" = {
+      home.file.".emacs.d/dump-init.el" = lib.mkIf config.davids.emacs.spacemacs.enable {
         text = loadSpacemacsInit "dump-init";
       };
     }
