@@ -12,7 +12,7 @@
     shell = pkgs.zsh;
   };
 
-  home-manager.users.davidszakallas = {
+  home-manager.users.davidszakallas = rec {
     imports = [
       homeModules.default
       davids-dotfiles-private.homeModules.default

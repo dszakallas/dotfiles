@@ -16,6 +16,28 @@ with lib;
         type = types.submodule {
           options = {
             enable = mkEnableOption "Enable Spacemacs management";
+            config = mkOption {
+              default = ./his.spacemacs.d;
+              type = types.path;
+              description = "Path to Spacemacs configuration";
+            };
+            source = mkOption {
+              type = types.enum [
+                "package"
+                "local"
+              ];
+              default = "package";
+              description = "Spacemacs source";
+            };
+            package = mkOption {
+              default = packages.${system}.spacemacs;
+              type = types.package;
+              description = "Spacemacs package";
+            };
+            local = mkOption {
+              type = types.str;
+              description = "Path to Spacemacs source";
+            };
           };
         };
       };
@@ -23,9 +45,14 @@ with lib;
   };
   config = mkIf config.davids.emacs.enable (
     let
-      spacemacs = packages.${system}.spacemacs;
+      pkg = config.davids.emacs.spacemacs.package;
+      spacemacs-start-directory =
+        if config.davids.emacs.spacemacs.source == "package" then
+          "${pkg.out}/share/spacemacs"
+        else
+          config.davids.emacs.spacemacs.local;
       loadSpacemacsInit = f: ''
-        (setq spacemacs-start-directory "${spacemacs.out}/share/spacemacs/")
+        (setq spacemacs-start-directory "${spacemacs-start-directory}/")
         (add-to-list 'load-path spacemacs-start-directory)
         (load "${f}" nil t)
       '';
@@ -63,16 +90,18 @@ with lib;
       programs.zsh.shellAliases = {
         e = "ect";
       };
-      home.file.".spacemacs.d" = mkIf config.davids.emacs.spacemacs.enable {
+    }
+    // lib.mkIf config.davids.emacs.spacemacs.enable {
+      home.file.".spacemacs.d" = {
         source = ./his.spacemacs.d;
       };
-      home.file.".emacs.d/init.el" = mkIf config.davids.emacs.spacemacs.enable {
+      home.file.".emacs.d/init.el" = {
         text = loadSpacemacsInit "init";
       };
-      home.file.".emacs.d/early-init.el" = mkIf config.davids.emacs.spacemacs.enable {
+      home.file.".emacs.d/early-init.el" = {
         text = loadSpacemacsInit "early-init";
       };
-      home.file.".emacs.d/dump-init.el" = mkIf config.davids.emacs.spacemacs.enable {
+      home.file.".emacs.d/dump-init.el" = {
         text = loadSpacemacsInit "dump-init";
       };
     }
