@@ -5,7 +5,9 @@
         "flake-utils": [
           "flake-utils"
         ],
-        "home-manager": "home-manager",
+        "home-manager": [
+          "home-manager"
+        ],
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -14,11 +16,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1740254982,
-        "narHash": "sha256-Ce6BypWsGS51teTvLSRv5uWg8IBifupfQF6CqUpZgyA=",
+        "lastModified": 1741519697,
+        "narHash": "sha256-KtcnGjREx4woLibQgLxpkaFGnt6HeDghnfXnizTfSYA=",
         "owner": "dszakallas",
         "repo": "dotfiles-private",
-        "rev": "84de24ad147d0409cdd540a36031cab4657876ec",
+        "rev": "bf8e50eb258fe30c88ec7b7b4b3d9bfbc589589e",
         "type": "github"
       },
       "original": {
@@ -64,27 +66,6 @@
       }
     },
     "home-manager": {
-      "inputs": {
-        "nixpkgs": [
-          "davids-dotfiles-private",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1740245535,
-        "narHash": "sha256-65Jt61DGE5kVMFut8JLH7Zw8FwxiZV3dTHtHbjtf9mk=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "7ceacd98a9fc99743ae7d9a5c0a4ea7c72314da6",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "home-manager_2": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -172,11 +153,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1738741221,
-        "narHash": "sha256-UiTOA89yQV5YNlO1ZAp4IqJUGWOnTyBC83netvt8rQE=",
+        "lastModified": 1741163974,
+        "narHash": "sha256-QehWX1ik9vqkylkbvdpO5XZKaqf2fsE92iMEyRBW2qI=",
         "owner": "nix-community",
         "repo": "poetry2nix",
-        "rev": "be1fe795035d3d36359ca9135b26dcc5321b31fb",
+        "rev": "98293f0b368f24c48e05aaa2359dcc0de15e976f",
         "type": "github"
       },
       "original": {
@@ -189,7 +170,7 @@
       "inputs": {
         "davids-dotfiles-private": "davids-dotfiles-private",
         "flake-utils": "flake-utils",
-        "home-manager": "home-manager_2",
+        "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
         "poetry2nix": "poetry2nix"
