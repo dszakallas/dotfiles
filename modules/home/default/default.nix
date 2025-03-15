@@ -12,11 +12,6 @@ let
     # Unmanaged local overrides
     [[ -s "$HOME/.local/share/${f}" ]] && source "$HOME/.local/share/${f}"
   '';
-  cloud = with pkgs; [
-    awscli2
-    minio-client
-    # TODO error building backblaze-b2
-  ];
   files = with pkgs; [
     age
     bat
@@ -39,12 +34,9 @@ let
   ];
   dev = with pkgs; [
     delta
-    git-lfs
     jq
     yq-go
-    asciinema
   ];
-  av = with pkgs; [ ffmpeg ];
   moduleName = "davids-dotfiles/default";
 in
 {
@@ -68,9 +60,7 @@ in
     home = {
       packages = lists.flatten [
         adm
-        av
         files
-        cloud
         dev
         nix
       ];

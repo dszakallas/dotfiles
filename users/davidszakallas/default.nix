@@ -36,6 +36,13 @@
       prefix = "/opt/homebrew";
     };
 
+    home.packages = with pkgs; [
+      ffmpeg
+      asciinema
+      awscli2
+      minio-client
+    ];
+
     davids.k8stools.enable = true;
     davids.emacs = {
       enable = true;
