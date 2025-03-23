@@ -798,12 +798,18 @@ before packages are loaded."
 
   (add-to-list 'warning-suppress-types '(copilot))
 
+  (defun copilot-mode-without-secure-files ()
+    "Enable copilot-mode, filtering out secure files."
+    (unless (cl-some (lambda (ext) (string-suffix-p ext (buffer-file-name)))
+                     '(".sec.yaml" ".sec.yml" ".sec.json" ".sec.jsonc" ".sec.json5" ".sec.toml"))
+      (copilot-mode)))
+
   (dolist (mode '(prog-mode-hook
                   org-mode-hook
                   markdown-mode-hook
                   toml-mode-hook
                   yaml-mode-hook))
-    (add-hook mode 'copilot-mode))
+    (add-hook mode 'copilot-mode-without-secure-files))
 
   (setq custom-file "~/.emacs.d/.cache/.custom-settings")
   (load custom-file))
