@@ -3,10 +3,10 @@
     "davids-devenvs": {
       "flake": false,
       "locked": {
-        "lastModified": 1739639904,
+        "lastModified": 1742389209,
         "owner": "dszakallas",
         "repo": "devenvs",
-        "rev": "8f679680a5438577bd1fbfa29750ae744969a0ae",
+        "rev": "6b8b5c07015afaf30986ec3792d7b491312908ac",
         "type": "github"
       },
       "original": {
@@ -18,10 +18,10 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1738414267,
+        "lastModified": 1742659231,
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "3f49b4afbb9a80b1e81fb6071f59dac152177efa",
+        "rev": "c651cb04013be972767aaecb3e9a98fc930d080e",
         "type": "github"
       },
       "original": {
@@ -55,10 +55,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1741379162,
+        "lastModified": 1742649964,
         "owner": "cachix",
         "repo": "git-hooks.nix",
-        "rev": "b5a62751225b2f62ff3147d0a334055ebadcd5cc",
+        "rev": "dcf5072734cb576d2b0c59b2ac44f5050b5eac82",
         "type": "github"
       },
       "original": {
