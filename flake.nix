@@ -2,19 +2,45 @@ rec {
   description = "My personal Nix configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    flake-utils.url = "github:numtide/flake-utils";
-    poetry2nix.url = "github:nix-community/poetry2nix";
-    poetry2nix.inputs.nixpkgs.follows = "nixpkgs";
-    davids-dotfiles-private.url = "github:dszakallas/dotfiles-private";
-    davids-dotfiles-private.inputs.nixpkgs.follows = "nixpkgs";
-    davids-dotfiles-private.inputs.home-manager.follows = "home-manager";
-    davids-dotfiles-private.inputs.flake-utils.follows = "flake-utils";
-    davids-dotfiles-private.inputs.poetry2nix.follows = "poetry2nix";
+    nixpkgs = {
+      url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    };
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+    };
+    pyproject-nix = {
+      url = "github:pyproject-nix/pyproject.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    uv2nix = {
+      url = "github:pyproject-nix/uv2nix";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    pyproject-build-systems = {
+      url = "github:pyproject-nix/build-system-pkgs";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.uv2nix.follows = "uv2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    davids-dotfiles-private = {
+      url = "github:dszakallas/dotfiles-private";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.pyproject-build-systems.follows = "pyproject-build-systems";
+      inputs.uv2nix.follows = "uv2nix";
+    };
   };
 
   nixConfig = {
@@ -39,7 +65,6 @@ rec {
       nixpkgs,
       home-manager,
       davids-dotfiles-private,
-      poetry2nix,
       flake-utils,
       ...
     }:
