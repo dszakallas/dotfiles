@@ -151,7 +151,7 @@ in
           path = "$HOME/.histfile";
         };
 
-        initExtra = unmanagedFile "zshrc";
+        initContent = unmanagedFile "zshrc";
         envExtra =
           ''
             export PATH="$HOME/.davids/bin:$PATH"

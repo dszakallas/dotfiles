@@ -52,7 +52,7 @@ in
     export PATH="${brew.prefix}/bin:$PATH"
   '';
 
-  config.programs.zsh.initExtra = mkIf brew.enable ''
+  config.programs.zsh.initContent = mkIf brew.enable ''
     if type brew &>/dev/null; then
       FPATH=$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH
       autoload -Uz compinit
