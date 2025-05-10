@@ -16,7 +16,6 @@ in
     darwinModules.homeapps
     darwinModules.p10y
     davids-dotfiles-private.systemModules.jupiter
-    davids-dotfiles-private.systemModules.kolobok
     users.${myUsername}
   ];
 
@@ -34,10 +33,5 @@ in
     enable = true;
     amalthea.staticIP.v4 = "192.168.1.244";
     callisto.staticIP.v4 = "192.168.1.144";
-  };
-
-  davids.kolobok = {
-    enable = true;
-    internalServices.staticIP.v4 = "192.168.1.186";
   };
 }
