@@ -41,6 +41,7 @@
       asciinema
       awscli2
       minio-client
+      backblaze-b2
     ];
 
     davids.k8stools.enable = true;
