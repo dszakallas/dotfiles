@@ -28,6 +28,7 @@ let
     ncdu
     nmap
     tmux
+    dig
   ];
   nix = with pkgs; [
     devenv
