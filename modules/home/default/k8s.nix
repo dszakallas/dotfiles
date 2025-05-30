@@ -14,6 +14,7 @@ with lib;
   };
   config = mkIf config.davids.k8stools.enable {
     home.packages = with pkgs; [
+      kind
       kubectl
       kubernetes-helm
       k9s
