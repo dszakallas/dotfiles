@@ -37,7 +37,6 @@ This function should only modify configuration layer settings."
      nginx
      ansible
      docker
-     earthly
      kubernetes
      (shell :variables
             shell-default-shell 'multi-vterm
@@ -132,7 +131,7 @@ This function should only modify configuration layer settings."
      github-copilot
      (chatgpt-shell :variables
                     chatgpt-shell-system-prompt 2
-                    chatgpt-shell-model-version "gemini-2.0-flash-exp"
+                    chatgpt-shell-model-version "gemini-2.5-flash-preview-05-20"
                     chatgpt-shell-openai-key (lambda () (getenv "OPENAI_API_KEY"))
                     chatgpt-shell-google-key (lambda () (getenv "GEMINI_API_KEY")))
 
