@@ -60,7 +60,7 @@ with lib;
     {
       home.packages = with pkgs; [
         # lsp dependencies
-        nodejs_23
+        nodejs_24
         # vterm build dependencies
         cmakeMinimal
         glibtool
