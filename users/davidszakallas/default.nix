@@ -23,9 +23,13 @@
       username = "davidszakallas";
       homeDirectory = "/Users/davidszakallas";
       stateVersion = "24.05";
-      shellAliases = {
-        docker = "podman";
-      };
+      packages = with pkgs; [
+        ffmpeg
+        asciinema
+        awscli2
+        minio-client
+        backblaze-b2
+      ];
     };
 
     programs.home-manager.enable = true;
@@ -36,14 +40,6 @@
       prefix = "/opt/homebrew";
     };
 
-    home.packages = with pkgs; [
-      ffmpeg
-      asciinema
-      awscli2
-      minio-client
-      backblaze-b2
-    ];
-
     davids.k8stools.enable = true;
     davids.emacs = {
       enable = true;
@@ -51,5 +47,9 @@
     };
     davids.jupiter.enable = true;
     davids.ssh.enable = true;
+    davids.gpg = {
+      enable = true;
+      defaultKey = "DAF51FB1E2246B94265E90B6D3743DE2308ADE59";
+    };
   };
 }
