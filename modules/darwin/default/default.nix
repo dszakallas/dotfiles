@@ -23,7 +23,6 @@
     homebrew.enable = true;
 
     homebrew.casks = [
-      "gpg-suite"
       "iterm2"
       "firefox"
       "keepassxc"
@@ -48,6 +47,10 @@
       #     eval `/usr/libexec/path_helper -s`
       #   fi
       # '';
+    };
+
+    programs.gnupg = {
+      agent.enable = true;
     };
 
     # Set Git commit hash for darwin-version.

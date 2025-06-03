@@ -7,7 +7,6 @@
   ...
 }:
 {
-
   environment.shells = with pkgs; [
     bash
     zsh
@@ -17,6 +16,7 @@
     curl
     vim
     git
+    gnupg
   ];
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
