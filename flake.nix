@@ -46,6 +46,7 @@ rec {
     extra-experimental-features = [
       "nix-command"
       "flakes"
+      "configurable-impure-env"
     ];
     extra-substituters = [
       "https://nix-community.cachix.org"

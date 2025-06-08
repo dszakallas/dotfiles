@@ -22,17 +22,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1748850314,
-        "narHash": "sha256-FkysH8/AsAUKKYUXTxC7zH+S6aZZRURTiJN0ebcWZ1E=",
-        "owner": "dszakallas",
-        "repo": "dotfiles-private",
-        "rev": "70e49e94f50759c85e213ea8dee647aca2d77ac6",
-        "type": "github"
+        "lastModified": 1749380140,
+        "narHash": "sha256-kjvBXAq1gxI/q1V+PCOWbuSH/71Y8bn1fj2mK+YnZ1A=",
+        "ref": "refs/heads/main",
+        "rev": "45d5cb4ddb1d190ab9e7003c5e233187c846b77e",
+        "revCount": 100,
+        "type": "git",
+        "url": "file:/Users/dszakallas/Worktrees/dotfiles-private"
       },
       "original": {
-        "owner": "dszakallas",
-        "repo": "dotfiles-private",
-        "type": "github"
+        "type": "git",
+        "url": "file:/Users/dszakallas/Worktrees/dotfiles-private"
       }
     },
     "flake-utils": {
