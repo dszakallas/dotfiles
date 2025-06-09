@@ -94,24 +94,24 @@ in
         v = "vim";
         docker = "podman";
       };
-      file.".ssh/davids.known_hosts".text = mkIf config.davids.ssh.enable (
-        ctx.lib.textRegion {
+      file.".ssh/davids.known_hosts" = mkIf config.davids.ssh.enable {
+        text = ctx.lib.textRegion {
           name = moduleName;
           content = config.davids.ssh.knownHostsLines;
-        }
-      );
-      file.".gnupg/gpg-agent.conf".text = mkIf config.davids.gpg.enable (
-        ctx.lib.textRegion {
+        };
+      };
+      file.".gnupg/gpg-agent.conf" = mkIf config.davids.gpg.enable {
+        text = ctx.lib.textRegion {
           name = moduleName;
           content = ''
             default-cache-ttl 600
             max-cache-ttl 7200
             enable-ssh-support
           '';
-        }
-      );
-      file.".gnupg/gpg.conf".text = mkIf config.davids.gpg.enable (
-        ctx.lib.textRegion {
+        };
+      };
+      file.".gnupg/gpg.conf" = mkIf config.davids.gpg.enable {
+        text = ctx.lib.textRegion {
           name = moduleName;
           content =
             ''
@@ -129,8 +129,8 @@ in
               else
                 ""
             );
-        }
-      );
+        };
+      };
 
     };
     programs = {
