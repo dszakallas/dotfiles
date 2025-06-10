@@ -18,6 +18,7 @@ let
     findutils
     fswatch
     gawk
+    gnused
     ripgrep
     rsync
     sops
