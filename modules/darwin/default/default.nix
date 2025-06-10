@@ -28,12 +28,16 @@
       "keepassxc"
     ];
 
-    homebrew.brews = lib.optionals config.davids.emacs.enable [
-      {
-        name = "emacs-plus@${config.davids.emacs.version}";
-        args = [ "with-native-comp" ];
-      }
-    ];
+    homebrew.brews =
+      [
+        "gnu-getopt"
+      ]
+      ++ (lib.optionals config.davids.emacs.enable [
+        {
+          name = "emacs-plus@${config.davids.emacs.version}";
+          args = [ "with-native-comp" ];
+        }
+      ]);
 
     homebrew.taps = lib.optionals config.davids.emacs.enable [ "d12frosted/emacs-plus" ];
 

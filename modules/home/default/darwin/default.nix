@@ -50,6 +50,7 @@ in
   config.programs.zsh.envExtra = mkIf brew.enable ''
     export HOMEBREW_PREFIX="${brew.prefix}"
     export PATH="${brew.prefix}/bin:$PATH"
+    export PATH="${brew.prefix}/opt/gnu-getopt/bin:$PATH"
   '';
 
   config.programs.zsh.initContent = mkIf brew.enable ''
@@ -63,6 +64,7 @@ in
   config.programs.bash.profileExtra = mkIf brew.enable ''
     export HOMEBREW_PREFIX="${brew.prefix}"
     export PATH="${brew.prefix}/bin:$PATH"
+    export PATH="${brew.prefix}/opt/gnu-getopt/bin:$PATH"
   '';
 
   config.programs.bash.bashrcExtra = mkIf brew.enable ''
