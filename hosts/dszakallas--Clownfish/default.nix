@@ -1,7 +1,7 @@
 {
   self,
-  systemModules,
   darwinModules,
+  davids-dotfiles-common,
   users,
   ...
 }:
@@ -10,7 +10,7 @@ let
 in
 {
   imports = [
-    systemModules.default
+    davids-dotfiles-common.systemModules.default
     darwinModules.default
     darwinModules.p10y
     users.${myUsername}

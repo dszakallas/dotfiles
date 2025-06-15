@@ -1,8 +1,8 @@
 {
   self,
-  davids-dotfiles-private,
-  systemModules,
   darwinModules,
+  davids-dotfiles-common,
+  davids-dotfiles-private,
   users,
   ...
 }@inputs:
@@ -11,11 +11,11 @@ let
 in
 {
   imports = [
-    systemModules.default
+    davids-dotfiles-common.systemModules.default
+    davids-dotfiles-private.systemModules.jupiter
     darwinModules.default
     darwinModules.homeapps
     darwinModules.p10y
-    davids-dotfiles-private.systemModules.jupiter
     users.${myUsername}
   ];
 

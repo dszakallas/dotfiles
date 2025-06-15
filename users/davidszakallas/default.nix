@@ -1,7 +1,7 @@
 {
   self,
+  davids-dotfiles-common,
   davids-dotfiles-private,
-  homeModules,
   ...
 }:
 { pkgs, ... }:
@@ -14,7 +14,7 @@
 
   home-manager.users.davidszakallas = rec {
     imports = [
-      homeModules.default
+      davids-dotfiles-common.homeModules.default
       davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.jupiter
     ];

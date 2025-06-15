@@ -31,6 +31,12 @@ rec {
       inputs.uv2nix.follows = "uv2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    davids-dotfiles-common = {
+      url = "git+file:///Users/davidszakallas/Worktrees/dotfiles-common";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+      inputs.flake-utils.follows = "flake-utils";
+    };
     davids-dotfiles-private = {
       url = "github:dszakallas/dotfiles-private";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -64,8 +70,8 @@ rec {
       nix-darwin,
       nixpkgs,
       home-manager,
-      davids-dotfiles-private,
       flake-utils,
+      davids-dotfiles-common,
       ...
     }:
     let
@@ -96,35 +102,23 @@ rec {
             }
           ];
         };
-      lib = import ./lib { inherit (nixpkgs) lib; };
-      outputs =
-        flake-utils.lib.eachDefaultSystem (system: {
-          packages = (
-            let
-              pkgs = nixpkgs.legacyPackages.${system};
-              packages = lib.callPackageDirWith ./pkgs (inputs // pkgs);
-            in
-            packages
-          );
-        })
-        // flake-utils.lib.eachDefaultSystemPassThrough (system: {
-          inherit lib;
-          darwinModules = lib.importDir ./modules/darwin ctx;
-          systemModules = lib.importDir ./modules/system ctx;
-          homeModules = lib.importDir ./modules/home ctx;
-          users = lib.importDir ./users ctx;
+      inherit (davids-dotfiles-common) lib;
+      outputs = flake-utils.lib.eachDefaultSystemPassThrough (system: {
+        # Extract to dotfiles-common once it is more generic
+        darwinModules = lib.importDir ./modules/darwin ctx;
+        users = lib.importDir ./users ctx;
 
-          darwinConfigurations = {
-            Jellyfish = mkDarwin {
-              host = "Jellyfish";
-              arch = "aarch64";
-            };
-            "dszakallas--Clownfish" = mkDarwin {
-              host = "dszakallas--Clownfish";
-              arch = "aarch64";
-            };
+        darwinConfigurations = {
+          Jellyfish = mkDarwin {
+            host = "Jellyfish";
+            arch = "aarch64";
           };
-        });
+          "dszakallas--Clownfish" = mkDarwin {
+            host = "dszakallas--Clownfish";
+            arch = "aarch64";
+          };
+        };
+      });
     in
     outputs;
 }

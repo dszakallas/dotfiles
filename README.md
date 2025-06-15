@@ -2,6 +2,9 @@
 
 My personal dotfiles as a flake.
 
+> [!NOTE]  
+> Most of my reusable config can be found in [dotfiles-commin](https://github.com/dszakallas/dotfiles-common).
+
 Structure:
 
 ```text
