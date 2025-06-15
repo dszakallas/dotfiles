@@ -8,23 +8,22 @@
         "home-manager": [
           "home-manager"
         ],
-        "nix-darwin": "nix-darwin",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1749973829,
-        "narHash": "sha256-/qVUy1W6UZqVSx+Qme2M9uhURuZTTJHNVYY87jI8NG4=",
-        "ref": "refs/heads/main",
-        "rev": "b8a66c78a7de9412a42800eae49327210e358f54",
-        "revCount": 2,
-        "type": "git",
-        "url": "file:///Users/davidszakallas/Worktrees/dotfiles-common"
+        "lastModified": 1749975663,
+        "narHash": "sha256-H/PoshF6qAluMb5b/9zga9Zso1qz+cQ5yTVePhBKSOc=",
+        "owner": "dszakallas",
+        "repo": "dotfiles-common",
+        "rev": "5dbdf52d515bb908edc051ccddd7cdde5bb6a89d",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///Users/davidszakallas/Worktrees/dotfiles-common"
+        "owner": "dszakallas",
+        "repo": "dotfiles-common",
+        "type": "github"
       }
     },
     "davids-dotfiles-private": {
@@ -101,27 +100,6 @@
       }
     },
     "nix-darwin": {
-      "inputs": {
-        "nixpkgs": [
-          "davids-dotfiles-common",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1749873626,
-        "narHash": "sha256-1Mc/D/1RwwmDKY59f4IpDBgcQttxffm+4o0m67lQ8hc=",
-        "owner": "LnL7",
-        "repo": "nix-darwin",
-        "rev": "2f140d6ac8840c6089163fb43ba95220c230f22b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "LnL7",
-        "repo": "nix-darwin",
-        "type": "github"
-      }
-    },
-    "nix-darwin_2": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -209,7 +187,7 @@
         "davids-dotfiles-private": "davids-dotfiles-private",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
-        "nix-darwin": "nix-darwin_2",
+        "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
         "pyproject-build-systems": "pyproject-build-systems",
         "pyproject-nix": "pyproject-nix",

@@ -32,7 +32,7 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
     };
     davids-dotfiles-common = {
-      url = "git+file:///Users/davidszakallas/Worktrees/dotfiles-common";
+      url = "github:dszakallas/dotfiles-common";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
       inputs.flake-utils.follows = "flake-utils";
