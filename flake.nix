@@ -45,6 +45,7 @@ rec {
       inputs.pyproject-nix.follows = "pyproject-nix";
       inputs.pyproject-build-systems.follows = "pyproject-build-systems";
       inputs.uv2nix.follows = "uv2nix";
+      inputs.davids-dotfiles-common.follows = "davids-dotfiles-common";
     };
   };
 
