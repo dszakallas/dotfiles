@@ -26,38 +26,11 @@
         "type": "github"
       }
     },
-    "davids-dotfiles-common_2": {
-      "inputs": {
-        "flake-utils": [
-          "davids-dotfiles-private",
-          "flake-utils"
-        ],
-        "home-manager": [
-          "davids-dotfiles-private",
-          "home-manager"
-        ],
-        "nixpkgs": [
-          "davids-dotfiles-private",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1749975663,
-        "narHash": "sha256-H/PoshF6qAluMb5b/9zga9Zso1qz+cQ5yTVePhBKSOc=",
-        "owner": "dszakallas",
-        "repo": "dotfiles-common",
-        "rev": "5dbdf52d515bb908edc051ccddd7cdde5bb6a89d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "dszakallas",
-        "repo": "dotfiles-common",
-        "type": "github"
-      }
-    },
     "davids-dotfiles-private": {
       "inputs": {
-        "davids-dotfiles-common": "davids-dotfiles-common_2",
+        "davids-dotfiles-common": [
+          "davids-dotfiles-common"
+        ],
         "flake-utils": [
           "flake-utils"
         ],
