@@ -19,7 +19,7 @@
       davids-dotfiles-private.homeModules.jupiter
     ];
 
-    home = {
+    home = rec {
       username = "davidszakallas";
       homeDirectory = "/Users/davidszakallas";
       stateVersion = "24.05";
@@ -30,6 +30,17 @@
         minio-client
         backblaze-b2
       ];
+
+      file.".gitconfig".text = davids-dotfiles-common.lib.textRegion {
+        name = "dotfiles/users/${username}";
+        content = ''
+          [user]
+            name = Dávid Szakállas
+            email = 5807322+dszakallas@users.noreply.github.com
+          [github]
+            user = dszakallas
+        '';
+      };
     };
 
     programs.home-manager.enable = true;

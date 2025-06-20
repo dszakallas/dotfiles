@@ -19,10 +19,21 @@
       davids-dotfiles-private.homeModules.pure
     ];
 
-    home = {
+    home = rec {
       username = "dszakallas";
       homeDirectory = "/Users/dszakallas";
       stateVersion = "24.05";
+
+      file.".gitconfig".text = davids-dotfiles-common.lib.textRegion {
+        name = "dotfiles/users/${username}";
+        content = ''
+          [user]
+            name = Dávid Szakállas
+            email = 5807322+dszakallas@users.noreply.github.com
+          [github]
+            user = dszakallas
+        '';
+      };
     };
 
     programs.home-manager.enable = true;
