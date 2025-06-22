@@ -7,7 +7,7 @@
   ...
 }@inputs:
 let
-  myUsername = "davidszakallas";
+  primaryUser = "davidszakallas";
 in
 {
   imports = [
@@ -16,12 +16,13 @@ in
     darwinModules.default
     darwinModules.homeapps
     darwinModules.p10y
-    users.${myUsername}
+    users.${primaryUser}
   ];
 
+  system = { inherit primaryUser; };
+
   nix.settings.trusted-users = [
-    "root"
-    myUsername
+    primaryUser
   ];
 
   davids.emacs = {

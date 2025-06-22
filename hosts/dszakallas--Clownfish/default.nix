@@ -6,15 +6,17 @@
   ...
 }:
 let
-  myUsername = "dszakallas";
+  primaryUser = "dszakallas";
 in
 {
   imports = [
     davids-dotfiles-common.systemModules.default
     darwinModules.default
     darwinModules.p10y
-    users.${myUsername}
+    users.${primaryUser}
   ];
+
+  system = { inherit primaryUser; };
 
   davids.emacs = {
     enable = true;
@@ -22,8 +24,7 @@ in
   };
 
   nix.settings.trusted-users = [
-    "root"
-    myUsername
+    primaryUser
   ];
 
   ids.gids.nixbld = 350;
