@@ -29,6 +29,7 @@
         awscli2
         minio-client
         backblaze-b2
+        yt-dlp
       ];
 
       file.".gitconfig".text = davids-dotfiles-common.lib.textRegion {
