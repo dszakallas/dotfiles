@@ -20,7 +20,7 @@ in
 
   davids.emacs = {
     enable = true;
-    version = "29";
+    version = "30";
   };
 
   nix.settings.trusted-users = [

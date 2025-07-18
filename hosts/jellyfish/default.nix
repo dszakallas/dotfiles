@@ -27,7 +27,7 @@ in
 
   davids.emacs = {
     enable = true;
-    version = "29";
+    version = "30";
   };
 
   davids.jupiter = {
