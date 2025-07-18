@@ -57,6 +57,11 @@
       agent.enable = true;
     };
 
+    security.sudo.extraConfig = ''
+      # Added by dotfiles/darwin/default
+      Defaults:root,%admin env_keep+=NIX_CONFIG
+    '';
+
     # Set Git commit hash for darwin-version.
     system.configurationRevision = self.rev or self.dirtyRev or null;
 
