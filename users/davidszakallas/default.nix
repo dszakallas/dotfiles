@@ -15,6 +15,7 @@
   home-manager.users.davidszakallas = rec {
     imports = [
       davids-dotfiles-common.homeModules.default
+      davids-dotfiles-common.homeModules.emacs
       davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.jupiter
     ];
@@ -55,6 +56,7 @@
     davids.k8stools.enable = true;
     davids.emacs = {
       enable = true;
+      daemon.enable = true;
       spacemacs.enable = true;
     };
     davids.jupiter.enable = true;

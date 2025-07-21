@@ -9,16 +9,6 @@
   ...
 }:
 {
-  options = with lib; {
-    davids.emacs = {
-      enable = mkEnableOption "Emacs configuration (system-wide)";
-      version = mkOption {
-        default = "29";
-        type = types.str;
-        description = "Emacs major version";
-      };
-    };
-  };
   config = {
     homebrew.enable = true;
 
@@ -28,18 +18,7 @@
       "keepassxc"
     ];
 
-    homebrew.brews =
-      [
-        "gnu-getopt"
-      ]
-      ++ (lib.optionals config.davids.emacs.enable [
-        {
-          name = "emacs-plus@${config.davids.emacs.version}";
-          args = [ "with-native-comp" ];
-        }
-      ]);
-
-    homebrew.taps = lib.optionals config.davids.emacs.enable [ "d12frosted/emacs-plus" ];
+    homebrew.brews = [ "gnu-getopt" ];
 
     # Create /etc/zshrc that loads the nix-darwin environment.
     programs.zsh = {

@@ -18,11 +18,6 @@ in
 
   system = { inherit primaryUser; };
 
-  davids.emacs = {
-    enable = true;
-    version = "30";
-  };
-
   nix.settings.trusted-users = [
     primaryUser
   ];
