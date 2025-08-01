@@ -14,13 +14,14 @@
 
   home-manager.users.davidszakallas = rec {
     imports = [
-      davids-dotfiles-common.homeModules.default
+      davids-dotfiles-common.homeModules.base
       davids-dotfiles-common.homeModules.emacs
+      davids-dotfiles-common.homeModules.github
       davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.jupiter
     ];
 
-    home = rec {
+    home = {
       username = "davidszakallas";
       homeDirectory = "/Users/davidszakallas";
       stateVersion = "24.05";
@@ -32,38 +33,44 @@
         backblaze-b2
         yt-dlp
       ];
-
-      file.".gitconfig".text = davids-dotfiles-common.lib.textRegion {
-        name = "dotfiles/users/${username}";
-        content = ''
-          [user]
-            name = Dávid Szakállas
-            email = 5807322+dszakallas@users.noreply.github.com
-          [github]
-            user = dszakallas
-        '';
-      };
     };
 
     programs.home-manager.enable = true;
 
-    # Impure brew programs
-    davids.brew = {
-      enable = true;
-      prefix = "/opt/homebrew";
-    };
-
-    davids.k8stools.enable = true;
-    davids.emacs = {
-      enable = true;
-      daemon.enable = true;
-      spacemacs.enable = true;
-    };
-    davids.jupiter.enable = true;
-    davids.ssh.enable = true;
-    davids.gpg = {
-      enable = true;
-      defaultKey = "DAF51FB1E2246B94265E90B6D3743DE2308ADE59";
+    davids = {
+      # Impure brew programs
+      brew = {
+        enable = true;
+        prefix = "/opt/homebrew";
+      };
+      k8stools = {
+        enable = true;
+      };
+      emacs = {
+        enable = true;
+        daemon.enable = true;
+        spacemacs.enable = true;
+      };
+      jupiter.enable = true;
+      ssh.enable = true;
+      gpg = {
+        enable = true;
+        defaultKey = "DAF51FB1E2246B94265E90B6D3743DE2308ADE59";
+      };
+      git = {
+        enable = true;
+        configLines = davids-dotfiles-common.lib.textRegion {
+          name = "dotfiles/users/${home.username}";
+          content = ''
+            [user]
+              name = Dávid Szakállas
+              email = 5807322+dszakallas@users.noreply.github.com
+            [github]
+              user = dszakallas
+          '';
+        };
+      };
+      github.enable = true;
     };
   };
 }

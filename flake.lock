@@ -13,11 +13,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1754057359,
-        "narHash": "sha256-N3BemMQPq3jedou4CyUM56muUTywLoced41WG+umzM0=",
+        "lastModified": 1754067879,
+        "narHash": "sha256-4DIRNtpPRNPy/F+LjzHJ8V+40uN25bHqDQWB6rLJ+bo=",
         "owner": "dszakallas",
         "repo": "dotfiles-common",
-        "rev": "f1812570473e0650aee0d7bc8df4d9b687fb9b7b",
+        "rev": "e67d06ea4246993d7540336aa9c337d62a22e235",
         "type": "github"
       },
       "original": {
@@ -51,11 +51,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1753884658,
-        "narHash": "sha256-BOZAoHQaxWN7Cmsa37LkEfybw38CST1qIC3MI11YoDg=",
+        "lastModified": 1754067703,
+        "narHash": "sha256-JX6VvBZ1el1MbF+nlm+8gp4c+ECcBivc0nPTbWn7p4M=",
         "owner": "dszakallas",
         "repo": "dotfiles-private",
-        "rev": "d961af1ffc16e0d592223cd6d229b30de0e32e3a",
+        "rev": "f8b726040cd6ed8bd7b6ebfea4fc00a35ecbc49a",
         "type": "github"
       },
       "original": {

@@ -12,46 +12,52 @@
     shell = pkgs.zsh;
   };
 
-  home-manager.users.dszakallas = {
+  home-manager.users.dszakallas = rec {
     imports = [
-      davids-dotfiles-common.homeModules.default
+      davids-dotfiles-common.homeModules.base
       davids-dotfiles-common.homeModules.emacs
+      davids-dotfiles-common.homeModules.github
       davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.pure
     ];
 
-    home = rec {
+    home = {
       username = "dszakallas";
       homeDirectory = "/Users/dszakallas";
       stateVersion = "24.05";
-
-      file.".gitconfig".text = davids-dotfiles-common.lib.textRegion {
-        name = "dotfiles/users/${username}";
-        content = ''
-          [user]
-            name = Dávid Szakállas
-            email = 5807322+dszakallas@users.noreply.github.com
-          [github]
-            user = dszakallas
-        '';
-      };
     };
 
     programs.home-manager.enable = true;
 
-    # Impure brew programs
-    davids.brew = {
-      enable = true;
-      prefix = "/opt/homebrew";
-    };
+    davids = {
+      # Impure brew programs
+      brew = {
+        enable = true;
+        prefix = "/opt/homebrew";
+      };
 
-    davids.k8stools.enable = true;
-    davids.emacs = {
-      enable = true;
-      daemon.enable = true;
-      spacemacs.enable = true;
+      k8stools.enable = true;
+      emacs = {
+        enable = true;
+        daemon.enable = true;
+        spacemacs.enable = true;
+      };
+      pure.enable = true;
+      ssh.enable = true;
+      git = {
+        enable = true;
+        configLines = davids-dotfiles-common.lib.textRegion {
+          name = "dotfiles/users/${home.username}";
+          content = ''
+            [user]
+              name = Dávid Szakállas
+              email = 5807322+dszakallas@users.noreply.github.com
+            [github]
+              user = dszakallas
+          '';
+        };
+      };
+      github.enable = true;
     };
-    davids.pure.enable = true;
-    davids.ssh.enable = true;
   };
 }
