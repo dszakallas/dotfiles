@@ -7,7 +7,7 @@
     "signal"
     "slack"
     "spotify"
-    "syncthing"
+    "syncthing-app"
     "zoom"
   ];
 }
