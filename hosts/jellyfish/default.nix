@@ -13,13 +13,24 @@ in
   imports = [
     davids-dotfiles-common.systemModules.default
     davids-dotfiles-private.systemModules.jupiter
-    darwinModules.default
-    darwinModules.homeapps
-    darwinModules.p10y
+    darwinModules.base
     users.${primaryUser}
   ];
 
   system = { inherit primaryUser; };
+
+  homebrew.casks = [
+    "calibre"
+    "discord"
+    "google-drive"
+    "logseq"
+    "signal"
+    "slack"
+    "spotify"
+    "syncthing-app"
+    "ukelele"
+    "zoom"
+  ];
 
   nix.settings.trusted-users = [
     primaryUser

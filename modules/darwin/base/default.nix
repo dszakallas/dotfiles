@@ -16,9 +16,13 @@
       "iterm2"
       "firefox"
       "keepassxc"
+      "ukelele"
+      "podman-desktop"
     ];
 
-    homebrew.brews = [ "gnu-getopt" ];
+    homebrew.brews = [
+      "podman"
+    ];
 
     # Create /etc/zshrc that loads the nix-darwin environment.
     programs.zsh = {

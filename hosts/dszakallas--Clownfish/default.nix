@@ -11,8 +11,7 @@ in
 {
   imports = [
     davids-dotfiles-common.systemModules.default
-    darwinModules.default
-    darwinModules.p10y
+    darwinModules.base
     users.${primaryUser}
   ];
 
@@ -20,6 +19,11 @@ in
 
   nix.settings.trusted-users = [
     primaryUser
+  ];
+
+  homebrew.casks = [
+    "logseq"
+    "ukelele"
   ];
 
   ids.gids.nixbld = 350;
