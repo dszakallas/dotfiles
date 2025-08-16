@@ -19,6 +19,7 @@
       davids-dotfiles-common.homeModules.github
       davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.jupiter
+      davids-dotfiles-private.homeModules.kolobok
     ];
 
     home = {
@@ -52,6 +53,7 @@
         spacemacs.enable = true;
       };
       jupiter.enable = true;
+      kolobok.enable = true;
       ssh.enable = true;
       gpg = {
         enable = true;
