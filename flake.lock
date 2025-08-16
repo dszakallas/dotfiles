@@ -13,11 +13,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1754078364,
-        "narHash": "sha256-tsA8hPiFxxz79a3fJOmiHiYlSWfQjS10C0XQqTbK6ZM=",
+        "lastModified": 1755345476,
+        "narHash": "sha256-kp2IRdsnliHGNkLSY0tlWQQsFsINu9HiH/mMycIuIlA=",
         "owner": "dszakallas",
         "repo": "dotfiles-common",
-        "rev": "530eb5c32df5b6dcb6ec468d07e8300a8330cec7",
+        "rev": "458dba6f0421d6c47ff5c76aeebba3f1a00e8bcc",
         "type": "github"
       },
       "original": {
