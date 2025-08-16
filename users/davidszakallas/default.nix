@@ -4,7 +4,7 @@
   davids-dotfiles-private,
   ...
 }:
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   users.users.davidszakallas = {
     name = "davidszakallas";
@@ -59,16 +59,18 @@
       };
       git = {
         enable = true;
-        configLines = davids-dotfiles-common.lib.textRegion {
-          name = "dotfiles/users/${home.username}";
-          content = ''
-            [user]
-              name = Dávid Szakállas
-              email = 5807322+dszakallas@users.noreply.github.com
-            [github]
-              user = dszakallas
-          '';
-        };
+        configLines = lib.mkBefore (
+          davids-dotfiles-common.lib.textRegion {
+            name = "dotfiles/users/${home.username}";
+            content = ''
+              [user]
+                name = Dávid Szakállas
+                email = 5807322+dszakallas@users.noreply.github.com
+              [github]
+                user = dszakallas
+            '';
+          }
+        );
       };
       github.enable = true;
     };
