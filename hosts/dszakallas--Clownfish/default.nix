@@ -4,9 +4,14 @@
   davids-dotfiles-common,
   users,
   ...
+}@inputs:
+{
+  lib,
+  ...
 }:
 let
   primaryUser = "dszakallas";
+  flakeInputs = (lib.filterAttrs (_: v: (lib.hasAttr "_type" v) && (v._type == "flake")) inputs);
 in
 {
   imports = [
@@ -15,19 +20,35 @@ in
     users.${primaryUser}
   ];
 
-  system = { inherit primaryUser; };
+  config = {
+    system = { inherit primaryUser; };
 
-  nix.settings.trusted-users = [
-    primaryUser
-  ];
+    nix = {
+      settings.trusted-users = [
+        primaryUser
+      ];
 
-  homebrew.casks = [
-    "logseq"
-    "ukelele"
-  ];
+      # TODO: Make it more generic and move to davids-dotfiles-common
+      registry = lib.attrsets.mapAttrs (name: value: {
+        exact = true;
+        from = {
+          id = name;
+          type = "indirect";
+        };
+        flake = value;
+      }) flakeInputs;
 
-  ids.gids.nixbld = 350;
+      nixPath = map (v: "${v}=flake:${v}") (builtins.attrNames flakeInputs);
+    };
 
-  # TODO: Replace with fine-grained and mergable alternative
-  nixpkgs.config.allowUnfree = true;
+    homebrew.casks = [
+      "logseq"
+      "ukelele"
+    ];
+
+    ids.gids.nixbld = 350;
+
+    # TODO: Replace with fine-grained and mergable alternative
+    nixpkgs.config.allowUnfree = true;
+  };
 }
