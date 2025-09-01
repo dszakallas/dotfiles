@@ -50,7 +50,10 @@
       emacs = {
         enable = true;
         daemon.enable = true;
-        spacemacs.enable = true;
+        spacemacs = {
+          enable = true;
+          config = "${self}/common/spacemacs.d";
+        };
       };
       jupiter.enable = true;
       kolobok.enable = true;

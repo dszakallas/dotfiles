@@ -45,7 +45,10 @@
       emacs = {
         enable = true;
         daemon.enable = true;
-        spacemacs.enable = true;
+        spacemacs = {
+          enable = true;
+          config = "${self}/common/spacemacs.d";
+        };
       };
       pure.enable = true;
       ssh.enable = true;
