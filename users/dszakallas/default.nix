@@ -30,6 +30,10 @@
       username = "dszakallas";
       homeDirectory = "/Users/dszakallas";
       stateVersion = "24.05";
+      # Let's put the keys into to the SSH folder so we have a stable
+      # identity for the macOS Keychain
+      file.".ssh/sk0".source = "${self}/common/keys/sk0";
+      file.".ssh/sk0.pub".source = "${self}/common/keys/sk0.pub";
     };
 
     programs.home-manager.enable = true;
@@ -73,7 +77,8 @@
           enable = true;
           matchBlocks = {
             "git" = {
-              identityFile = "~/.ssh/dszakallas@github.com";
+              identityFile = "~/.ssh/sk0";
+              isFIDO2 = true;
             };
           };
         };
