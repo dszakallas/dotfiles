@@ -67,7 +67,17 @@
           }
         );
       };
-      github.enable = true;
+      github = {
+        enable = true;
+        ssh = {
+          enable = true;
+          matchBlocks = {
+            "git" = {
+              identityFile = "~/.ssh/dszakallas@github.com";
+            };
+          };
+        };
+      };
     };
   };
 }

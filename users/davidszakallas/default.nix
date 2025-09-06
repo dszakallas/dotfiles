@@ -34,6 +34,10 @@
         backblaze-b2
         yt-dlp
       ];
+      # Let's put the keys into to the SSH folder so we have a stable
+      # identity for the macOS Keychain
+      file.".ssh/sk0".source = "${self}/common/keys/sk0";
+      file.".ssh/sk0.pub".source = "${self}/common/keys/sk0.pub";
     };
 
     programs.home-manager.enable = true;
@@ -57,7 +61,9 @@
       };
       jupiter.enable = true;
       kolobok.enable = true;
-      ssh.enable = true;
+      ssh = {
+        enable = true;
+      };
       gpg = {
         enable = true;
         defaultKey = "DAF51FB1E2246B94265E90B6D3743DE2308ADE59";
@@ -77,7 +83,18 @@
           }
         );
       };
-      github.enable = true;
+      github = {
+        enable = true;
+        ssh = {
+          enable = true;
+          matchBlocks = {
+            "git" = {
+              identityFile = "~/.ssh/sk0";
+              isFIDO2 = true;
+            };
+          };
+        };
+      };
     };
   };
 }
