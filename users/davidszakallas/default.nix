@@ -63,10 +63,7 @@
       kolobok.enable = true;
       ssh = {
         enable = true;
-      };
-      gpg = {
-        enable = true;
-        defaultKey = "DAF51FB1E2246B94265E90B6D3743DE2308ADE59";
+        agent.enable = true;
       };
       git = {
         enable = true;

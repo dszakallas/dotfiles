@@ -38,10 +38,6 @@ in
       "zoom"
     ];
 
-    programs.gnupg = {
-      agent.enableSSHSupport = true;
-    };
-
     nix = {
       settings.trusted-users = [
         primaryUser
