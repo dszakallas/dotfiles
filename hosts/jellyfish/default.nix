@@ -19,6 +19,7 @@ in
     davids-dotfiles-common.systemModules.default
     davids-dotfiles-private.systemModules.jupiter
     darwinModules.base
+    darwinModules.podman
     users.${primaryUser}
   ];
 

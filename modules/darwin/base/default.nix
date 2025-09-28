@@ -17,11 +17,6 @@
       "firefox"
       "keepassxc"
       "ukelele"
-      "podman-desktop"
-    ];
-
-    homebrew.brews = [
-      "podman"
     ];
 
     # Create /etc/zshrc that loads the nix-darwin environment.
