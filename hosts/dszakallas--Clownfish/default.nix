@@ -27,18 +27,11 @@ in
       settings.trusted-users = [
         primaryUser
       ];
+    };
 
-      # TODO: Make it more generic and move to davids-dotfiles-common
-      registry = lib.attrsets.mapAttrs (name: value: {
-        exact = true;
-        from = {
-          id = name;
-          type = "indirect";
-        };
-        flake = value;
-      }) flakeInputs;
-
-      nixPath = map (v: "${v}=flake:${v}") (builtins.attrNames flakeInputs);
+    davids.nix = {
+      enable = true;
+      pinnedFlakes = flakeInputs;
     };
 
     homebrew.casks = [
