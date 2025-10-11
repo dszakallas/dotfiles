@@ -55,7 +55,10 @@
         };
       };
       pure.enable = true;
-      ssh.enable = true;
+      ssh = {
+        enable = true;
+        agent.enable = true;
+      };
       git = {
         enable = true;
         configLines = lib.mkBefore (
