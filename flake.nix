@@ -104,22 +104,30 @@ rec {
           ];
         };
       inherit (davids-dotfiles-common) lib;
-      outputs = flake-utils.lib.eachDefaultSystemPassThrough (system: {
-        # Extract to dotfiles-common once it is more generic
-        darwinModules = lib.importDir ./modules/darwin ctx;
-        users = lib.importDir ./users ctx;
+      outputs =
+        (flake-utils.lib.eachDefaultSystem (system: {
+          packages.npm = import ./node2nix-pkgs {
+            pkgs = nixpkgs.legacyPackages.${system};
+            nodejs = nixpkgs.legacyPackages.${system}.nodejs_20;
+            inherit system;
+          };
+        }))
+        // flake-utils.lib.eachDefaultSystemPassThrough (system: {
+          # Extract to dotfiles-common once it is more generic
+          darwinModules = lib.importDir ./modules/darwin ctx;
+          users = lib.importDir ./users ctx;
 
-        darwinConfigurations = {
-          Jellyfish = mkDarwin {
-            host = "Jellyfish";
-            arch = "aarch64";
+          darwinConfigurations = {
+            Jellyfish = mkDarwin {
+              host = "Jellyfish";
+              arch = "aarch64";
+            };
+            "dszakallas--Clownfish" = mkDarwin {
+              host = "dszakallas--Clownfish";
+              arch = "aarch64";
+            };
           };
-          "dszakallas--Clownfish" = mkDarwin {
-            host = "dszakallas--Clownfish";
-            arch = "aarch64";
-          };
-        };
-      });
+        });
     in
     outputs;
 }

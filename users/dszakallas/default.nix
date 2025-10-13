@@ -2,6 +2,7 @@
   self,
   davids-dotfiles-common,
   davids-dotfiles-private,
+  packages,
   ...
 }:
 {
@@ -34,6 +35,9 @@
       # identity for the macOS Keychain
       file.".ssh/sk1".source = "${self}/common/keys/sk1";
       file.".ssh/sk1.pub".source = "${self}/common/keys/sk1.pub";
+
+      # TODO move to common
+      packages = [ packages.${system}.npm."@augmentcode/auggie-0.5.8" ];
     };
 
     programs.home-manager.enable = true;
