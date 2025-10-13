@@ -37,7 +37,7 @@
       file.".ssh/sk1.pub".source = "${self}/common/keys/sk1.pub";
 
       # TODO move to common
-      packages = [ packages.${system}.npm."@augmentcode/auggie-0.5.8" ];
+      packages = [ packages.${system}.npm."@augmentcode/auggie" ];
     };
 
     programs.home-manager.enable = true;

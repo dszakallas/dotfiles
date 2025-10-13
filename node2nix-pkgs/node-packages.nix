@@ -6,7 +6,7 @@ let
   sources = {};
 in
 {
-  "@augmentcode/auggie-0.5.8" = nodeEnv.buildNodePackage {
+  "@augmentcode/auggie" = nodeEnv.buildNodePackage {
     name = "_at_augmentcode_slash_auggie";
     packageName = "@augmentcode/auggie";
     version = "0.5.8";
