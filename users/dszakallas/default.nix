@@ -37,7 +37,12 @@
       file.".ssh/sk1.pub".source = "${self}/common/keys/sk1.pub";
 
       # TODO move to common
-      packages = [ packages.${system}.npm."@augmentcode/auggie" ];
+      packages = [
+        packages.${system}.npm."@augmentcode/auggie"
+      ]
+      ++ (with pkgs; [
+        gemini-cli-bin
+      ]);
     };
 
     programs.home-manager.enable = true;
