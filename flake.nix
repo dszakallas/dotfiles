@@ -108,7 +108,7 @@ rec {
         (flake-utils.lib.eachDefaultSystem (system: {
           packages.npm = import ./node2nix-pkgs {
             pkgs = nixpkgs.legacyPackages.${system};
-            nodejs = nixpkgs.legacyPackages.${system}.nodejs_20;
+            nodejs = nixpkgs.legacyPackages.${system}.nodejs_24;
             inherit system;
           };
         }))
