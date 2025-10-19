@@ -23,6 +23,11 @@ in
   config = {
     system = { inherit primaryUser; };
 
+    services.openssh.extraConfig = ''
+      PasswordAuthentication no
+      ChallengeResponseAuthentication no
+    '';
+
     nix = {
       settings.trusted-users = [
         primaryUser

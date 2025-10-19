@@ -16,7 +16,6 @@
       "iterm2"
       "firefox"
       "keepassxc"
-      "ukelele"
     ];
 
     # Create /etc/zshrc that loads the nix-darwin environment.
@@ -31,13 +30,15 @@
       # '';
     };
 
-    programs.gnupg = {
-      agent.enable = true;
-    };
-
     security.sudo.extraConfig = ''
       # Added by dotfiles/darwin/default
       Defaults:root,%admin env_keep+=NIX_CONFIG
+    '';
+
+    services.openssh.extraConfig = ''
+      # Added by dotfiles/darwin/default
+      PasswordAuthentication no
+      ChallengeResponseAuthentication no
     '';
 
     # Set Git commit hash for darwin-version.
