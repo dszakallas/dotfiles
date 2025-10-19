@@ -5,14 +5,13 @@
   davids-dotfiles-private,
   users,
   ...
-}@inputs:
+}:
 {
   lib,
   ...
 }:
 let
   primaryUser = "davidszakallas";
-  flakeInputs = (lib.filterAttrs (_: v: (lib.hasAttr "_type" v) && (v._type == "flake")) inputs);
 in
 {
   imports = [
@@ -43,11 +42,6 @@ in
       settings.trusted-users = [
         primaryUser
       ];
-    };
-
-    davids.nix = {
-      enable = true;
-      pinnedFlakes = flakeInputs;
     };
 
     davids.jupiter = {

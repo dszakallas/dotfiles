@@ -4,14 +4,13 @@
   davids-dotfiles-common,
   users,
   ...
-}@inputs:
+}:
 {
   lib,
   ...
 }:
 let
   primaryUser = "dszakallas";
-  flakeInputs = (lib.filterAttrs (_: v: (lib.hasAttr "_type" v) && (v._type == "flake")) inputs);
 in
 {
   imports = [

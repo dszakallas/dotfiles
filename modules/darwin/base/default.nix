@@ -1,4 +1,4 @@
-{ self, ... }:
+{ self, ... }@inputs:
 {
   pkgs,
   config,
@@ -8,6 +8,13 @@
   lib,
   ...
 }:
+let
+  flakeInputs = (
+    lib.filterAttrs (
+      _: v: (builtins.isAttrs v) && (lib.hasAttr "_type" v) && (v._type == "flake")
+    ) inputs
+  );
+in
 {
   config = {
     homebrew.enable = true;
@@ -40,6 +47,11 @@
       PasswordAuthentication no
       ChallengeResponseAuthentication no
     '';
+
+    davids.nix = {
+      enable = true;
+      pinnedFlakes = flakeInputs;
+    };
 
     # Set Git commit hash for darwin-version.
     system.configurationRevision = self.rev or self.dirtyRev or null;
