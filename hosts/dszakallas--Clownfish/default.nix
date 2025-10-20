@@ -33,11 +33,6 @@ in
       ];
     };
 
-    davids.nix = {
-      enable = true;
-      pinnedFlakes = flakeInputs;
-    };
-
     homebrew.casks = [
       "logseq"
       "ukelele"
