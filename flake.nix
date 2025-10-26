@@ -114,8 +114,8 @@ rec {
         }))
         // flake-utils.lib.eachDefaultSystemPassThrough (system: {
           # Extract to dotfiles-common once it is more generic
-          darwinModules = lib.importDir ./modules/darwin ctx;
-          users = lib.importDir ./users ctx;
+          darwinModules = lib.importRec1 ./modules/darwin ctx;
+          users = lib.importRec1 ./users ctx;
 
           darwinConfigurations = {
             Jellyfish = mkDarwin {
