@@ -2,9 +2,15 @@
   self,
   davids-dotfiles-common,
   davids-dotfiles-private,
+  packages,
   ...
 }:
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  system,
+  ...
+}:
 {
   users.users.davidszakallas = {
     name = "davidszakallas";
@@ -26,7 +32,10 @@
       username = "davidszakallas";
       homeDirectory = "/Users/davidszakallas";
       stateVersion = "24.05";
-      packages = with pkgs; [
+      packages = [
+        packages.${system}.npm."@openai/codex"
+      ]
+      ++ (with pkgs; [
         ffmpeg
         asciinema
         awscli2
@@ -34,7 +43,7 @@
         backblaze-b2
         yt-dlp
         gemini-cli-bin
-      ];
+      ]);
       # Let's put the keys into to the SSH folder so we have a stable
       # identity for the macOS Keychain
       file.".ssh/sk1".source = "${self}/common/keys/sk1";

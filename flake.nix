@@ -105,13 +105,15 @@ rec {
         };
       inherit (davids-dotfiles-common) lib;
       outputs =
-        (flake-utils.lib.eachDefaultSystem (system: {
-          packages.npm = import ./node2nix-pkgs {
+        (flake-utils.lib.eachDefaultSystem (
+          system:
+          let
             pkgs = nixpkgs.legacyPackages.${system};
-            nodejs = nixpkgs.legacyPackages.${system}.nodejs_24;
-            inherit system;
-          };
-        }))
+          in
+          {
+            packages = lib.callPackageWithRec (inputs // pkgs) ./pkgs;
+          }
+        ))
         // flake-utils.lib.eachDefaultSystemPassThrough (system: {
           # Extract to dotfiles-common once it is more generic
           darwinModules = lib.importRec1 ./modules/darwin ctx;
