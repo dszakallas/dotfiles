@@ -9,16 +9,34 @@ in
   "@augmentcode/auggie" = nodeEnv.buildNodePackage {
     name = "_at_augmentcode_slash_auggie";
     packageName = "@augmentcode/auggie";
-    version = "0.5.8";
+    version = "0.6.1";
     src = fetchurl {
-      url = "https://registry.npmjs.org/@augmentcode/auggie/-/auggie-0.5.8.tgz";
-      sha512 = "9wJuWGejHy5SsvfxEcCipdDolaaym5h7Wt7tvdOecEBxkFq9dnZ7DkY7jXuYv4Fq9/sCbzD3vxy5pMrmDtBo9g==";
+      url = "https://registry.npmjs.org/@augmentcode/auggie/-/auggie-0.6.1.tgz";
+      sha512 = "MmQIaJXjaGP5U3QlhIFR67SuUacb977HSASplP4iU9/o7iVSfz6FlDC+Xw7wBslFZunKSiFmHjWrtOR8ELXNFg==";
     };
     buildInputs = globalBuildInputs;
     meta = {
       description = "Auggie CLI Client by Augment Code";
       homepage = "https://augmentcode.com";
       license = "SEE LICENSE IN LICENSE.md";
+    };
+    production = true;
+    bypassCache = true;
+    reconstructLock = true;
+  };
+  "@openai/codex" = nodeEnv.buildNodePackage {
+    name = "_at_openai_slash_codex";
+    packageName = "@openai/codex";
+    version = "0.53.0";
+    src = fetchurl {
+      url = "https://registry.npmjs.org/@openai/codex/-/codex-0.53.0.tgz";
+      sha512 = "p9FxjMQuEU1LQ+YG2HPci1fafNAAvL2q8mXJkfTsPLUU1/uTsOohemtbvjC+LYTHd99Y6WseaAdmm1JBXqGsHw==";
+    };
+    buildInputs = globalBuildInputs;
+    meta = {
+      description = "<p align=\"center\"><code>npm i -g @openai/codex</code><br />or <code>brew install --cask codex</code></p>";
+      homepage = "https://github.com/openai/codex#readme";
+      license = "Apache-2.0";
     };
     production = true;
     bypassCache = true;
