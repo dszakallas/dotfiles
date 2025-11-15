@@ -141,6 +141,10 @@ This function should only modify configuration layer settings."
      (exec-path-from-shell :variables
                            exec-path-from-shell-variables '(
                                                             "GEMINI_API_KEY"
+                                                            "GOPATH"
+                                                            "GOROOT"
+                                                            "GOTOOLCHAIN"
+                                                            "GOTOOLDIR"
                                                             "GPG_AGENT_INFO"
                                                             "HOME"
                                                             "HOMEBREW_PREFIX"
@@ -578,7 +582,7 @@ It should only modify the values of Spacemacs settings."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
    ;; (default '("rg" "ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg" "ag" "grep")
 
    ;; The backend used for undo/redo functionality. Possible values are
    ;; `undo-fu', `undo-redo' and `undo-tree' see also `evil-undo-system'.
