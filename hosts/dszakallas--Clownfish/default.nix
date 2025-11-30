@@ -16,6 +16,7 @@ in
   imports = [
     davids-dotfiles-common.systemModules.default
     darwinModules.base
+    darwinModules.podman
     users.${primaryUser}
   ];
 
