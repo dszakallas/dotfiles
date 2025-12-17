@@ -42,6 +42,20 @@ in
       settings.trusted-users = [
         primaryUser
       ];
+      linux-builder = {
+        enable = true;
+        ephemeral = true;
+        maxJobs = 8;
+        config = {
+          virtualisation = {
+            darwin-builder = {
+              diskSize = 64 * 1024;
+              memorySize = 12 * 1024;
+            };
+            cores = 4;
+          };
+        };
+      };
     };
 
     davids.jupiter = {
