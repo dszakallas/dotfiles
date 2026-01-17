@@ -43,6 +43,7 @@
         backblaze-b2
         yt-dlp
         gemini-cli-bin
+        google-cloud-sdk
       ]);
       # Let's put the keys into to the SSH folder so we have a stable
       # identity for the macOS Keychain
