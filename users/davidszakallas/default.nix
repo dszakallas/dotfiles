@@ -41,6 +41,7 @@
         awscli2
         minio-client
         backblaze-b2
+        rclone
         yt-dlp
         gemini-cli-bin
         google-cloud-sdk
