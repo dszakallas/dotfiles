@@ -2,6 +2,7 @@
   self,
   davids-dotfiles-common,
   davids-dotfiles-private,
+  homeModules,
   packages,
   ...
 }:
@@ -25,6 +26,7 @@
       davids-dotfiles-common.homeModules.github
       davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.pure
+      homeModules.gemini
     ];
 
     home = {
@@ -39,10 +41,7 @@
       # TODO move to common
       packages = [
         packages.${system}.npm."@augmentcode/auggie"
-      ]
-      ++ (with pkgs; [
-        gemini-cli-bin
-      ]);
+      ];
     };
 
     programs.home-manager.enable = true;

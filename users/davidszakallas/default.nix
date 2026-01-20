@@ -2,6 +2,7 @@
   self,
   davids-dotfiles-common,
   davids-dotfiles-private,
+  homeModules,
   packages,
   ...
 }:
@@ -26,6 +27,7 @@
       davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.jupiter
       davids-dotfiles-private.homeModules.kolobok
+      homeModules.gemini
     ];
 
     home = {
@@ -43,7 +45,6 @@
         backblaze-b2
         rclone
         yt-dlp
-        gemini-cli-bin
         google-cloud-sdk
       ]);
       # Let's put the keys into to the SSH folder so we have a stable

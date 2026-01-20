@@ -117,6 +117,7 @@ rec {
         // flake-utils.lib.eachDefaultSystemPassThrough (system: {
           # Extract to dotfiles-common once it is more generic
           darwinModules = lib.importRec1 ./modules/darwin ctx;
+          homeModules = lib.importRec1 ./modules/home ctx;
           users = lib.importRec1 ./users ctx;
 
           darwinConfigurations = {
