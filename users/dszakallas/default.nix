@@ -33,15 +33,17 @@
       username = "dszakallas";
       homeDirectory = "/Users/dszakallas";
       stateVersion = "24.05";
+      # TODO move to common
+      packages = [
+        packages.${system}.npm."@augmentcode/auggie"
+      ]
+      ++ (with pkgs; [
+        fluxcd-operator
+      ]);
       # Let's put the keys into to the SSH folder so we have a stable
       # identity for the macOS Keychain
       file.".ssh/sk1".source = "${self}/common/keys/sk1";
       file.".ssh/sk1.pub".source = "${self}/common/keys/sk1.pub";
-
-      # TODO move to common
-      packages = [
-        packages.${system}.npm."@augmentcode/auggie"
-      ];
     };
 
     programs.home-manager.enable = true;
@@ -59,7 +61,10 @@
         daemon.enable = true;
         spacemacs = {
           enable = true;
-          config = "${self}/common/spacemacs.d";
+          config = {
+            enable = true;
+            source = "${self}/common/spacemacs.d";
+          };
         };
       };
       pure.enable = true;

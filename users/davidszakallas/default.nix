@@ -35,9 +35,10 @@
       homeDirectory = "/Users/davidszakallas";
       stateVersion = "24.05";
       packages = [
-        packages.${system}.npm."@openai/codex"
+        packages.${system}.npm."@augmentcode/auggie"
       ]
       ++ (with pkgs; [
+        fluxcd-operator
         ffmpeg
         asciinema
         awscli2
@@ -69,7 +70,6 @@
         daemon.enable = true;
         spacemacs = {
           enable = true;
-          config = "${self}/common/spacemacs.d";
         };
       };
       jupiter.enable = true;

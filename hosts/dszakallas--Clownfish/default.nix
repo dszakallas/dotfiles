@@ -1,7 +1,9 @@
 {
   self,
-  darwinModules,
   davids-dotfiles-common,
+  darwinModules,
+  systemModules,
+  overlays,
   users,
   ...
 }:
@@ -15,7 +17,8 @@ in
 {
   imports = [
     davids-dotfiles-common.systemModules.default
-    darwinModules.base
+    systemModules.default
+    darwinModules.default
     darwinModules.podman
     users.${primaryUser}
   ];

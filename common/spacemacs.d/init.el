@@ -128,6 +128,7 @@ This function should only modify configuration layer settings."
      helm
 
      ;; AI services
+     agent-shell
      github-copilot
      (chatgpt-shell :variables
                     chatgpt-shell-system-prompt 2
@@ -816,3 +817,83 @@ before packages are loaded."
 
   (setq custom-file "~/.emacs.d/.cache/.custom-settings")
   (load custom-file))
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages
+     '(ace-link acp agent-shell aggressive-indent all-the-icons ansible ansible-doc
+                auto-compile auto-highlight-symbol auto-yasnippet
+                avy-jump-helm-line blacken browse-at-remote bundler
+                centered-cursor-mode chatgpt-shell clean-aindent-mode cmake-ide
+                cmake-mode code-cells code-review color-theme-sanityinc-solarized
+                color-theme-sanityinc-tomorrow column-enforce-mode company-ansible
+                company-auctex company-c-headers company-math
+                company-nixos-options company-reftex company-shell
+                company-terraform company-web copilot copilot-chat
+                cpp-auto-include csv-mode cython-mode dactyl-mode dap-mode
+                define-word devdocs diff-hl diminish dired-quick-sort direnv
+                disable-mouse disaster docker dockerfile-mode dotenv-mode
+                drag-stuff dumb-jump eat edit-indirect ein elisp-def elisp-demos
+                elisp-slime-nav emmet-mode emr esh-help eshell-prompt-extras
+                eshell-z eval-sexp-fu evil-anzu evil-args evil-cleverparens
+                evil-collection evil-easymotion evil-escape evil-evilified-state
+                evil-exchange evil-goggles evil-iedit-state evil-indent-plus
+                evil-lion evil-lisp-state evil-matchit evil-mc evil-nerd-commenter
+                evil-numbers evil-org evil-surround evil-tex evil-textobj-line
+                evil-tutor evil-unimpaired evil-visual-mark-mode evil-visualstar
+                exec-path-from-shell expand-region eyebrowse fancy-battery
+                fish-mode flycheck-bashate flycheck-elsa flycheck-golangci-lint
+                flycheck-package flycheck-pos-tip gendoxy gh-md git-link
+                git-messenger git-modes git-timemachine gitignore-templates
+                gnuplot go-eldoc go-fill-struct go-gen-test go-guru go-impl
+                go-rename go-tag godoctor golden-ratio google-c-style
+                google-translate helm-ag helm-c-yasnippet helm-comint helm-company
+                helm-cscope helm-css-scss helm-ctest helm-descbinds helm-ls-git
+                helm-lsp helm-make helm-mode-manager helm-nixos-options helm-org
+                helm-org-rifle helm-projectile helm-purpose helm-pydoc helm-swoop
+                helm-xref hide-comnt highlight-indentation highlight-numbers
+                highlight-parentheses hl-todo holy-mode hungry-delete hybrid-mode
+                impatient-mode indent-guide info+ insert-shebang inspector
+                jinja2-mode js-doc js2-refactor json-mode json-navigator
+                json-reformat json-snatcher kubernetes-evil link-hint live-py-mode
+                livid-mode lorem-ipsum lsp-latex lsp-origami lsp-pyright lsp-ui
+                macrostep magit-delta markdown-toc minitest multi-line multi-term
+                multi-vterm nameless nginx-mode nix-mode nodejs-repl npm-mode
+                open-junk-file org-cliplink org-contrib org-download org-mime
+                org-pomodoro org-present org-projectile org-rich-yank
+                org-superstar orgit-forge overseer page-break-lines paradox
+                password-generator pcsv pip-requirements pipenv pippel poetry
+                popwin prettier-js protobuf-mode pug-mode py-isort pydoc
+                pyenv-mode pylookup python-pytest quickrun rainbow-delimiters rake
+                restart-emacs ron-mode rspec-mode rubocop rubocopfmt
+                ruby-hash-syntax ruby-refactor ruby-test-mode ruby-tools rustic
+                sass-mode scss-mode shell-pop shfmt slim-mode smeargle space-doc
+                spaceline spacemacs-purpose-popwin spacemacs-whitespace-cleanup
+                sphinx-doc sql-indent string-edit-at-point string-inflection
+                symbol-overlay symon tagedit term-cursor terminal-here toc-org
+                toml-mode tree-sitter-indent tree-sitter-langs treemacs-evil
+                treemacs-icons-dired treemacs-magit treemacs-persp
+                treemacs-projectile ts-fold typescript-mode undo-fu
+                undo-fu-session vi-tilde-fringe vimrc-mode volatile-highlights
+                vundo web-beautify web-mode wgrep winum writeroom-mode ws-butler
+                yaml-mode yasnippet-snippets))
+   '(projectile-create-missing-test-files t)
+   '(projectile-ignored-projects '("~/"))
+   '(safe-local-variable-values
+     '((smie-indent-basic . 2) (typescript-backend . tide) (typescript-backend . lsp)
+       (javascript-backend . tide) (javascript-backend . tern)
+       (javascript-backend . lsp))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )

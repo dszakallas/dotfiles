@@ -17,10 +17,10 @@ in
   "@augmentcode/auggie" = nodeEnv.buildNodePackage {
     name = "_at_augmentcode_slash_auggie";
     packageName = "@augmentcode/auggie";
-    version = "0.6.1";
+    version = "0.14.0";
     src = fetchurl {
-      url = "https://registry.npmjs.org/@augmentcode/auggie/-/auggie-0.6.1.tgz";
-      sha512 = "MmQIaJXjaGP5U3QlhIFR67SuUacb977HSASplP4iU9/o7iVSfz6FlDC+Xw7wBslFZunKSiFmHjWrtOR8ELXNFg==";
+      url = "https://registry.npmjs.org/@augmentcode/auggie/-/auggie-0.14.0.tgz";
+      sha512 = "VhCTtYeEgjwDCEbSa11wJup2oFnzL26uMvbMzrr73k9JG3XVaVkvn+8bwOxybus0Xk/NlmspCXvD38c15InJ4w==";
     };
     buildInputs = globalBuildInputs;
     meta = {
@@ -35,14 +35,14 @@ in
   "@openai/codex" = nodeEnv.buildNodePackage {
     name = "_at_openai_slash_codex";
     packageName = "@openai/codex";
-    version = "0.53.0";
+    version = "0.88.0";
     src = fetchurl {
-      url = "https://registry.npmjs.org/@openai/codex/-/codex-0.53.0.tgz";
-      sha512 = "p9FxjMQuEU1LQ+YG2HPci1fafNAAvL2q8mXJkfTsPLUU1/uTsOohemtbvjC+LYTHd99Y6WseaAdmm1JBXqGsHw==";
+      url = "https://registry.npmjs.org/@openai/codex/-/codex-0.88.0.tgz";
+      sha512 = "tZF1SpcVPZBEGYXTcpHUpg5TXorxofllHo7qGyz6iejQjk8bV1kRMvcHewyx83dGiSknM/OrG71zGDyaiBKPhg==";
     };
     buildInputs = globalBuildInputs;
     meta = {
-      description = "<p align=\"center\"><code>npm i -g @openai/codex</code><br />or <code>brew install --cask codex</code></p>";
+      description = "<p align=\"center\"><code>npm i -g @openai/codex</code><br />or <code>brew install --cask codex</code></p> <p align=\"center\"><strong>Codex CLI</strong> is a coding agent from OpenAI that runs locally on your computer. <p align=\"center\">   <img src=\"./.githu";
       homepage = "https://github.com/openai/codex#readme";
       license = "Apache-2.0";
     };

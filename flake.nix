@@ -68,14 +68,18 @@ rec {
   outputs =
     inputs@{
       self,
-      nix-darwin,
       nixpkgs,
+      nix-darwin,
       home-manager,
       flake-utils,
       davids-dotfiles-common,
       ...
     }:
     let
+      inherit (davids-dotfiles-common.lib) importRec importRec1 callPackageWithRec;
+      inherit (nixpkgs) lib;
+      pkgsFor = system: nixpkgs.legacyPackages.${system}.extend overlays;
+      overlays = lib.foldl' lib.composeExtensions (_: _: { }) (lib.attrValues (importRec ./overlays));
       ctx = (inputs // outputs);
       mkDarwin =
         { host, arch, ... }:
@@ -83,7 +87,7 @@ rec {
           system = "${arch}-darwin";
           specialArgs =
             let
-              hostPlatform = nixpkgs.legacyPackages.${system}.stdenv.hostPlatform;
+              hostPlatform = (pkgsFor system).stdenv.hostPlatform;
             in
             {
               inherit
@@ -103,22 +107,24 @@ rec {
             }
           ];
         };
-      inherit (davids-dotfiles-common) lib;
       outputs =
         (flake-utils.lib.eachDefaultSystem (
           system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = pkgsFor system;
           in
           {
-            packages = lib.callPackageWithRec (inputs // pkgs) ./pkgs;
+            packages = callPackageWithRec (inputs // pkgs) ./pkgs;
           }
         ))
         // flake-utils.lib.eachDefaultSystemPassThrough (system: {
+          systemModules = importRec1 ./modules/system ctx;
           # Extract to dotfiles-common once it is more generic
-          darwinModules = lib.importRec1 ./modules/darwin ctx;
-          homeModules = lib.importRec1 ./modules/home ctx;
-          users = lib.importRec1 ./users ctx;
+          darwinModules = importRec1 ./modules/darwin ctx;
+          homeModules = importRec1 ./modules/home ctx;
+          users = importRec1 ./users ctx;
+
+          inherit overlays;
 
           darwinConfigurations = {
             Jellyfish = mkDarwin {
