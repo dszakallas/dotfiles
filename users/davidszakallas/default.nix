@@ -27,6 +27,7 @@
       davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.jupiter
       davids-dotfiles-private.homeModules.kolobok
+      homeModules.id
       homeModules.gemini
     ];
 
@@ -48,10 +49,6 @@
         yt-dlp
         google-cloud-sdk
       ]);
-      # Let's put the keys into to the SSH folder so we have a stable
-      # identity for the macOS Keychain
-      file.".ssh/sk1".source = "${self}/common/keys/sk1";
-      file.".ssh/sk1.pub".source = "${self}/common/keys/sk1.pub";
     };
 
     programs.home-manager.enable = true;
@@ -80,29 +77,11 @@
       };
       git = {
         enable = true;
-        configLines = lib.mkBefore (
-          davids-dotfiles-common.lib.textRegion {
-            name = "dotfiles/users/${home.username}";
-            content = ''
-              [user]
-                name = Dávid Szakállas
-                email = 5807322+dszakallas@users.noreply.github.com
-              [github]
-                user = dszakallas
-            '';
-          }
-        );
       };
       github = {
         enable = true;
         ssh = {
           enable = true;
-          matchBlocks = {
-            "git" = {
-              identityFile = "~/.ssh/sk1";
-              isFIDO2 = true;
-            };
-          };
         };
       };
     };

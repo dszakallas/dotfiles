@@ -26,6 +26,7 @@
       davids-dotfiles-common.homeModules.github
       davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.pure
+      homeModules.id
       homeModules.gemini
     ];
 
@@ -40,10 +41,6 @@
       ++ (with pkgs; [
         fluxcd-operator
       ]);
-      # Let's put the keys into to the SSH folder so we have a stable
-      # identity for the macOS Keychain
-      file.".ssh/sk1".source = "${self}/common/keys/sk1";
-      file.".ssh/sk1.pub".source = "${self}/common/keys/sk1.pub";
     };
 
     programs.home-manager.enable = true;
@@ -63,7 +60,7 @@
           enable = true;
           config = {
             enable = true;
-            source = "${self}/common/spacemacs.d";
+            path = "${self}/common/spacemacs.d";
           };
         };
       };
@@ -72,31 +69,11 @@
         enable = true;
         agent.enable = true;
       };
-      git = {
-        enable = true;
-        configLines = lib.mkBefore (
-          davids-dotfiles-common.lib.textRegion {
-            name = "dotfiles/users/${home.username}";
-            content = ''
-              [user]
-                name = Dávid Szakállas
-                email = 5807322+dszakallas@users.noreply.github.com
-              [github]
-                user = dszakallas
-            '';
-          }
-        );
-      };
+      git.enable = true;
       github = {
         enable = true;
         ssh = {
           enable = true;
-          matchBlocks = {
-            "git" = {
-              identityFile = "~/.ssh/sk1";
-              isFIDO2 = true;
-            };
-          };
         };
       };
     };
