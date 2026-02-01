@@ -27,6 +27,7 @@
       davids-dotfiles-private.homeModules.default
       davids-dotfiles-private.homeModules.pure
       homeModules.id
+      homeModules.spacemacs-config
       homeModules.gemini
     ];
 
@@ -58,10 +59,6 @@
         daemon.enable = true;
         spacemacs = {
           enable = true;
-          config = {
-            enable = true;
-            path = "${self}/common/spacemacs.d";
-          };
         };
       };
       pure.enable = true;
