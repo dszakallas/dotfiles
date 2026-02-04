@@ -17,10 +17,10 @@ in
   "@augmentcode/auggie" = nodeEnv.buildNodePackage {
     name = "_at_augmentcode_slash_auggie";
     packageName = "@augmentcode/auggie";
-    version = "0.14.0";
+    version = "0.15.0";
     src = fetchurl {
-      url = "https://registry.npmjs.org/@augmentcode/auggie/-/auggie-0.14.0.tgz";
-      sha512 = "VhCTtYeEgjwDCEbSa11wJup2oFnzL26uMvbMzrr73k9JG3XVaVkvn+8bwOxybus0Xk/NlmspCXvD38c15InJ4w==";
+      url = "https://registry.npmjs.org/@augmentcode/auggie/-/auggie-0.15.0.tgz";
+      sha512 = "s6Yw3gpWItztICjx7GOIM7GTrfVadKMZCP0dlIsIVVb0dzUaY2pybEqxUMoaOuzf1vnrnd67Z2PoE3tmUsov0g==";
     };
     buildInputs = globalBuildInputs;
     meta = {
@@ -35,10 +35,10 @@ in
   "@openai/codex" = nodeEnv.buildNodePackage {
     name = "_at_openai_slash_codex";
     packageName = "@openai/codex";
-    version = "0.88.0";
+    version = "0.93.0";
     src = fetchurl {
-      url = "https://registry.npmjs.org/@openai/codex/-/codex-0.88.0.tgz";
-      sha512 = "tZF1SpcVPZBEGYXTcpHUpg5TXorxofllHo7qGyz6iejQjk8bV1kRMvcHewyx83dGiSknM/OrG71zGDyaiBKPhg==";
+      url = "https://registry.npmjs.org/@openai/codex/-/codex-0.93.0.tgz";
+      sha512 = "3skVlzRN3bApbyCX3zeEK6umGb4OfaTa/lsuJ9syng+NxUGptDMFsrOoC+rMU1uYeFtt+OjYttjpfHY2xE1DAQ==";
     };
     buildInputs = globalBuildInputs;
     meta = {
