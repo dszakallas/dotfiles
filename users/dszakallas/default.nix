@@ -38,9 +38,11 @@
       # TODO move to common
       packages = [
         packages.${system}.npm."@augmentcode/auggie"
+        #packages.${system}.npm."@gleanwork/local-mcp-server"
       ]
       ++ (with pkgs; [
         fluxcd-operator
+        temporal-cli
       ]);
     };
 
