@@ -55,7 +55,7 @@ in
               diskSize = 64 * 1024;
               memorySize = 12 * 1024;
             };
-            cores = 4;
+            cores = 8;
           };
         };
       };

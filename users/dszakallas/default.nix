@@ -64,6 +64,7 @@
         };
       };
       pure.enable = true;
+      id.enable = true;
       ssh = {
         enable = true;
         agent.enable = true;

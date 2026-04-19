@@ -36,7 +36,7 @@
       homeDirectory = "/Users/davidszakallas";
       stateVersion = "24.05";
       packages = [
-        packages.${system}.npm."@augmentcode/auggie"
+        #      packages.${system}.npm."@augmentcode/auggie"
       ]
       ++ (with pkgs; [
         fluxcd-operator
@@ -50,6 +50,38 @@
         google-cloud-sdk
       ]);
     };
+
+    programs.ssh.matchBlocks =
+      builtins.listToAttrs (
+        builtins.map
+          (name: {
+            inherit name;
+            value = {
+              match = "host ${name}";
+              user = "gamer";
+              identitiesOnly = true;
+              identityFile = "~/.ssh/gamer@${name}";
+              forwardAgent = true;
+              serverAliveInterval = 5;
+              sendEnv = [ "NIX_CONFIG" ];
+            };
+          })
+          [
+            "callisto"
+            #"amalthea"
+          ]
+      )
+      // {
+        "sparkplug" = {
+          match = "host sparkplug";
+          forwardAgent = true;
+          identitiesOnly = true;
+          user = "david";
+          sendEnv = [ "NIX_CONFIG" ];
+          serverAliveInterval = 5;
+          identityFile = "~/.ssh/sparkplug";
+        };
+      };
 
     programs.home-manager.enable = true;
 
@@ -71,6 +103,9 @@
       };
       jupiter.enable = true;
       kolobok.enable = true;
+      id = {
+        enable = true;
+      };
       ssh = {
         enable = true;
         agent.enable = true;
