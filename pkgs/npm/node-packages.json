@@ -1,4 +1,0 @@
-[ 
-  { "@augmentcode/auggie": "*" },
-  { "@openai/codex": "*" }
-]

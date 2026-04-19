@@ -36,7 +36,6 @@
       homeDirectory = "/Users/davidszakallas";
       stateVersion = "24.05";
       packages = [
-        #      packages.${system}.npm."@augmentcode/auggie"
       ]
       ++ (with pkgs; [
         fluxcd-operator
