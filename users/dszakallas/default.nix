@@ -28,7 +28,7 @@
       davids-dotfiles-private.homeModules.pure
       homeModules.id
       homeModules.spacemacs-config
-      homeModules.gemini
+      homeModules.agents
     ];
 
     home = {
@@ -63,6 +63,10 @@
       };
       pure.enable = true;
       id.enable = true;
+      agents = {
+        enable = true;
+        gemini.enable = true;
+      };
       ssh = {
         enable = true;
         agent.enable = true;
