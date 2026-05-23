@@ -120,7 +120,7 @@
           let
             mkMemory =
               agentConf: extra:
-              (pkgs.replaceVars ./MEMORY.md (
+              (pkgs.replaceVars ../MEMORY.md (
                 {
                   agentUserDirectory = agentConf.userDirectory;
                   agentMainMemoryFile = agentConf.memory.main.target;

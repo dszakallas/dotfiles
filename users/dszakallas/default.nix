@@ -19,7 +19,7 @@
     shell = pkgs.zsh;
   };
 
-  home-manager.users.dszakallas = rec {
+  home-manager.users.dszakallas = { config, ... }: rec {
     imports = [
       davids-dotfiles-common.homeModules.base
       davids-dotfiles-common.homeModules.emacs
@@ -63,10 +63,42 @@
       };
       pure.enable = true;
       id.enable = true;
-      agents = {
-        enable = true;
-        gemini.enable = true;
-      };
+      agents =
+        let
+          mkMemory =
+            agentConf: extra:
+            (pkgs.replaceVars ../MEMORY.md (
+              {
+                agentUserDirectory = agentConf.userDirectory;
+                agentMainMemoryFile = agentConf.memory.main.target;
+                userLevelFilesExtraH3 = "";
+                packageManagentExtraH3 = "";
+                workTreesExtraH3 = "";
+              }
+              // extra
+            ));
+        in
+        lib.foldl'
+          (
+            a: v:
+            a
+            // {
+              "${v}" = {
+                enable = true;
+                memory.enable = true;
+                memory.main.enable = true;
+                memory.main.source = mkMemory config.davids.agents."${v}" { };
+              };
+            }
+          )
+          {
+            enable = true;
+          }
+          [
+            "gemini"
+            "claude"
+            "copilot"
+          ];
       ssh = {
         enable = true;
         agent.enable = true;

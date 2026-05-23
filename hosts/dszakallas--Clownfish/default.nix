@@ -44,7 +44,14 @@ in
 
     ids.gids.nixbld = 350;
 
-    # TODO: Replace with fine-grained and mergable alternative
-    nixpkgs.config.allowUnfree = true;
+    nixpkgs.config.allowUnfreePredicate =
+      pkg:
+      builtins.elem (lib.getName pkg) [
+        "vault"
+        "terraform"
+        "claude-code"
+        "github-copilot-cli"
+      ];
   };
+
 }
