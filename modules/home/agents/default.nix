@@ -19,13 +19,16 @@ let
       name,
       defaultPackage,
       defaultUserDirectory,
-      defaultMainMemoryFile,
+      defaultMemoryDirectory ? defaultUserDirectory,
+      defaultMemoryFile,
+      defaultLinkSkills ? false,
+      defaultSkillsDirectory ? "${defaultUserDirectory}/skills",
     }:
     {
       options = {
         enable = mkEnableOption "${name} agent";
         package = mkOption {
-          type = types.package;
+          type = types.nullOr types.package;
           default = defaultPackage;
           description = "The package for the ${name} agent.";
         };
@@ -34,25 +37,37 @@ let
           default = defaultUserDirectory;
           description = "The user directory for ${name} local files.";
         };
+        linkSkills = mkOption {
+          type = types.bool;
+          default = defaultLinkSkills;
+          description = "Whether to link agent skills into the ${name} user directory under skills/.";
+        };
+        skillsDirectory = mkOption {
+          type = types.str;
+          default = defaultSkillsDirectory;
+          description = "The directory where agent skills are linked for ${name}.";
+        };
         memory = {
           enable = mkEnableOption "memory management for ${name}";
-          main = {
-            enable = mkEnableOption "main memory file for ${name}";
-            content = mkOption {
-              type = types.nullOr types.lines;
-              default = null;
-              description = "Content of the main memory file.";
-            };
-            target = mkOption {
-              type = types.str;
-              default = defaultMainMemoryFile;
-              description = "Path to the target file for the main memory file.";
-            };
-            source = mkOption {
-              type = types.nullOr types.path;
-              default = null;
-              description = "Path to the source file for the main memory file.";
-            };
+          directory = mkOption {
+            type = types.str;
+            default = defaultMemoryDirectory;
+            description = "The directory for ${name} memory files.";
+          };
+          content = mkOption {
+            type = types.nullOr types.lines;
+            default = null;
+            description = "Content of the main memory file.";
+          };
+          target = mkOption {
+            type = types.str;
+            default = defaultMemoryFile;
+            description = "Path to the target file for the main memory file.";
+          };
+          source = mkOption {
+            type = types.nullOr types.path;
+            default = null;
+            description = "Path to the source file for the main memory file.";
           };
         };
       };
@@ -60,20 +75,28 @@ let
       config =
         let
           cfg = config.davids.agents.${name};
-          memoryBaseDir = "${config.home.homeDirectory}/${cfg.userDirectory}";
-          memoryFile = "${memoryBaseDir}/${cfg.memory.main.target}";
+          memoryBaseDir = "${config.home.homeDirectory}/${cfg.memory.directory}";
+          memoryFile = "${memoryBaseDir}/${cfg.memory.target}";
           unmanagedFile = "${memoryBaseDir}/unmanaged.MEMORY.MD";
         in
         mkIf cfg.enable (mkMerge [
           {
-            home.packages = [ cfg.package ];
+            home.packages = if cfg.package == null then [ ] else [ cfg.package ];
           }
-          (mkIf (cfg.memory.enable && cfg.memory.main.enable) {
+          (mkIf (cfg.linkSkills && config.davids.agents.skills.enable) {
+            home.file = lib.mapAttrs' (skillName: src: {
+              name = "${cfg.skillsDirectory}/${skillName}";
+              value = {
+                source = src;
+              };
+            }) config.davids.agents.skills.entries;
+          })
+          (mkIf cfg.memory.enable {
             home.file."${memoryFile}" =
-              if cfg.memory.main.content != null then
-                { text = cfg.memory.main.content; }
-              else if cfg.memory.main.source != null then
-                { source = cfg.memory.main.source; }
+              if cfg.memory.content != null then
+                { text = cfg.memory.content; }
+              else if cfg.memory.source != null then
+                { source = cfg.memory.source; }
               else
                 { };
 
@@ -85,7 +108,7 @@ let
 
               <!--
               This file is for your private, local-only agent memory.
-              Unlike '${cfg.memory.main.target}', this file is NOT managed by Nix.
+              Unlike '${cfg.memory.target}', this file is NOT managed by Nix.
               It will never be overwritten, and it is safe to edit manually.
 
               Use this for:
@@ -105,21 +128,31 @@ let
     name = "gemini";
     defaultPackage = pkgs.gemini-cli;
     defaultUserDirectory = ".gemini";
-    defaultMainMemoryFile = "GEMINI.md";
+    defaultMemoryFile = "GEMINI.md";
   };
 
   claudeModule = mkAgentModule {
     name = "claude";
     defaultPackage = pkgs.claude-code;
     defaultUserDirectory = ".claude";
-    defaultMainMemoryFile = "CLAUDE.md";
+    defaultMemoryFile = "CLAUDE.md";
+    defaultLinkSkills = true;
   };
 
   copilotModule = mkAgentModule {
     name = "copilot";
     defaultPackage = pkgs.github-copilot-cli;
     defaultUserDirectory = ".copilot";
-    defaultMainMemoryFile = "copilot-instructions.md";
+    defaultMemoryFile = "copilot-instructions.md";
+  };
+
+  antigravityModule = mkAgentModule {
+    name = "antigravity";
+    defaultPackage = null;
+    defaultUserDirectory = ".gemini/antigravity-cli";
+    defaultMemoryDirectory = ".gemini";
+    defaultMemoryFile = "GEMINI.md";
+    defaultLinkSkills = true;
   };
 in
 {
@@ -128,11 +161,29 @@ in
     gemini = geminiModule.options;
     claude = claudeModule.options;
     copilot = copilotModule.options;
+    antigravity = antigravityModule.options;
+    skills = {
+      enable = mkEnableOption "agent skills";
+      entries = mkOption {
+        type = types.attrsOf types.path;
+        default = { };
+        description = "Agent skills to install into ~/.agents/skills/. Each attribute name is the skill name and the value is a path or derivation to link.";
+      };
+    };
   };
 
   config = mkIf config.davids.agents.enable (mkMerge [
     geminiModule.config
     claudeModule.config
     copilotModule.config
+    antigravityModule.config
+    (mkIf config.davids.agents.skills.enable {
+      home.file = lib.mapAttrs' (name: src: {
+        name = ".agents/skills/${name}";
+        value = {
+          source = src;
+        };
+      }) config.davids.agents.skills.entries;
+    })
   ]);
 }

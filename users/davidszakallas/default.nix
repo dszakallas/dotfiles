@@ -122,8 +122,8 @@
               agentConf: extra:
               (pkgs.replaceVars ../MEMORY.md (
                 {
-                  agentUserDirectory = agentConf.userDirectory;
-                  agentMainMemoryFile = agentConf.memory.main.target;
+                  agentMemoryDirectory = agentConf.memory.directory;
+                  agentMemoryFile = agentConf.memory.target;
                   userLevelFilesExtraH3 = "";
                   packageManagentExtraH3 = "";
                   workTreesExtraH3 = "";
@@ -139,18 +139,22 @@
                 "${v}" = {
                   enable = true;
                   memory.enable = true;
-                  memory.main.enable = true;
-                  memory.main.source = mkMemory config.davids.agents."${v}" { };
+                  memory.source = mkMemory config.davids.agents."${v}" { };
                 };
               }
             )
             {
               enable = true;
+              skills.enable = true;
+              skills.entries = lib.mapAttrs (name: _: ../skills + "/${name}") (
+                lib.filterAttrs (_: type: type == "directory") (builtins.readDir ../skills)
+              );
             }
             [
               "gemini"
               "claude"
               "copilot"
+              "antigravity"
             ];
         ssh = {
           enable = true;

@@ -19,9 +19,9 @@ If a command is not available in your current environment, use `nix shell nixpkg
 
 ### Your user level memory
 
-Your memory file is located at `@agentUserDirectory@/@agentMainMemoryFile@`. This file is managed by
+Your memory file is located at `@agentMemoryDirectory@/@agentMemoryFile@`. This file is managed by
 home-manager and thus immutable. When asked to record something in user-level memory, you should add them
-to the unmanaged memory file at `@agentUserDirectory@/unmanaged.MEMORY.MD`, which is included in the main
+to the unmanaged memory file at `@agentMemoryDirectory@/unmanaged.MEMORY.MD`, which is included in the main
 memory file.
 
 @userLevelFilesExtraH3@

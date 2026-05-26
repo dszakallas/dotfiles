@@ -66,12 +66,12 @@ in
       amalthea.staticIP.v4 = "192.168.1.244";
       callisto.staticIP.v4 = "192.168.1.144";
     };
+    # Allow proprietary agents :(
+    nixpkgs.config.allowUnfreePredicate =
+      pkg:
+      builtins.elem (lib.getName pkg) [
+        "claude-code"
+        "github-copilot-cli"
+      ];
   };
-  # Allow proprietary agents :(
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    builtins.elem (lib.getName pkg) [
-      "claude-code"
-      "github-copilot-cli"
-    ];
 }
