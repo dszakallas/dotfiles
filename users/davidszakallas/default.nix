@@ -29,7 +29,7 @@
 
   home-manager.users.davidszakallas =
     { config, ... }:
-    rec {
+    {
       imports = [
         davids-dotfiles-common.homeModules.base
         davids-dotfiles-common.homeModules.emacs
@@ -138,8 +138,28 @@
               // {
                 "${v}" = {
                   enable = true;
-                  memory.enable = true;
-                  memory.source = mkMemory config.davids.agents."${v}" { };
+                  memory =
+                    if v == "gemini" then
+                      {
+                        enable = false;
+                      }
+                    else
+                      {
+                        enable = true;
+                        source = mkMemory {
+                          memory = {
+                            directory = ".agents/${v}";
+                            target = "MEMORY.md";
+                          };
+                        } { };
+                        extraImports = [
+                          {
+                            enable = true;
+                            target = "tropes.memory.md";
+                            source = ../tropes.memory.md;
+                          }
+                        ];
+                      };
                 };
               }
             )

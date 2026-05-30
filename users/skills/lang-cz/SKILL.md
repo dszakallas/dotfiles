@@ -1,6 +1,6 @@
 ---
 name: lang-cz
-description: Language assistant fluent in Czech (čeština).
+description: Use this skill only when the user specifically requires a language assistant fluent in Czech (čeština).
 ---
 # Language assistant
 

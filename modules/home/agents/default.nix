@@ -64,6 +64,31 @@ let
             default = defaultMemoryFile;
             description = "Path to the target file for the main memory file.";
           };
+          extraImports = mkOption {
+            type = types.listOf (
+              types.submodule {
+                options = {
+                  enable = mkEnableOption "this memory import";
+                  target = mkOption {
+                    type = types.str;
+                    description = "The target file name in the memory directory.";
+                  };
+                  content = mkOption {
+                    type = types.lines;
+                    default = "";
+                    description = "Content of the imported memory file.";
+                  };
+                  source = mkOption {
+                    type = types.nullOr types.path;
+                    default = null;
+                    description = "Source derivation or path for the imported memory file.";
+                  };
+                };
+              }
+            );
+            default = [ ];
+            description = "List of additional memory files to import.";
+          };
           source = mkOption {
             type = types.nullOr types.path;
             default = null;
@@ -91,36 +116,55 @@ let
               };
             }) config.davids.agents.skills.entries;
           })
-          (mkIf cfg.memory.enable {
-            home.file."${memoryFile}" =
-              if cfg.memory.content != null then
-                { text = cfg.memory.content; }
-              else if cfg.memory.source != null then
-                { source = cfg.memory.source; }
-              else
-                { };
+          (mkIf cfg.memory.enable (mkMerge [
+            {
+              home.file."${memoryFile}".source = pkgs.runCommand "${name}-memory-with-imports" { } ''
+                cat ${
+                  if cfg.memory.source != null then
+                    cfg.memory.source
+                  else
+                    pkgs.writeText "content" (if cfg.memory.content != null then cfg.memory.content else "")
+                } > $out; echo "" >> $out; echo -n '${
+                  lib.concatStringsSep "
+" (
+                    map (m: "@./${m.target}") (builtins.filter (m: m.enable) cfg.memory.extraImports)
+                  )
+                }
+                ' >> $out'';
+            }
+            {
+              home.activation."initUnmanagedMemory${name}" = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+                  $DRY_RUN_CMD mkdir -p $VERBOSE_ARG "${memoryBaseDir}"
+                  if [[ ! -f "${unmanagedFile}" ]]; then
+                    $DRY_RUN_CMD cat <<EOF > "${unmanagedFile}"
+                # Unmanaged Memory for ${name}
 
-            home.activation."initUnmanagedMemory${name}" = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-              $DRY_RUN_CMD mkdir -p $VERBOSE_ARG "${memoryBaseDir}"
-              if [[ ! -f "${unmanagedFile}" ]]; then
-                $DRY_RUN_CMD cat <<EOF > "${unmanagedFile}"
-              # Unmanaged Memory for ${name}
+                <!--
+                This file is for your private, local-only agent memory.
+                Unlike '${cfg.memory.target}', this file is NOT managed by Nix.
+                It will never be overwritten, and it is safe to edit manually.
 
-              <!--
-              This file is for your private, local-only agent memory.
-              Unlike '${cfg.memory.target}', this file is NOT managed by Nix.
-              It will never be overwritten, and it is safe to edit manually.
-
-              Use this for:
-              - Personal secrets or local-only context.
-              - Temporary notes you don't want to commit to your dotfiles.
-              - Machine-specific configuration hints.
-              -->
-              EOF
-                $DRY_RUN_CMD chmod $VERBOSE_ARG 644 "${unmanagedFile}"
-              fi
-            '';
-          })
+                Use this for:
+                - Personal secrets or local-only context.
+                - Temporary notes you don't want to commit to your dotfiles.
+                - Machine-specific configuration hints.
+                -->
+                EOF
+                    $DRY_RUN_CMD chmod $VERBOSE_ARG 644 "${unmanagedFile}"
+                  fi
+              '';
+            }
+            {
+              home.file = builtins.listToAttrs (
+                map (
+                  m:
+                  lib.nameValuePair "${memoryBaseDir}/${m.target}" (
+                    if m.source != null then { source = m.source; } else { text = m.content; }
+                  )
+                ) (builtins.filter (m: m.enable) cfg.memory.extraImports)
+              );
+            }
+          ]))
         ]);
     };
 
