@@ -29,7 +29,7 @@
 
   home-manager.users.davidszakallas =
     { config, ... }:
-    {
+    rec {
       imports = [
         davids-dotfiles-common.homeModules.base
         davids-dotfiles-common.homeModules.emacs
@@ -146,12 +146,7 @@
                     else
                       {
                         enable = true;
-                        source = mkMemory {
-                          memory = {
-                            directory = ".agents/${v}";
-                            target = "MEMORY.md";
-                          };
-                        } { };
+                        source = mkMemory config.davids.agents."${v}" { };
                         extraImports = [
                           {
                             enable = true;

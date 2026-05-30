@@ -125,8 +125,7 @@ let
                   else
                     pkgs.writeText "content" (if cfg.memory.content != null then cfg.memory.content else "")
                 } > $out; echo "" >> $out; echo -n '${
-                  lib.concatStringsSep "
-" (
+                  lib.concatStringsSep "\n" (
                     map (m: "@./${m.target}") (builtins.filter (m: m.enable) cfg.memory.extraImports)
                   )
                 }
