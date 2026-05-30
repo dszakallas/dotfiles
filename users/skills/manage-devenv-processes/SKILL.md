@@ -1,7 +1,6 @@
 ---
 name: manage-devenv-processes
-description: Use this skill when the user asks to run, stop, check the status of, or view logs for local development environment 
-processes defined in devenv.nix projects. This skill provides instructions on how to use the 'devenv processes' command suite for process management.
+description: Use this skill when the user asks to run, stop, check the status of, or view logs for local development environment processes defined in devenv.nix projects. This skill provides instructions on how to use the 'devenv processes' command suite for process management.
 ---
 # Devenv process management
 
