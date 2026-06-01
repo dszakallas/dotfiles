@@ -65,6 +65,7 @@
         };
         pure.enable = true;
         id.enable = true;
+
         agents =
           let
             mkMemory =
@@ -87,19 +88,32 @@
               // {
                 "${v}" = {
                   enable = true;
-                  memory.enable = true;
-                  memory.source = mkMemory {
-                    memory = {
-                      directory = ".agents/${v}";
-                      target = "MEMORY.md";
-                    };
-                  } { };
-
+                  memory =
+                    if v == "gemini" then
+                      {
+                        enable = false;
+                      }
+                    else
+                      {
+                        enable = true;
+                        source = mkMemory config.davids.agents."${v}" { };
+                        extraImports = [
+                          {
+                            enable = true;
+                            target = "tropes.memory.md";
+                            source = ../tropes.memory.md;
+                          }
+                        ];
+                      };
                 };
               }
             )
             {
               enable = true;
+              skills.enable = true;
+              skills.entries = lib.mapAttrs (name: _: ../skills + "/${name}") (
+                lib.filterAttrs (_: type: type == "directory") (builtins.readDir ../skills)
+              );
             }
             [
               "gemini"
