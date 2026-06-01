@@ -24,13 +24,13 @@
     {
       imports = [
         davids-dotfiles-common.homeModules.base
+        davids-dotfiles-common.homeModules.agents
         davids-dotfiles-common.homeModules.emacs
         davids-dotfiles-common.homeModules.github
         davids-dotfiles-private.homeModules.default
         davids-dotfiles-private.homeModules.pure
         homeModules.id
         homeModules.spacemacs-config
-        homeModules.agents
       ];
 
       home = {

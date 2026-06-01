@@ -34,11 +34,11 @@
         davids-dotfiles-common.homeModules.base
         davids-dotfiles-common.homeModules.emacs
         davids-dotfiles-common.homeModules.github
+        davids-dotfiles-common.homeModules.agents
         davids-dotfiles-private.homeModules.default
         davids-dotfiles-private.homeModules.jupiter
         davids-dotfiles-private.homeModules.kolobok
         homeModules.id
-        homeModules.agents
       ];
 
       home = {
