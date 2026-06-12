@@ -49,6 +49,10 @@ consistent development environment, both for humans and for agents.
 If the project contains a `devenv.nix` file, you should treat it as a devenv project and apply the
 practices in this section.
 
+To detect if you are already running within a `devenv` shell, check if the `DEVENV_CMDLINE`
+environment variable is non-empty. If it is, you are already in the environment and can run
+commands directly without the `devenv shell` prefix.
+
 You should always execute commands from within the `devenv` shell,
 which provides access to all necessary tools and dependencies.
 

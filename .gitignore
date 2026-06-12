@@ -9,3 +9,7 @@ devenv.local.nix
 .pre-commit-config.yaml
 
 .agent-shell
+.antigravitycli
+
+# for editable dependencies
+deps
