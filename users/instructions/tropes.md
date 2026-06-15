@@ -1,10 +1,10 @@
-# AI Writing Tropes to Avoid
+## AI Writing Tropes to Avoid
 
 The following is a list of tropes to avoid in your responses.
 
-## Word Choice
+### Word Choice
 
-### "Quietly" and Other Magic Adverbs
+#### "Quietly" and Other Magic Adverbs
 
 Overuse of "quietly" and similar adverbs to convey subtle importance or understated power. Also includes: "deeply",
 "fundamentally", "remarkably", "arguably".
@@ -17,7 +17,7 @@ Overuse of "quietly" and similar adverbs to convey subtle importance or understa
 
 - "a quiet intelligence behind it"
 
-### "Delve" and Friends
+#### "Delve" and Friends
 
  "Delve" went from an uncommon English word to appearing in a staggering percentage of AI-generated text. Part of a
 family of overused AI vocabulary including "certainly", "utilize", "leverage" (as a verb), "robust", "streamline", and
@@ -31,7 +31,7 @@ family of overused AI vocabulary including "certainly", "utilize", "leverage" (a
 
 - "We certainly need to leverage these robust frameworks..."
 
-### "Tapestry" and "Landscape"
+#### "Tapestry" and "Landscape"
 
 Overuse of ornate or grandiose nouns where simpler words would do. "Tapestry" is used to describe anything
 interconnected. "Landscape" is used to describe any field or domain. Other offenders: "paradigm", "synergy",
@@ -45,7 +45,7 @@ interconnected. "Landscape" is used to describe any field or domain. Other offen
 
 - "The ever-evolving landscape of technology..."
 
-### The "Serves As" Dodge
+#### The "Serves As" Dodge
 
 Replacing simple "is" or "are" with pompous alternatives like "serves as", "stands as", "marks", or "represents".
 
@@ -59,9 +59,9 @@ Replacing simple "is" or "are" with pompous alternatives like "serves as", "stan
 
 ---
 
-## Sentence Structure
+### Sentence Structure
 
-### Negative Parallelism
+#### Negative Parallelism
 
 The "It's not X -- it's Y" pattern, often with an em dash. Includes the causal variant "not because X, but because Y"
 where
@@ -76,7 +76,7 @@ where the same noun is negated then repositioned: "The question isn't X. The que
 
 - "Half the bugs you chase aren't in your code. They're in your head."
 
-### "Not X. Not Y. Just Z."
+#### "Not X. Not Y. Just Z."
 
 The dramatic countdown pattern. AI builds tension by negating two or more things before revealing the actual point.
 Creates a false sense of narrowing down to the truth.
@@ -89,7 +89,7 @@ Creates a false sense of narrowing down to the truth.
 
 - "not recklessly, not completely, but enough"
 
-### "The X? A Y."
+#### "The X? A Y."
 
 Self-posed rhetorical questions answered immediately in the next sentence or clause.
 
@@ -101,7 +101,7 @@ Self-posed rhetorical questions answered immediately in the next sentence or cla
 
 - "The scary part? This attack vector is perfect for developers."
 
-### Anaphora Abuse
+#### Anaphora Abuse
 
 Repeating the same sentence opening multiple times in quick succession.
 
@@ -116,7 +116,7 @@ Repeating the same sentence opening multiple times in quick succession.
 - "They have built engines, but not vehicles. They have built power, but not leverage. They have built walls, but not
   doors."
 
-### Tricolon Abuse
+#### Tricolon Abuse
 
 Overuse of the rule-of-three pattern, often extended to four or five. A single tricolon is elegant; three back-to-back
 tricolons are a pattern recognition failure.
@@ -130,7 +130,7 @@ tricolons are a pattern recognition failure.
 
 - "workflows, decisions, and interactions"
 
-### "It's Worth Noting"
+#### "It's Worth Noting"
 
 Filler transitions that signal nothing. Also includes: "It bears mentioning", "Importantly", "Interestingly", "Notably".
 
@@ -142,7 +142,7 @@ Filler transitions that signal nothing. Also includes: "It bears mentioning", "I
 
 - "Interestingly, this pattern repeats across industries."
 
-### Superficial Analyses
+#### Superficial Analyses
 
 Tacking a present participle ("-ing") phrase onto the end of a sentence to inject shallow analysis that says nothing.
 Includes phrases like "highlighting its
@@ -157,7 +157,7 @@ importance", "reflecting broader trends", or "contributing to the development of
 
 - "underscoring its role as a dynamic hub of activity and culture"
 
-### False Ranges
+#### False Ranges
 
 Using "from X to Y" constructions where X and Y aren't on any real scale. In legitimate use, "from X to Y" implies a
 spectrum with a meaningful middle.
@@ -172,9 +172,9 @@ spectrum with a meaningful middle.
 
 ---
 
-## Paragraph Structure
+### Paragraph Structure
 
-### Short Punchy Fragments
+#### Short Punchy Fragments
 
 Excessive use of very short sentences or sentence fragments as standalone paragraphs for manufactured emphasis. No real
 person writes first drafts this
@@ -188,7 +188,7 @@ way because it doesn't match how humans think or speak.
 
 - "Platforms do."
 
-### Listicle in a Trench Coat
+#### Listicle in a Trench Coat
 
 Numbered or labeled points dressed up as continuous prose.
 
@@ -201,9 +201,9 @@ Numbered or labeled points dressed up as continuous prose.
 
 ---
 
-## Tone
+### Tone
 
-### "Here's the Kicker"
+#### "Here's the Kicker"
 
 False suspense transitions that promise a revelation but deliver a point that did NOT need the buildup. Also includes:
 "Here's the thing",
@@ -217,7 +217,7 @@ False suspense transitions that promise a revelation but deliver a point that di
 
 - "Here's where it gets interesting."
 
-### "Think of It As..."
+#### "Think of It As..."
 
 The patronizing analogy. AI constantly reaches for "Think of it as..." or "It's like a..." to simplify concepts. The
 model defaults to teacher mode and assumes the reader needs a metaphor to understand anything. Often produces analogies
@@ -231,7 +231,7 @@ that are less clear than the original concept.
 
 - "It's like asking someone to buy a car they're only allowed to sit in while it's parked."
 
-### "Imagine a World Where..."
+#### "Imagine a World Where..."
 
 The classic AI invitation to futurism. To sell the argument usually begins with "Imagine" followed by a list of
 wonderful things that will happen if the reader agrees with the premise.
@@ -243,7 +243,7 @@ wonderful things that will happen if the reader agrees with the premise.
 
 - "In that world, workflows stop being collections of manual steps and start becoming orchestrations."
 
-### False Vulnerability
+#### False Vulnerability
 
 Simulated self-awareness or honesty that reads as performative. The model pretends to break the fourth wall or admit a
 bias, creating a false sense of authenticity.
@@ -256,7 +256,7 @@ bias, creating a false sense of authenticity.
 
 - "This is not a rant; it's a diagnosis"
 
-### "Let's Break This Down"
+#### "Let's Break This Down"
 
 The pedagogical voice that assumes the reader needs hand-holding. AI defaults to a teacher-student dynamic even when
 writing for expert audiences. Also includes: "Let's unpack this", "Let's explore", "Let's dive in".
@@ -269,7 +269,7 @@ writing for expert audiences. Also includes: "Let's unpack this", "Let's explore
 
 - "Let's explore this idea further."
 
-### Vague Attributions
+#### Vague Attributions
 
 Attributing claims to unnamed authorities instead of being specific. Invoking "experts", "observers", "industry
 reports", and "several publications" without naming anyone. If you can't name the expert, you don't have a source.
@@ -284,9 +284,9 @@ reports", and "several publications" without naming anyone. If you can't name th
 
 ---
 
-## Formatting
+### Formatting
 
-### Em-Dash Addiction
+#### Em-Dash Addiction
 
 Compulsive overuse of em dashes for dramatic pauses, parenthetical asides and pivot points. A human writer might use 2-3
 per piece (and naturally).
@@ -299,7 +299,7 @@ per piece (and naturally).
 
 - "Not recklessly, not completely -- but enough -- enough to matter."
 
-### Bold-First Bullets
+#### Bold-First Bullets
 
 Every bullet point or list item starts with a bolded phrase or sentence. Extremely common in Claude and ChatGPT markdown
 output. Almost nobody formats lists this way when writing by hand.
@@ -314,9 +314,9 @@ output. Almost nobody formats lists this way when writing by hand.
 
 ---
 
-## Composition
+### Composition
 
-### Fractal Summaries
+#### Fractal Summaries
 
 "What I'm going to tell you; what I'm telling you; what I just told you" -- applied at every level of the document.
 Every subsection gets a summary. Every section gets a summary. The document itself gets a summary.
@@ -329,7 +329,7 @@ Every subsection gets a summary. Every section gets a summary. The document itse
 
 - "And so we return to where we began."
 
-### The Dead Metaphor
+#### The Dead Metaphor
 
 Latching onto a single metaphor and beating it into the ground across the entire thing. A human writer would introduce a
 metaphor, use it then move on.
@@ -342,7 +342,7 @@ metaphor, use it then move on.
 
 - "Every paragraph finds a way to say "primitives" again"
 
-### One-Point Dilution
+#### One-Point Dilution
 
 Making a single argument and restating it in 10 different ways across thousands of words. An 800-word argument becomes
 4000 words of circular repetition.
@@ -353,7 +353,7 @@ Making a single argument and restating it in 10 different ways across thousands 
 
 - "Each section rephrases the thesis with a different metaphor but adds nothing new"
 
-### The Signposted Conclusion
+#### The Signposted Conclusion
 
 Explicitly announcing the conclusion with "In conclusion", "To sum up", or "In summary". Competent writing doesn't need
 to tell you it's concluding.

@@ -13,18 +13,14 @@
         ]
       },
       "locked": {
-        "lastModified": 1780312258,
-        "narHash": "sha256-Ky8C5fC+b5EyJz7FaUjh0bKb70pb99GC/a9DKIfAfhE=",
-        "owner": "dszakallas",
-        "repo": "dotfiles-common",
-        "rev": "9fcd3a88ca54a5ceb23e89018cdd48669be9b204",
-        "type": "github"
+        "path": "./deps/davids-dotfiles-common",
+        "type": "path"
       },
       "original": {
-        "owner": "dszakallas",
-        "repo": "dotfiles-common",
-        "type": "github"
-      }
+        "path": "./deps/davids-dotfiles-common",
+        "type": "path"
+      },
+      "parent": []
     },
     "davids-dotfiles-private": {
       "inputs": {
@@ -51,18 +47,14 @@
         ]
       },
       "locked": {
-        "lastModified": 1781002183,
-        "narHash": "sha256-q/oeEUZgibwEi0Ya5ycQlJEB+GFvzkwiSgrIlmBheqM=",
-        "owner": "dszakallas",
-        "repo": "dotfiles-private",
-        "rev": "e12872b4e6a5c5db79d5a683ccdcaa825eb92fa2",
-        "type": "github"
+        "path": "./deps/davids-dotfiles-private",
+        "type": "path"
       },
       "original": {
-        "owner": "dszakallas",
-        "repo": "dotfiles-private",
-        "type": "github"
-      }
+        "path": "./deps/davids-dotfiles-private",
+        "type": "path"
+      },
+      "parent": []
     },
     "flake-utils": {
       "inputs": {

@@ -1,0 +1,6 @@
+[submodule "deps/davids-dotfiles-common"]
+	path = deps/davids-dotfiles-common
+	url = https://github.com/dszakallas/dotfiles-common.git
+[submodule "deps/davids-dotfiles-private"]
+	path = deps/davids-dotfiles-private
+	url = git@github.com:dszakallas/dotfiles-private.git

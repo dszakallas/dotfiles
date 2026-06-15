@@ -120,13 +120,20 @@
           let
             mkMemory =
               agentConf: extra:
-              (pkgs.replaceVars ../MEMORY.md (
+              let
+                memoryFiles = [
+                  ../instructions/user.md
+                  ../instructions/worktrees.md
+                  ../instructions/tropes.md
+                ];
+                concatenatedMemory = pkgs.writeText "concatenated-memory" (
+                  "# User-level memory\n\n" + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
+                );
+              in
+              (pkgs.replaceVars concatenatedMemory (
                 {
                   agentMemoryDirectory = agentConf.memory.directory;
                   agentMemoryFile = agentConf.memory.target;
-                  userLevelFilesExtraH3 = "";
-                  packageManagentExtraH3 = "";
-                  workTreesExtraH3 = "";
                 }
                 // extra
               ));
@@ -147,13 +154,6 @@
                       {
                         enable = true;
                         source = mkMemory config.davids.agents."${v}" { };
-                        extraImports = [
-                          {
-                            enable = true;
-                            target = "tropes.memory.md";
-                            source = ../tropes.memory.md;
-                          }
-                        ];
                       };
                 };
               }
@@ -170,6 +170,7 @@
               "claude"
               "copilot"
               "antigravity"
+              "opencode"
             ];
         ssh = {
           enable = true;

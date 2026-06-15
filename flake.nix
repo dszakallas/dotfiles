@@ -2,6 +2,7 @@ rec {
   description = "My personal Nix configuration";
 
   inputs = {
+    self.submodules = true;
     nixpkgs = {
       url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     };
@@ -32,13 +33,13 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
     };
     davids-dotfiles-common = {
-      url = "github:dszakallas/dotfiles-common";
+      url = "path:./deps/davids-dotfiles-common";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
       inputs.flake-utils.follows = "flake-utils";
     };
     davids-dotfiles-private = {
-      url = "github:dszakallas/dotfiles-private";
+      url = "path:./deps/davids-dotfiles-private";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
       inputs.flake-utils.follows = "flake-utils";

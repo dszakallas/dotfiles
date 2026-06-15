@@ -10,6 +10,3 @@ devenv.local.nix
 
 .agent-shell
 .antigravitycli
-
-# for editable dependencies
-deps
