@@ -79,6 +79,7 @@
                 concatenatedMemory = pkgs.writeText "concatenated-memory" (
                   "# User-level memory\n\n"
                   + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
+                  + davids-dotfiles-common.lib.agents.memory.commitConventions
                   + davids-dotfiles-private.lib.agents.memory.pure.purelogin
                   + davids-dotfiles-private.lib.agents.memory.pure.commitConventions
                 );
