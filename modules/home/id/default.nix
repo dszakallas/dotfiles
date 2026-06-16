@@ -60,7 +60,7 @@ in
         ssh = {
           matchBlocks = {
             "git" = {
-              identityFile =
+              IdentityFile =
                 if lib.isList config.davids.id.identity then
                   builtins.map (identity: "~/.ssh/${identity}") config.davids.id.identity
                 else

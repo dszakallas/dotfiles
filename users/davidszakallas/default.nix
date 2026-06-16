@@ -61,19 +61,18 @@
         ]);
       };
 
-      programs.ssh.matchBlocks =
+      programs.ssh.settings =
         builtins.listToAttrs (
           builtins.map
             (name: {
-              inherit name;
+              name = "Match host ${name}";
               value = {
-                match = "host ${name}";
-                user = "gamer";
-                identitiesOnly = true;
-                identityFile = "~/.ssh/gamer@${name}";
-                forwardAgent = true;
-                serverAliveInterval = 5;
-                sendEnv = [ "NIX_CONFIG" ];
+                User = "gamer";
+                IdentitiesOnly = true;
+                IdentityFile = "~/.ssh/gamer@${name}";
+                ForwardAgent = true;
+                ServerAliveInterval = 5;
+                SendEnv = [ "NIX_CONFIG" ];
               };
             })
             [
@@ -82,14 +81,13 @@
             ]
         )
         // {
-          "sparkplug" = {
-            match = "host sparkplug";
-            forwardAgent = true;
-            identitiesOnly = true;
-            user = "david";
-            sendEnv = [ "NIX_CONFIG" ];
-            serverAliveInterval = 5;
-            identityFile = "~/.ssh/sparkplug";
+          "Match host sparkplug" = {
+            ForwardAgent = true;
+            IdentitiesOnly = true;
+            User = "david";
+            SendEnv = [ "NIX_CONFIG" ];
+            ServerAliveInterval = 5;
+            IdentityFile = "~/.ssh/sparkplug";
           };
         };
 
