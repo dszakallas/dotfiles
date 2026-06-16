@@ -77,7 +77,10 @@
                   ../instructions/tropes.md
                 ];
                 concatenatedMemory = pkgs.writeText "concatenated-memory" (
-                  "# User-level memory\n\n" + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
+                  "# User-level memory\n\n"
+                  + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
+                  + davids-dotfiles-private.lib.agents.memory.pure.purelogin
+                  + davids-dotfiles-private.lib.agents.memory.pure.commitConventions
                 );
               in
               (pkgs.replaceVars concatenatedMemory (
