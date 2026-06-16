@@ -1,13 +1,21 @@
-{ ... }:
+{ pkgs, davids-dotfiles-common, ... }@args:
 {
-  languages.python.enable = true;
-  languages.python.uv.enable = true;
+  imports = [
+    davids-dotfiles-common.devenvModules.recommended
+  ];
 
-  git-hooks.hooks.nixfmt-rfc-style = {
+  profiles = {
+    agents.module = import ./devenv/profiles/agents args;
+  };
+
+  git-hooks.hooks.nixfmt = {
     excludes = [ "pkgs/npm/_.*\\.nix" ];
   };
 
   git-hooks.hooks.markdownlint = {
+    excludes = [
+      "users/skills/devenv/SKILL\\.md"
+    ];
     settings.configuration = {
       # instructions in certain folders will be merged into a single file
       MD041 = false;

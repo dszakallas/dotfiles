@@ -1,3 +1,12 @@
+# Managed files
+.copilot/mcp-config.json
+.agents/mcp_config.json
+.gemini/settings.json
+.vscode/mcp.json
+.agent-shell
+.antigravitycli
+.mcp.json
+
 # Devenv
 .devenv*
 devenv.local.nix
@@ -8,5 +17,4 @@ devenv.local.nix
 # pre-commit
 .pre-commit-config.yaml
 
-.agent-shell
-.antigravitycli
+

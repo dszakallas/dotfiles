@@ -1,7 +1,9 @@
 inputs:
-  davids-devenvs:
-    url: github:dszakallas/devenvs
-    flake: false
+  davids-dotfiles-common:
+    url: git+file:deps/davids-dotfiles-common
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
   git-hooks:
     url: github:cachix/git-hooks.nix
     inputs:
@@ -9,5 +11,3 @@ inputs:
         follows: nixpkgs
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
-imports:
-- davids-devenvs/recommended
