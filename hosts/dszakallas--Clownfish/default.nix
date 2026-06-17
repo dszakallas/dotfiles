@@ -38,7 +38,8 @@ in
     };
 
     homebrew.casks = [
-      "logseq"
+      "claude"
+      "ollama"
       "ukelele"
     ];
 

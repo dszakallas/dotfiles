@@ -30,9 +30,10 @@ in
 
     homebrew.casks = [
       "calibre"
+      "claude"
       "discord"
       "google-drive"
-      "logseq"
+      "ollama"
       "signal"
       "slack"
       "spotify"
