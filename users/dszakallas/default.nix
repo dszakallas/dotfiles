@@ -91,6 +91,23 @@
                 }
                 // extra
               ));
+
+            # User-level (global) MCP servers, specified once in the generic
+            # schema and transformed per agent.
+            inherit (davids-dotfiles-private.lib.agents) gleanMcpConfig;
+            mcpServers = gleanMcpConfig;
+            mkMcp = agent: {
+              # No-op while mcpServers is empty, so we never clobber servers a
+              # CLI added at user scope until we actually manage some here.
+              enable = mcpServers != { };
+              servers = davids-dotfiles-common.lib.agents.mcpServersForAgent agent mcpServers;
+            };
+            mcpAgents = [
+              "gemini"
+              "claude"
+              "copilot"
+              "opencode"
+            ];
           in
           lib.foldl'
             (
@@ -109,7 +126,8 @@
                         enable = true;
                         source = mkMemory config.davids.agents."${v}" { };
                       };
-                };
+                }
+                // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; };
               }
             )
             {
