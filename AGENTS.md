@@ -37,15 +37,19 @@ Changes that span multiple repositories (this repo + submodules) require extra s
 
 1. **Commit inside the submodule first** (`deps/davids-dotfiles-common`, `deps/davids-dotfiles-private`).
 2. **Push the submodule** to its remote so the commit is reachable:
+
    ```bash
    cd deps/<name> && git push origin main
    ```
+
 3. **Update the parent repo's submodule pointer** and commit:
+
    ```bash
    cd /path/to/dotfiles
    git add deps/<name>
    git commit -m "update <name> submodule"
    ```
+
 4. **Push the parent repo**.
 
 > Skipping step 2 causes the Nix flake build to fail with:
@@ -54,14 +58,17 @@ Changes that span multiple repositories (this repo + submodules) require extra s
 
 ### When submodule main branch moves forward
 
-If the submodule's remote `main` advances (e.g. someone pushed new commits) while you have local commits on a detached HEAD, your commits are not on `main` and will be lost when the submodule is updated. To avoid this:
+If the submodule's remote `main` advances (e.g. someone pushed new commits) while you have local commits on a
+detached HEAD, your commits are not on `main` and will be lost when the submodule is updated. To avoid this:
 
 - Work on the submodule with `git checkout main` before making changes, so commits land on the branch.
 - After the submodule's remote advances, rebase your local work:
+
   ```bash
   cd deps/<name>
   git fetch origin
   git rebase origin/main
   git push origin main
   ```
+
 - Then update the parent repo pointer as described above.

@@ -14,7 +14,7 @@
 
   git-hooks.hooks.markdownlint = {
     excludes = [
-      "users/skills/devenv/SKILL\\.md"
+      "users/skills/.*"
     ];
     settings.configuration = {
       # instructions in certain folders will be merged into a single file

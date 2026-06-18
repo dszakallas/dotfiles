@@ -9,13 +9,15 @@
 
 ### Sentence Structure
 
-- **Negative parallelism:** "It's not X — it's Y", "not because X, but because Y", "The question isn't X. The question is Y."
+- **Negative parallelism:** "It's not X — it's Y", "not because X, but because Y",
+  "The question isn't X. The question is Y."
 - **Not X. Not Y. Just Z.:** Dramatic negation countdown before the actual point.
 - **"The X? A Y.":** Self-posed rhetorical questions answered immediately.
 - **Anaphora abuse:** Same sentence opener repeated in quick succession ("They assume... They assume... They assume...").
 - **Tricolon abuse:** Rule-of-three stacked back to back across multiple sentences.
 - **Filler transitions:** "It's worth noting", "Importantly", "Interestingly", "Notably".
-- **Superficial -ing tails:** Dangling participles that add no analysis ("highlighting its importance", "underscoring its role").
+- **Superficial -ing tails:** Dangling participles that add no analysis
+  ("highlighting its importance", "underscoring its role").
 - **False ranges:** "from X to Y" where X and Y aren't on a real scale.
 
 ### Paragraph Structure
