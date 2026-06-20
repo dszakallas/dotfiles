@@ -29,19 +29,8 @@ in
       enable = true;
       servers = mcpServers;
     };
-    gemini = {
-      enable = true;
-      settings = {
-        enable = true;
-        value = (lib'.agents.mcpServersForAgent "gemini" mcpServers) // {
-          context = {
-            fileName = [ "AGENTS.md" ];
-          };
-        };
-      };
-    };
   }
-  // lib.genAttrs [ "vscode" "claude" "copilot" ] (name: {
+  // lib.genAttrs [ "vscode" "claude" "copilot" "gemini" ] (name: {
     enable = true;
     mcp = {
       enable = true;

@@ -10,6 +10,7 @@
 # Devenv
 .devenv*
 devenv.local.nix
+result
 
 # direnv
 .direnv

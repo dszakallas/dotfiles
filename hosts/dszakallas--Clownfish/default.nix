@@ -39,7 +39,9 @@ in
 
     homebrew.casks = [
       "claude"
+      "google-gemini"
       "ollama"
+      "plexamp"
       "ukelele"
     ];
 
