@@ -29,12 +29,14 @@ in
     system = { inherit primaryUser; };
 
     homebrew.casks = [
+      "antigravity"
+      "antigravity-cli"
       "calibre"
       "claude"
       "discord"
       "google-drive"
       "google-gemini"
-      "ollama"
+      "ollama-app"
       "plexamp"
       "signal"
       "slack"

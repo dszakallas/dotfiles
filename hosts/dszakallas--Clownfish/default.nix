@@ -38,9 +38,11 @@ in
     };
 
     homebrew.casks = [
+      "antigravity"
+      "antigravity-cli"
       "claude"
       "google-gemini"
-      "ollama"
+      "ollama-app"
       "plexamp"
       "ukelele"
     ];
