@@ -63,7 +63,18 @@
             enable = true;
           };
         };
-        pure.enable = true;
+        pure = {
+          enable = true;
+          python = {
+            enable = true;
+            setPurePypiMirrorAsDefault = true;
+            setPureExtraIndexes = true;
+          };
+          go = {
+            enable = true;
+            setPureGoProxy = true;
+          };
+        };
         id.enable = true;
 
         agents =
