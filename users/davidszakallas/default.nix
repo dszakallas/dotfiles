@@ -173,6 +173,11 @@
               skills.enable = true;
               skills.entries = {
                 shared = shared-skills;
+                dotfiles-common-skills = davids-dotfiles-common.lib.agents.mkSkill pkgs {
+                  name = "dotfiles-common-skills";
+                  version = "unstable";
+                  src = davids-dotfiles-common;
+                };
                 cc-skills-golang = davids-dotfiles-common.lib.agents.mkSkill pkgs {
                   name = "cc-skills-golang";
                   version = "2026-07-02";
