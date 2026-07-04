@@ -83,9 +83,9 @@
               agentConf: extra:
               let
                 memoryFiles = [
-                  ../local/instructions/user.md
-                  ../local/instructions/worktrees.md
-                  ../local/instructions/tropes.md
+                  ../shared/instructions/user.md
+                  ../shared/instructions/worktrees.md
+                  ../shared/instructions/tropes.md
                 ];
                 concatenatedMemory = pkgs.writeText "concatenated-memory" (
                   "# User-level memory\n\n"
@@ -120,9 +120,9 @@
               "opencode"
             ];
 
-            local-skills = pkgs.stdenvNoCC.mkDerivation {
-              name = "local-skills";
-              src = ../local;
+            shared-skills = pkgs.stdenvNoCC.mkDerivation {
+              name = "shared-skills";
+              src = ../shared;
               dontBuild = true;
               installPhase = ''
                 mkdir -p $out
@@ -155,7 +155,7 @@
               enable = true;
               skills.enable = true;
               skills.entries = {
-                local = local-skills;
+                shared = shared-skills;
                 cc-skills-golang = davids-dotfiles-common.lib.agents.mkSkill pkgs {
                   name = "cc-skills-golang";
                   version = "2026-07-02";
