@@ -188,6 +188,17 @@
                     hash = "sha256-oSFApXKBndeM1wsl6GyPwiDuIgt5bGXWzDtpnmC6SaM=";
                   };
                 };
+                wshobson-python-skills = davids-dotfiles-common.lib.agents.mkSkill pkgs {
+                  name = "wshobson-python-skills";
+                  version = "2026-06-25";
+                  src = pkgs.fetchFromGitHub {
+                    owner = "wshobson";
+                    repo = "agents";
+                    rev = "5cc2549a50fc672230efd0a0307e2fd27ffba792";
+                    hash = "sha256-wgDN0ytDleqyPQtJHSvrzZVSeY+JPI+SNDl3FFliIqM=";
+                  };
+                  subDir = "plugins/python-development";
+                };
               };
             }
             [

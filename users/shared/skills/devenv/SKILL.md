@@ -255,7 +255,51 @@ Long-running processes managed by devenv (started with `devenv up`). These are u
 
 ### Process management
 
-Process management is handled via the `devenv processes` command suite.
+Process management is handled via the `devenv processes` command suite or the **`devenv` MCP server**.
+
+> [!IMPORTANT]
+> **Use the MCP Server to Manage Processes when Available**:
+> If the `devenv` MCP server is enabled in your environment, **always** prefer using the MCP tools (`list_processes`, `start_process`, `stop_process`, `get_process_status`, `get_process_logs`) over shell CLI commands. 
+> The MCP server is executed in the exact context of the workspace's background daemon, which prevents the path and socket mismatches described below.
+
+#### Mismatched Shell Sessions & Orphaned Supervisors
+
+* **CLI Commands are Not Shareable Across Shells**: 
+  devenv process manager states and sockets are saved in a temporary runtime directory (`DEVENV_RUNTIME`) keyed to a hash of the environment. If you enter the environment in different ways (e.g. nested shells, different terminal sessions, or wrapper scripts), their `DEVENV_RUNTIME` values may point to different directories (e.g., `/tmp/devenv-e864f60` vs `/tmp/devenv-c92e103`).
+  As a result, commands like `devenv processes list` or `devenv processes down` run in one session might fail to find the active supervisor's control socket and report `"No process manager is running"`, even though the supervisor is running and actively managing processes in the background.
+
+* **Do Not Run Processes in Ephemeral or Nested Shells**:
+  Avoid running `devenv up` or `devenv up -d` inside ephemeral shells (such as nested scripts, short-lived tasks, or subagent runs). If the shell parent exits or is cancelled, the supervisord daemon may exit or lose its control socket, but the children (Vite, Go backend, Postgres) will remain orphaned, running invisibly in the background, consuming CPU, and blocking port bindings.
+
+* **Prefer Foreground in Persistent/Backgrounded Shell Sessions**:
+  To ensure processes clean up automatically, run `devenv up` or `devenv processes start` in the **foreground** of a terminal session. If you need the stack to run in the background, **background the terminal session itself** (e.g., using `tmux`, `screen`, or a background system daemon), while keeping the processes running in the foreground of that session. 
+  This way, when the session is closed or killed, the terminal controller sends signals (SIGINT/SIGHUP) to the entire process group, ensuring all child services are cleanly terminated instead of being orphaned.
+
+* **Testing Foreground Exit Behavior**:
+  You can test this clean teardown using terminal multiplexers (like `tmux`):
+  1. Start `devenv up` in a detached tmux session:
+     ```bash
+     tmux new-session -d -s devenv-session 'devenv up'
+     ```
+  2. Verify that services are active and ports are bound (e.g., `lsof -i :3000`).
+  3. Terminate the tmux session:
+     ```bash
+     tmux kill-session -t devenv-session
+     ```
+  4. Verify that the child processes (Vite, Go, PostgreSQL) have terminated cleanly and the ports are freed.
+
+* **Shutting Down Orphaned Supervisors**:
+  If a supervisor daemon gets orphaned or runs under a mismatched socket path, manual child process kills (e.g. killing `postgres` or `node`) will just trigger immediate restarts by the supervisor. To shut down the daemon and its children permanently:
+  1. Kill the supervisor daemon itself:
+     ```bash
+     pkill -f "daemon-processes"
+     ```
+  2. Kill any remaining children:
+     ```bash
+     pkill -f "node.*vite" || true
+     pkill -f "postgres" || true
+     ```
+
 
 #### 1. Starting Processes
 
