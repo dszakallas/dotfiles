@@ -173,6 +173,16 @@
               skills.enable = true;
               skills.entries = {
                 local = local-skills;
+                cc-skills-golang = davids-dotfiles-common.lib.agents.mkSkill pkgs {
+                  name = "cc-skills-golang";
+                  version = "2026-07-02";
+                  src = pkgs.fetchFromGitHub {
+                    owner = "samber";
+                    repo = "cc-skills-golang";
+                    rev = "8b2d019212d6a5390d472a7660a8489109d7db49";
+                    hash = "sha256-oSFApXKBndeM1wsl6GyPwiDuIgt5bGXWzDtpnmC6SaM=";
+                  };
+                };
               };
             }
             [
