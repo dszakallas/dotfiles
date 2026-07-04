@@ -83,9 +83,9 @@
               agentConf: extra:
               let
                 memoryFiles = [
-                  ../instructions/user.md
-                  ../instructions/worktrees.md
-                  ../instructions/tropes.md
+                  ../local/instructions/user.md
+                  ../local/instructions/worktrees.md
+                  ../local/instructions/tropes.md
                 ];
                 concatenatedMemory = pkgs.writeText "concatenated-memory" (
                   "# User-level memory\n\n"
@@ -119,6 +119,16 @@
               "copilot"
               "opencode"
             ];
+
+            local-skills = pkgs.stdenvNoCC.mkDerivation {
+              name = "local-skills";
+              src = ../local;
+              dontBuild = true;
+              installPhase = ''
+                mkdir -p $out
+                cp -r $src/* $out/
+              '';
+            };
           in
           lib.foldl'
             (
@@ -144,9 +154,9 @@
             {
               enable = true;
               skills.enable = true;
-              skills.entries = lib.mapAttrs (name: _: ../skills + "/${name}") (
-                lib.filterAttrs (_: type: type == "directory") (builtins.readDir ../skills)
-              );
+              skills.entries = {
+                local = local-skills;
+              };
             }
             [
               "gemini"
