@@ -127,6 +127,9 @@ This project uses Git submodules for local development of flake dependencies.
   - **Instruction**: Always ensure the parent repository is "dirty" (has unstaged/staged changes) when testing local
     submodule modifications. You can do this by adding a temporary comment or newline to a file in the root directory
     (e.g., `flake.nix` or `AGENTS.md`).
+- **Submodule Testing**: When making changes in a dependency flake submodule (e.g.
+  `deps/davids-dotfiles-common`), also `cd` into the dependency repository and run
+  `devenv test` to verify that its own tests pass.
 
 ### Committing and Publishing Submodule Changes
 

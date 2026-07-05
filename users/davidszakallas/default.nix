@@ -46,6 +46,7 @@
         homeDirectory = "/Users/davidszakallas";
         stateVersion = "24.05";
         packages = [
+          packages.${system}.notebooklm-py
         ]
         ++ (with pkgs; [
           fluxcd-operator

@@ -39,6 +39,7 @@
         stateVersion = "24.05";
         # TODO move to common
         packages = [
+          packages.${system}.notebooklm-py
         ]
         ++ (with pkgs; [
           fluxcd-operator
