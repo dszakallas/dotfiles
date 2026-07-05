@@ -43,6 +43,7 @@
         ++ (with pkgs; [
           fluxcd-operator
           temporal-cli
+          gogcli
         ]);
       };
 

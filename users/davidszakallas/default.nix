@@ -58,6 +58,7 @@
           yt-dlp
           google-cloud-sdk
           playwright-mcp
+          gogcli
         ]);
       };
 
