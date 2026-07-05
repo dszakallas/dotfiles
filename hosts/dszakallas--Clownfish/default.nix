@@ -41,6 +41,7 @@ in
       "antigravity"
       "antigravity-cli"
       "claude"
+      "claude-code"
       "copilot-cli"
       "google-gemini"
       "ollama-app"

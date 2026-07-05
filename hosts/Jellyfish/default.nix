@@ -33,6 +33,7 @@ in
       "antigravity-cli"
       "calibre"
       "claude"
+      "claude-code"
       "copilot-cli"
       "discord"
       "google-drive"
