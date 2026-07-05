@@ -34,6 +34,9 @@ To enter the `devenv` shell interactively, run:
 devenv shell --no-tui --quiet
 ```
 
+**IMPORTANT**: Do not enter the devenv shell if `DEVENV_CMDLINE` is already set,
+as this indicates you are already in the environment.
+
 You can, then run any command within the shell, for example:
 
 ```bash

@@ -120,12 +120,13 @@
               agentConf: extra:
               let
                 memoryFiles = [
-                  ../shared/instructions/user.md
+                  ../shared/instructions/home.md
                   ../shared/instructions/worktrees.md
                   ../shared/instructions/tropes.md
                 ];
                 concatenatedMemory = pkgs.writeText "concatenated-memory" (
                   "# User-level memory\n\n"
+                  + davids-dotfiles-private.lib.agents.memory.personal.id
                   + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
                   + davids-dotfiles-common.lib.agents.memory.commitConventions
                 );
@@ -137,16 +138,6 @@
                 }
                 // extra
               ));
-
-            shared-skills = pkgs.stdenvNoCC.mkDerivation {
-              name = "dotfiles-skills";
-              src = ../shared/skills;
-              dontBuild = true;
-              installPhase = ''
-                mkdir -p $out/skills
-                cp -r $src/* $out/skills/
-              '';
-            };
           in
           lib.foldl'
             (
@@ -155,54 +146,29 @@
               // {
                 "${v}" = {
                   enable = true;
-                  memory =
-                    if v == "gemini" then
-                      {
-                        enable = false;
-                      }
-                    else
-                      {
-                        enable = true;
-                        source = mkMemory config.davids.agents."${v}" { };
-                      };
+                  memory = {
+                    enable = true;
+                    source = mkMemory config.davids.agents."${v}" { };
+                  };
+                }
+                // lib.optionalAttrs (v == "claude" || v == "copilot" || v == "antigravity") {
+                  # non-free, self-updating tools, better installed with Homebrew
+                  package = null;
                 };
               }
             )
             {
               enable = true;
               skills.enable = true;
-              skills.entries = {
-                shared = shared-skills;
-                dotfiles-common-skills = davids-dotfiles-common.lib.agents.mkSkill pkgs {
-                  name = "dotfiles-common-skills";
+              skills.entries = packages.${system}.agentskills // {
+                dotfiles-common-skills = pkgs.mkSkill {
+                  name = "davids-dotfiles-common-skills";
                   version = "unstable";
                   src = davids-dotfiles-common;
-                };
-                cc-skills-golang = davids-dotfiles-common.lib.agents.mkSkill pkgs {
-                  name = "cc-skills-golang";
-                  version = "2026-07-02";
-                  src = pkgs.fetchFromGitHub {
-                    owner = "samber";
-                    repo = "cc-skills-golang";
-                    rev = "8b2d019212d6a5390d472a7660a8489109d7db49";
-                    hash = "sha256-oSFApXKBndeM1wsl6GyPwiDuIgt5bGXWzDtpnmC6SaM=";
-                  };
-                };
-                wshobson-python-skills = davids-dotfiles-common.lib.agents.mkSkill pkgs {
-                  name = "wshobson-python-skills";
-                  version = "2026-06-25";
-                  src = pkgs.fetchFromGitHub {
-                    owner = "wshobson";
-                    repo = "agents";
-                    rev = "5cc2549a50fc672230efd0a0307e2fd27ffba792";
-                    hash = "sha256-wgDN0ytDleqyPQtJHSvrzZVSeY+JPI+SNDl3FFliIqM=";
-                  };
-                  subDir = "plugins/python-development";
                 };
               };
             }
             [
-              "gemini"
               "claude"
               "copilot"
               "antigravity"

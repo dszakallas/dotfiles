@@ -15,6 +15,7 @@
   git-hooks.hooks.markdownlint = {
     excludes = [
       "users/shared/skills/.*"
+      "pkgs/agentskills/local/skills/.*"
     ];
     settings.configuration = {
       # instructions in certain folders will be merged into a single file

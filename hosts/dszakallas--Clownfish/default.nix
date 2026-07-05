@@ -41,6 +41,7 @@ in
       "antigravity"
       "antigravity-cli"
       "claude"
+      "copilot-cli"
       "google-gemini"
       "ollama-app"
       "plexamp"

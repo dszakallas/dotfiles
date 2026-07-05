@@ -80,7 +80,9 @@ rec {
       inherit (davids-dotfiles-common.lib) importRec importRec1 callPackageWithRec;
       inherit (nixpkgs) lib;
       pkgsFor = system: nixpkgs.legacyPackages.${system}.extend overlays;
-      overlays = lib.foldl' lib.composeExtensions (_: _: { }) (lib.attrValues (importRec ./overlays));
+      overlays = lib.foldl' lib.composeExtensions (_: _: { }) (
+        lib.attrValues (importRec1 ./overlays ctx)
+      );
       ctx = (inputs // outputs);
       mkDarwin =
         { host, arch, ... }:

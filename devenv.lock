@@ -9,6 +9,7 @@
         ]
       },
       "locked": {
+        "ref": "refs/heads/main",
         "type": "git",
         "url": "file:deps/davids-dotfiles-common"
       },

@@ -83,12 +83,13 @@
               agentConf: extra:
               let
                 memoryFiles = [
-                  ../shared/instructions/user.md
+                  ../shared/instructions/home.md
                   ../shared/instructions/worktrees.md
                   ../shared/instructions/tropes.md
                 ];
                 concatenatedMemory = pkgs.writeText "concatenated-memory" (
                   "# User-level memory\n\n"
+                  + davids-dotfiles-private.lib.agents.memory.pure.id
                   + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
                   + davids-dotfiles-common.lib.agents.memory.commitConventions
                   + davids-dotfiles-private.lib.agents.memory.pure.purelogin
@@ -148,28 +149,22 @@
                         source = mkMemory config.davids.agents."${v}" { };
                       };
                 }
-                // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; };
+                // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; }
+                // lib.optionalAttrs (v == "claude" || v == "copilot") {
+                  # Installed with Homebrew
+                  package = null;
+                };
               }
             )
             {
               enable = true;
               skills.enable = true;
               skills.entries = {
-                shared = shared-skills;
-                dotfiles-common-skills = davids-dotfiles-common.lib.agents.mkSkill pkgs {
+                inherit (packages.${system}.agentskills) local;
+                dotfiles-common-skills = pkgs.mkSkill {
                   name = "davids-dotfiles-common-skills";
                   version = "unstable";
                   src = davids-dotfiles-common;
-                };
-                cc-skills-golang = davids-dotfiles-common.lib.agents.mkSkill pkgs {
-                  name = "cc-skills-golang";
-                  version = "2026-07-02";
-                  src = pkgs.fetchFromGitHub {
-                    owner = "samber";
-                    repo = "cc-skills-golang";
-                    rev = "8b2d019212d6a5390d472a7660a8489109d7db49";
-                    hash = "sha256-oSFApXKBndeM1wsl6GyPwiDuIgt5bGXWzDtpnmC6SaM=";
-                  };
                 };
               };
             }

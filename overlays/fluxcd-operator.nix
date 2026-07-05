@@ -1,4 +1,4 @@
-fix: prev: {
+_: fix: prev: {
   fluxcd-operator = prev.fluxcd-operator.overrideAttrs (_: rec {
     subPackages = [
       "cmd/cli"

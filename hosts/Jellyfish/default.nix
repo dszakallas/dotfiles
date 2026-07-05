@@ -33,6 +33,7 @@ in
       "antigravity-cli"
       "calibre"
       "claude"
+      "copilot-cli"
       "discord"
       "google-drive"
       "google-gemini"
