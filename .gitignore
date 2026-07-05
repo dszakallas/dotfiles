@@ -6,6 +6,8 @@
 .agent-shell
 .antigravitycli
 .mcp.json
+.agents/skills
+.claude
 
 # Devenv
 .devenv*
