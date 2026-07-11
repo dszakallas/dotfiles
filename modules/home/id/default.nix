@@ -56,18 +56,15 @@ in
           }
         );
       };
-      github = {
-        ssh = {
-          matchBlocks = {
-            "git" = {
-              IdentityFile =
-                if lib.isList config.davids.id.identity then
-                  builtins.map (identity: "~/.ssh/${identity}") config.davids.id.identity
-                else
-                  "~/.ssh/${config.davids.id.identity}";
-              isFIDO2 = true;
-            };
-          };
+      ssh.matchBlocks = {
+        "git@github.com" = {
+          match = "user git host github.com";
+          IdentityFile =
+            if lib.isList config.davids.id.identity then
+              builtins.map (identity: "~/.ssh/${identity}") config.davids.id.identity
+            else
+              "~/.ssh/${config.davids.id.identity}";
+          isFIDO2 = true;
         };
       };
     };
