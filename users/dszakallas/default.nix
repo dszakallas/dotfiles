@@ -181,7 +181,13 @@
           enable = true;
           agent.enable = true;
         };
-        git.enable = true;
+        git = {
+          enable = true;
+          userPresets = {
+            github-pure.enable = true;
+            dszakallas.enable = true;
+          };
+        };
         github = {
           enable = true;
           ssh = {

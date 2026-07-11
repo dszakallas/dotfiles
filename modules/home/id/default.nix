@@ -42,20 +42,6 @@ in
     };
 
     davids = {
-      git = {
-        configLines = lib.mkBefore (
-          davids-dotfiles-common.lib.textRegion {
-            name = "dotfiles/modules/home/id";
-            content = ''
-              [user]
-                name = Dávid Szakállas
-                email = 5807322+dszakallas@users.noreply.github.com
-              [github]
-                user = dszakallas
-            '';
-          }
-        );
-      };
       ssh.matchBlocks = {
         "git@github.com" = {
           match = "user git host github.com";

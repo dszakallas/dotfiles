@@ -182,6 +182,10 @@
         };
         git = {
           enable = true;
+          userPresets = {
+            github-user1.enable = true;
+            dszakallas.enable = true;
+          };
         };
         github = {
           enable = true;
