@@ -43,6 +43,7 @@ in
       "signal"
       "slack"
       "spotify"
+      "stats"
       "syncthing-app"
       "ukelele"
       "zoom"

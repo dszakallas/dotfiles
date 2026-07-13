@@ -46,6 +46,7 @@ in
       "google-gemini"
       "ollama-app"
       "plexamp"
+      "stats"
       "ukelele"
     ];
 
