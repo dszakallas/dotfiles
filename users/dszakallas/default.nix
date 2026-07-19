@@ -27,6 +27,7 @@
         davids-dotfiles-common.homeModules.agents
         davids-dotfiles-common.homeModules.emacs
         davids-dotfiles-common.homeModules.github
+        davids-dotfiles-common.homeModules.ssh
         davids-dotfiles-private.homeModules.default
         davids-dotfiles-private.homeModules.pure
         homeModules.id
@@ -77,7 +78,10 @@
             setPureGoProxy = true;
           };
         };
-        id.enable = true;
+        id = {
+          enable = true;
+          identity = [ "sk1" ];
+        };
 
         agents =
           let
@@ -182,7 +186,10 @@
           enable = true;
           userPresets = {
             github-pure.enable = true;
-            dszakallas.enable = true;
+            dszakallas = {
+              enable = true;
+              sshIdentity = [ "sk1" ];
+            };
           };
         };
         github = {
