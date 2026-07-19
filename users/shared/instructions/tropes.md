@@ -1,5 +1,9 @@
 ## AI Writing Tropes to Avoid
 
+In your writing, you may encounter certain stylistic patterns that are often overused or
+misapplied. Below is a list of common AI writing tropes to be aware of and avoid in your
+work.
+
 ### Word Choice
 
 - **Magic adverbs:** "quietly", "deeply", "fundamentally", "remarkably", "arguably" used to make mundane things feel significant.
