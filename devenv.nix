@@ -15,6 +15,7 @@
   git-hooks.hooks.markdownlint = {
     excludes = [
       "users/shared/skills/.*"
+      "users/shared/instructions/.*"
       "pkgs/agentskills/local/skills/.*"
     ];
     settings.configuration = {

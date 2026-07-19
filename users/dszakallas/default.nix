@@ -87,15 +87,12 @@
                 memoryFiles = [
                   ../shared/instructions/home.md
                   ../shared/instructions/worktrees.md
-                  ../shared/instructions/tropes.md
                 ];
                 concatenatedMemory = pkgs.writeText "concatenated-memory" (
                   "# User-level memory\n\n"
-                  + davids-dotfiles-private.lib.agents.memory.pure.id
                   + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
-                  + davids-dotfiles-common.lib.agents.memory.commitConventions
-                  + davids-dotfiles-private.lib.agents.memory.pure.purelogin
-                  + davids-dotfiles-private.lib.agents.memory.pure.contributing
+                  + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-common.lib.agents.memory)
+                  + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-private.lib.agents.memory.pure)
                 );
               in
               (pkgs.replaceVars concatenatedMemory (

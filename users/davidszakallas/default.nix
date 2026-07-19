@@ -121,16 +121,15 @@
             mkMemory =
               agentConf: extra:
               let
-                memoryFiles = [
+                memory = [
                   ../shared/instructions/home.md
                   ../shared/instructions/worktrees.md
-                  ../shared/instructions/tropes.md
                 ];
                 concatenatedMemory = pkgs.writeText "concatenated-memory" (
                   "# User-level memory\n\n"
-                  + davids-dotfiles-private.lib.agents.memory.personal.id
-                  + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
-                  + davids-dotfiles-common.lib.agents.memory.commitConventions
+                  + lib.concatMapStrings (f: builtins.readFile f + "\n") memory
+                  + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-common.lib.agents.memory)
+                  + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-private.lib.agents.memory.personal)
                 );
               in
               (pkgs.replaceVars concatenatedMemory (
