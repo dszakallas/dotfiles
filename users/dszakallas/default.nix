@@ -109,8 +109,20 @@
 
             # User-level (global) MCP servers, specified once in the generic
             # schema and transformed per agent.
-            inherit (davids-dotfiles-private.lib.agents) gleanMcpConfig;
-            mcpServers = gleanMcpConfig;
+            mcpServers = {
+              inherit (davids-dotfiles-private.lib.agents.mcpServers) glean;
+              chrome-devtools = {
+                type = "stdio";
+                command = "npx";
+                args = [
+                  "-y"
+                  "chrome-devtools-mcp@latest"
+                  "--no-usage-statistics"
+                  "--no-performance-crux"
+                ];
+                env = { };
+              };
+            };
             mkMcp = agent: {
               # No-op while mcpServers is empty, so we never clobber servers a
               # CLI added at user scope until we actually manage some here.
