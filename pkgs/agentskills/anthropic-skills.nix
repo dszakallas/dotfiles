@@ -1,8 +1,6 @@
 {
   fetchFromGitHub,
   mkSkill,
-  exclude ? null,
-  include ? null,
 }:
 mkSkill {
   name = "anthropic-skills";
@@ -19,6 +17,6 @@ mkSkill {
     "docx"
     "xlsx"
     "mcp-builder"
+    "skill-creator"
   ];
-  inherit exclude;
 }

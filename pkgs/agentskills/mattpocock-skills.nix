@@ -1,8 +1,6 @@
 {
   fetchFromGitHub,
   mkSkill,
-  exclude ? null,
-  include ? null,
 }:
 mkSkill {
   name = "mattpocock-skills";
@@ -22,5 +20,4 @@ mkSkill {
     "prototype"
     "diagnosing-bugs"
   ];
-  inherit exclude;
 }
