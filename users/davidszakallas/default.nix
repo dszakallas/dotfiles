@@ -50,6 +50,10 @@
           packages.${system}.notebooklm-py
         ]
         ++ (with pkgs; [
+          (fluxcd.withPlugins (p: [
+            p.schema
+            p.mirror
+          ]))
           fluxcd-operator
           ffmpeg
           asciinema
