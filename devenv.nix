@@ -1,12 +1,13 @@
 { pkgs, davids-dotfiles-common, ... }@args:
+let
+  lib' = davids-dotfiles-common.lib;
+in
 {
   imports = [
     davids-dotfiles-common.devenvModules.recommended
   ];
 
-  profiles = {
-    agents.module = import ./devenv/profiles/agents args;
-  };
+  profiles = lib'.importRec1 ./devenv args;
 
   git-hooks.hooks.nixfmt = {
     excludes = [ "pkgs/npm/_.*\\.nix" ];
