@@ -50,6 +50,7 @@
           fluxcd-operator
           temporal-cli
           gogcli
+          uv
         ]);
       };
 
@@ -114,7 +115,7 @@
             # User-level (global) MCP servers, specified once in the generic
             # schema and transformed per agent.
             mcpServers = {
-              inherit (davids-dotfiles-private.lib.agents.mcpServers) glean;
+              inherit (davids-dotfiles-private.lib.agents.mcpServers) glean atlassian-mcp;
               chrome-devtools = {
                 type = "stdio";
                 command = "npx";
@@ -128,9 +129,6 @@
               };
             };
             mkMcp = agent: {
-              # No-op while mcpServers is empty, so we never clobber servers a
-              # CLI added at user scope until we actually manage some here.
-              enable = mcpServers != { };
               servers = davids-dotfiles-common.lib.agents.mcpServersForAgent agent mcpServers;
             };
             mcpAgents = [
