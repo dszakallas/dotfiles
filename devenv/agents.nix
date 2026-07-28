@@ -42,7 +42,7 @@ in
         };
       };
     }
-    // lib.genAttrs [ "vscode" "claude" "copilot" "gemini" ] (name: {
+    // lib.genAttrs [ "vscode" "claude" "copilot" "gemini" "opencode" ] (name: {
       enable = true;
       mcp = {
         enable = true;

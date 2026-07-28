@@ -8,6 +8,8 @@
 .mcp.json
 .agents/skills
 .claude
+opencode.json
+
 
 # Devenv
 .devenv*

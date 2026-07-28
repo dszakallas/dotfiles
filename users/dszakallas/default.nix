@@ -129,12 +129,14 @@
               };
             };
             mkMcp = agent: {
+              enable = true;
               servers = davids-dotfiles-common.lib.agents.mcpServersForAgent agent mcpServers;
             };
             mcpAgents = [
               "gemini"
               "claude"
               "copilot"
+              "antigravity"
               "opencode"
             ];
 

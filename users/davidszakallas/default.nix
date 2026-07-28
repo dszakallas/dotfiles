@@ -145,6 +145,29 @@
                 }
                 // extra
               ));
+            mcpServers = {
+              chrome-devtools = {
+                type = "stdio";
+                command = "npx";
+                args = [
+                  "-y"
+                  "chrome-devtools-mcp@latest"
+                  "--no-usage-statistics"
+                  "--no-performance-crux"
+                ];
+                env = { };
+              };
+            };
+            mkMcp = agent: {
+              enable = true;
+              servers = davids-dotfiles-common.lib.agents.mcpServersForAgent agent mcpServers;
+            };
+            mcpAgents = [
+              "claude"
+              "copilot"
+              "antigravity"
+              "opencode"
+            ];
           in
           lib.foldl'
             (
@@ -158,6 +181,7 @@
                     source = mkMemory config.davids.agents."${v}" { };
                   };
                 }
+                // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; }
                 // lib.optionalAttrs (v == "claude" || v == "copilot" || v == "antigravity") {
                   # non-free, self-updating tools, better installed with Homebrew
                   package = null;
