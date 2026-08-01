@@ -19,6 +19,11 @@ in
   config = {
     homebrew.enable = true;
 
+    environment.variables = {
+      HOMEBREW_NO_ENV_HINTS = "1";
+      HOMEBREW_AUTO_UPDATE_SECS = "604800";
+    };
+
     homebrew.casks = [
       "iterm2"
       "firefox"

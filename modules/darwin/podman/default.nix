@@ -7,6 +7,5 @@ _: {
 
   homebrew.brews = [
     "podman"
-    "slp/krunkit/krunkit"
   ];
 }
