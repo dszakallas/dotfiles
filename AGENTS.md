@@ -8,11 +8,15 @@ A personal Nix flake that configures macOS hosts via [nix-darwin](https://github
 and [home-manager](https://github.com/nix-community/home-manager). It builds `darwinConfigurations`
 for each machine and composes reusable modules, overlays, packages, and per-user home configs.
 
-Reusable, generic config lives in two Git submodules under `deps/`:
+Reusable, generic config lives in three Git submodules under `deps/`:
 
 - `deps/davids-dotfiles-common` — public, shareable modules and lib functions
   ([dotfiles-common](https://github.com/dszakallas/dotfiles-common)).
-- `deps/davids-dotfiles-private` — non-public config (`dotfiles-private`).
+- `deps/davids-dotfiles-private` — non-public personal config
+  ([dotfiles-private](https://github.com/dszakallas/dotfiles-private)).
+- `deps/davids-bikeshed-pure` — Pure Storage work config: the `bikeshed.pure` module, internal
+  tooling packages, corporate agent memory and MCP servers
+  ([bikeshed-pure](https://github.com/dszakallas/bikeshed-pure)).
 
 Prefer adding generic functionality to `deps/davids-dotfiles-common`; keep host- and
 user-specific wiring in this repo.
@@ -33,7 +37,7 @@ users/
   <user>/                 # user + home-manager wiring per host
   instructions/           # agent memory fragments (user.md, worktrees.md, tropes.md)
   skills/                 # agent skills (devenv, lang-cz, skill-creator, ...)
-deps/                     # submodules (see below)
+deps/                     # dependency flakes (see above)
 ```
 
 Hosts and their primary users:
@@ -56,8 +60,9 @@ module args. The common shape is:
 }
 ```
 
-Custom options live under the `davids.*` namespace (e.g. `davids.id`, `davids.agents`,
-`davids.pure`). Gate them behind `lib.mkEnableOption` and `lib.mkIf`.
+Custom options live under the `davids.*` namespace (e.g. `davids.id`, `davids.agents`).
+`deps/davids-bikeshed-pure` is the exception and uses `bikeshed.*` (`bikeshed.pure`).
+Gate them behind `lib.mkEnableOption` and `lib.mkIf`.
 
 ### Directory imports
 

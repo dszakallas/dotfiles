@@ -1,5 +1,39 @@
 {
   "nodes": {
+    "davids-bikeshed-pure": {
+      "inputs": {
+        "davids-dotfiles-common": [
+          "davids-dotfiles-common"
+        ],
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "pyproject-build-systems": [
+          "pyproject-build-systems"
+        ],
+        "pyproject-nix": [
+          "pyproject-nix"
+        ],
+        "uv2nix": [
+          "uv2nix"
+        ]
+      },
+      "locked": {
+        "path": "./deps/davids-bikeshed-pure",
+        "type": "path"
+      },
+      "original": {
+        "path": "./deps/davids-bikeshed-pure",
+        "type": "path"
+      },
+      "parent": []
+    },
     "davids-dotfiles-common": {
       "inputs": {
         "flake-utils": [
@@ -35,15 +69,6 @@
         ],
         "nixpkgs": [
           "nixpkgs"
-        ],
-        "pyproject-build-systems": [
-          "pyproject-build-systems"
-        ],
-        "pyproject-nix": [
-          "pyproject-nix"
-        ],
-        "uv2nix": [
-          "uv2nix"
         ]
       },
       "locked": {
@@ -178,6 +203,7 @@
     },
     "root": {
       "inputs": {
+        "davids-bikeshed-pure": "davids-bikeshed-pure",
         "davids-dotfiles-common": "davids-dotfiles-common",
         "davids-dotfiles-private": "davids-dotfiles-private",
         "flake-utils": "flake-utils",

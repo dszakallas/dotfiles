@@ -43,6 +43,13 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
       inputs.flake-utils.follows = "flake-utils";
+      inputs.davids-dotfiles-common.follows = "davids-dotfiles-common";
+    };
+    davids-bikeshed-pure = {
+      url = "path:./deps/davids-bikeshed-pure";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+      inputs.flake-utils.follows = "flake-utils";
       inputs.pyproject-nix.follows = "pyproject-nix";
       inputs.pyproject-build-systems.follows = "pyproject-build-systems";
       inputs.uv2nix.follows = "uv2nix";

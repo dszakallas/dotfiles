@@ -4,4 +4,6 @@
 [submodule "deps/davids-dotfiles-private"]
 	path = deps/davids-dotfiles-private
 	url = https://github.com/dszakallas/dotfiles-private.git
-
+[submodule "deps/davids-bikeshed-pure"]
+	path = deps/davids-bikeshed-pure
+	url = https://github.com/dszakallas/bikeshed-pure.git

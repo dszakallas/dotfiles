@@ -135,7 +135,7 @@
                   "# User-level memory\n\n"
                   + lib.concatMapStrings (f: builtins.readFile f + "\n") memory
                   + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-common.lib.agents.memory)
-                  + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-private.lib.agents.memory.personal)
+                  + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-private.lib.agents.memory)
                 );
               in
               (pkgs.replaceVars concatenatedMemory (

@@ -2,6 +2,7 @@
   self,
   davids-dotfiles-common,
   davids-dotfiles-private,
+  davids-bikeshed-pure,
   homeModules,
   packages,
   ...
@@ -29,7 +30,7 @@
         davids-dotfiles-common.homeModules.github
         davids-dotfiles-common.homeModules.ssh
         davids-dotfiles-private.homeModules.default
-        davids-dotfiles-private.homeModules.pure
+        davids-bikeshed-pure.homeModules.default
         homeModules.id
         homeModules.spacemacs-config
       ];
@@ -56,6 +57,19 @@
 
       programs.home-manager.enable = true;
 
+      bikeshed.pure = {
+        enable = true;
+        python = {
+          enable = true;
+          setPurePypiMirrorAsDefault = true;
+          setPureExtraIndexes = true;
+        };
+        go = {
+          enable = true;
+          setPureGoProxy = true;
+        };
+      };
+
       davids = {
         # Impure brew programs
         brew = {
@@ -69,18 +83,6 @@
           daemon.enable = true;
           spacemacs = {
             enable = true;
-          };
-        };
-        pure = {
-          enable = true;
-          python = {
-            enable = true;
-            setPurePypiMirrorAsDefault = true;
-            setPureExtraIndexes = true;
-          };
-          go = {
-            enable = true;
-            setPureGoProxy = true;
           };
         };
         id = {
@@ -101,7 +103,7 @@
                   "# User-level memory\n\n"
                   + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
                   + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-common.lib.agents.memory)
-                  + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-private.lib.agents.memory.pure)
+                  + lib.concatStringsSep "\n" (lib.attrValues davids-bikeshed-pure.lib.agents.memory)
                 );
               in
               (pkgs.replaceVars concatenatedMemory (
@@ -115,7 +117,7 @@
             # User-level (global) MCP servers, specified once in the generic
             # schema and transformed per agent.
             mcpServers = {
-              inherit (davids-dotfiles-private.lib.agents.mcpServers) glean atlassian-mcp;
+              inherit (davids-bikeshed-pure.lib.agents.mcpServers) glean atlassian-mcp;
               chrome-devtools = {
                 type = "stdio";
                 command = "npx";
