@@ -1,6 +1,6 @@
 {
   self,
-  davids-dotfiles-common,
+  bikeshed,
   bikeshed-homelab,
   homeModules,
   packages,
@@ -29,13 +29,13 @@
 
   home-manager.users.davidszakallas =
     { config, ... }:
-    rec {
+    {
       imports = [
-        davids-dotfiles-common.homeModules.base
-        davids-dotfiles-common.homeModules.emacs
-        davids-dotfiles-common.homeModules.github
-        davids-dotfiles-common.homeModules.agents
-        davids-dotfiles-common.homeModules.ssh
+        bikeshed.homeModules.base
+        bikeshed.homeModules.emacs
+        bikeshed.homeModules.github
+        bikeshed.homeModules.agents
+        bikeshed.homeModules.ssh
         bikeshed-homelab.homeModules.default
         bikeshed-homelab.homeModules.jupiter
         bikeshed-homelab.homeModules.kolobok
@@ -100,12 +100,15 @@
 
       programs.home-manager.enable = true;
 
+      davids.id = {
+        enable = true;
+        identity = [ "sk1" ];
+      };
+
       bikeshed = {
         jupiter.enable = true;
         kolobok.enable = true;
-      };
 
-      davids = {
         # Impure brew programs
         brew = {
           enable = true;
@@ -121,10 +124,6 @@
             enable = true;
           };
         };
-        id = {
-          enable = true;
-          identity = [ "sk1" ];
-        };
         agents =
           let
             mkMemory =
@@ -137,7 +136,7 @@
                 concatenatedMemory = pkgs.writeText "concatenated-memory" (
                   "# User-level memory\n\n"
                   + lib.concatMapStrings (f: builtins.readFile f + "\n") memory
-                  + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-common.lib.agents.memory)
+                  + lib.concatStringsSep "\n" (lib.attrValues bikeshed.lib.agents.memory)
                   + lib.concatStringsSep "\n" (lib.attrValues bikeshed-homelab.lib.agents.memory)
                 );
               in
@@ -162,7 +161,7 @@
               };
             };
             mkMcp = agent: {
-              servers = davids-dotfiles-common.lib.agents.mcpServersForAgent agent mcpServers;
+              servers = bikeshed.lib.agents.mcpServersForAgent agent mcpServers;
             };
             mcpAgents = [
               "claude"
@@ -180,7 +179,7 @@
                   enable = true;
                   memory = {
                     enable = true;
-                    source = mkMemory config.davids.agents."${v}" { };
+                    source = mkMemory config.bikeshed.agents."${v}" { };
                   };
                 }
                 // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; }
@@ -194,10 +193,10 @@
               enable = true;
               skills.enable = true;
               skills.entries = packages.${system}.agentskills // {
-                dotfiles-common-skills = pkgs.mkSkill {
-                  name = "davids-dotfiles-common-skills";
+                bikeshed-skills = pkgs.mkSkill {
+                  name = "bikeshed-skills";
                   version = "unstable";
-                  src = davids-dotfiles-common;
+                  src = bikeshed;
                 };
               };
             }

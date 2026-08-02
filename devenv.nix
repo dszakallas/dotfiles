@@ -1,10 +1,10 @@
-{ pkgs, davids-dotfiles-common, ... }@args:
+{ pkgs, bikeshed, ... }@args:
 let
-  lib' = davids-dotfiles-common.lib;
+  lib' = bikeshed.lib;
 in
 {
   imports = [
-    davids-dotfiles-common.devenvModules.recommended
+    bikeshed.devenvModules.recommended
   ];
 
   profiles = lib'.importRec1 ./devenv args;

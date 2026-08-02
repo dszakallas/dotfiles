@@ -1,9 +1,31 @@
 {
   "nodes": {
+    "bikeshed": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "path": "./deps/bikeshed",
+        "type": "path"
+      },
+      "original": {
+        "path": "./deps/bikeshed",
+        "type": "path"
+      },
+      "parent": []
+    },
     "bikeshed-homelab": {
       "inputs": {
-        "davids-dotfiles-common": [
-          "davids-dotfiles-common"
+        "bikeshed": [
+          "bikeshed"
         ],
         "flake-utils": [
           "flake-utils"
@@ -27,8 +49,8 @@
     },
     "davids-bikeshed-pure": {
       "inputs": {
-        "davids-dotfiles-common": [
-          "davids-dotfiles-common"
+        "bikeshed": [
+          "bikeshed"
         ],
         "flake-utils": [
           "flake-utils"
@@ -55,28 +77,6 @@
       },
       "original": {
         "path": "./deps/davids-bikeshed-pure",
-        "type": "path"
-      },
-      "parent": []
-    },
-    "davids-dotfiles-common": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "home-manager": [
-          "home-manager"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "path": "./deps/davids-dotfiles-common",
-        "type": "path"
-      },
-      "original": {
-        "path": "./deps/davids-dotfiles-common",
         "type": "path"
       },
       "parent": []
@@ -203,9 +203,9 @@
     },
     "root": {
       "inputs": {
+        "bikeshed": "bikeshed",
         "bikeshed-homelab": "bikeshed-homelab",
         "davids-bikeshed-pure": "davids-bikeshed-pure",
-        "davids-dotfiles-common": "davids-dotfiles-common",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",

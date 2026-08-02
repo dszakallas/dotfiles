@@ -32,8 +32,8 @@ rec {
       inputs.uv2nix.follows = "uv2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    davids-dotfiles-common = {
-      url = "path:./deps/davids-dotfiles-common";
+    bikeshed = {
+      url = "path:./deps/bikeshed";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
       inputs.flake-utils.follows = "flake-utils";
@@ -43,7 +43,7 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
       inputs.flake-utils.follows = "flake-utils";
-      inputs.davids-dotfiles-common.follows = "davids-dotfiles-common";
+      inputs.bikeshed.follows = "bikeshed";
     };
     davids-bikeshed-pure = {
       url = "path:./deps/davids-bikeshed-pure";
@@ -53,7 +53,7 @@ rec {
       inputs.pyproject-nix.follows = "pyproject-nix";
       inputs.pyproject-build-systems.follows = "pyproject-build-systems";
       inputs.uv2nix.follows = "uv2nix";
-      inputs.davids-dotfiles-common.follows = "davids-dotfiles-common";
+      inputs.bikeshed.follows = "bikeshed";
     };
   };
 
@@ -80,11 +80,11 @@ rec {
       nix-darwin,
       home-manager,
       flake-utils,
-      davids-dotfiles-common,
+      bikeshed,
       ...
     }:
     let
-      inherit (davids-dotfiles-common.lib) importRec importRec1 callPackageWithRec;
+      inherit (bikeshed.lib) importRec importRec1 callPackageWithRec;
       inherit (nixpkgs) lib;
       pkgsFor = system: nixpkgs.legacyPackages.${system}.extend overlays;
       overlays = lib.foldl' lib.composeExtensions (_: _: { }) (
@@ -129,7 +129,7 @@ rec {
         ))
         // flake-utils.lib.eachDefaultSystemPassThrough (system: {
           systemModules = importRec1 ./modules/system ctx;
-          # Extract to dotfiles-common once it is more generic
+          # Extract to bikeshed once it is more generic
           darwinModules = importRec1 ./modules/darwin ctx;
           homeModules = importRec1 ./modules/home ctx;
           users = importRec1 ./users ctx;

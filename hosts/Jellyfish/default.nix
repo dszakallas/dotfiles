@@ -1,6 +1,6 @@
 {
   self,
-  davids-dotfiles-common,
+  bikeshed,
   bikeshed-homelab,
   darwinModules,
   systemModules,
@@ -17,7 +17,7 @@ let
 in
 {
   imports = [
-    davids-dotfiles-common.systemModules.default
+    bikeshed.systemModules.default
     bikeshed-homelab.systemModules.jupiter
     systemModules.default
     darwinModules.default

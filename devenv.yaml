@@ -1,6 +1,6 @@
 inputs:
-  davids-dotfiles-common:
-    url: git+file:deps/davids-dotfiles-common
+  bikeshed:
+    url: git+file:deps/bikeshed
     inputs:
       nixpkgs:
         follows: nixpkgs

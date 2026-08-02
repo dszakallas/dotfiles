@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: git submodule update --init deps/davids-dotfiles-common
+      - run: git submodule update --init deps/bikeshed
       - uses: cachix/install-nix-action@v31
       - uses: cachix/cachix-action@v17
         with:

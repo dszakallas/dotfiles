@@ -1,6 +1,6 @@
 {
   self,
-  davids-dotfiles-common,
+  bikeshed,
   darwinModules,
   systemModules,
   overlays,
@@ -16,7 +16,7 @@ let
 in
 {
   imports = [
-    davids-dotfiles-common.systemModules.default
+    bikeshed.systemModules.default
     systemModules.default
     darwinModules.default
     darwinModules.podman

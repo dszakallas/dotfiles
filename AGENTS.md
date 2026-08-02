@@ -10,8 +10,8 @@ for each machine and composes reusable modules, overlays, packages, and per-user
 
 Reusable, generic config lives in three Git submodules under `deps/`:
 
-- `deps/davids-dotfiles-common` — public, shareable modules and lib functions
-  ([dotfiles-common](https://github.com/dszakallas/dotfiles-common)).
+- `deps/bikeshed` — public, shareable modules and lib functions
+  ([bikeshed](https://github.com/dszakallas/bikeshed)).
 - `deps/bikeshed-homelab` — personal machines and accounts: git and SSH user presets, the
   `bikeshed.jupiter` and `bikeshed.kolobok` modules
   ([bikeshed-homelab](https://github.com/dszakallas/bikeshed-homelab)).
@@ -19,7 +19,7 @@ Reusable, generic config lives in three Git submodules under `deps/`:
   tooling packages, corporate agent memory and MCP servers
   ([bikeshed-pure](https://github.com/dszakallas/bikeshed-pure)).
 
-Prefer adding generic functionality to `deps/davids-dotfiles-common`; keep host- and
+Prefer adding generic functionality to `deps/bikeshed`; keep host- and
 user-specific wiring in this repo.
 
 ## Repository layout
@@ -54,23 +54,21 @@ Modules take two argument sets: flake context first, then the nix-darwin/home-ma
 module args. The common shape is:
 
 ```nix
-{ self, davids-dotfiles-common, ... }:   # flake context (inputs // outputs)
+{ self, bikeshed, ... }:   # flake context (inputs // outputs)
 { pkgs, lib, config, ... }:              # module system args
 {
   # options / config
 }
 ```
 
-Custom options live under the `davids.*` namespace (e.g. `davids.id`, `davids.agents`).
-`deps/davids-bikeshed-pure` and `deps/bikeshed-homelab` own theirs under `bikeshed.*`
-(`bikeshed.pure`, `bikeshed.jupiter`, `bikeshed.kolobok`); the git and SSH user presets
-`bikeshed-homelab` declares still extend the `davids.git` tree owned by dotfiles-common.
-Gate them behind `lib.mkEnableOption` and `lib.mkIf`.
+Custom options live under the `bikeshed.*` namespace (e.g. `bikeshed.agents`, `bikeshed.git`,
+`bikeshed.pure`, `bikeshed.jupiter`). The one exception is `davids.id`, declared by this
+repo's own `modules/home/id`. Gate options behind `lib.mkEnableOption` and `lib.mkIf`.
 
 ### Directory imports
 
 Directories are imported recursively by the `importRec` / `importRec1` / `callPackageWithRec`
-helpers in `deps/davids-dotfiles-common/lib`. A "leaf" is a `.nix` file or a directory
+helpers in `deps/bikeshed/lib`. A "leaf" is a `.nix` file or a directory
 containing `default.nix`; its basename becomes the attribute name. Adding a file under
 `modules/*`, `overlays/`, `users/`, or `pkgs/` registers it automatically — there is no
 manual list to update. Do not create both a `foo.nix` and a `foo/` in the same directory
@@ -102,7 +100,7 @@ devenv shell --no-tui --quiet -- <command>
 - Build a specific package: `nix build .#<pkg>`
 - Run tests (also what CI runs): `devenv test`
 
-CI (`.github/workflows/ci.yaml`) initializes the `davids-dotfiles-common` submodule and runs
+CI (`.github/workflows/ci.yaml`) initializes the `bikeshed` submodule and runs
 `devenv test` on every push.
 
 ## Local Dependency Development Workflow
@@ -120,7 +118,7 @@ This project uses Git submodules for local development of flake dependencies.
 2. **Relative Paths**: The `flake.nix` is configured to use relative paths for these dependencies:
 
    ```nix
-   davids-dotfiles-common.url = "path:./deps/davids-dotfiles-common";
+   bikeshed.url = "path:./deps/bikeshed";
    ```
 
 3. **Develop**: Make changes in the `deps/` directory.
@@ -136,7 +134,7 @@ This project uses Git submodules for local development of flake dependencies.
     submodule modifications. You can do this by adding a temporary comment or newline to a file in the root directory
     (e.g., `flake.nix` or `AGENTS.md`).
 - **Submodule Testing**: When making changes in a dependency flake submodule (e.g.
-  `deps/davids-dotfiles-common`), also `cd` into the dependency repository and run
+  `deps/bikeshed`), also `cd` into the dependency repository and run
   `devenv test` to verify that its own tests pass.
 
 ### Committing and Publishing Submodule Changes
@@ -145,7 +143,7 @@ Changes that span multiple repositories (this repo + submodules) require extra s
 
 #### Commit order
 
-1. **Commit inside the submodule first** (`deps/davids-dotfiles-common`, `deps/bikeshed-homelab`).
+1. **Commit inside the submodule first** (`deps/bikeshed`, `deps/bikeshed-homelab`).
 2. **Push the submodule** to its remote so the commit is reachable:
 
    ```bash

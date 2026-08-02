@@ -3,11 +3,11 @@
   lib,
   config,
   inputs,
-  davids-dotfiles-common,
+  bikeshed,
   ...
 }:
 let
-  lib' = davids-dotfiles-common.lib;
+  lib' = bikeshed.lib;
   mcpServers = {
     devenv = {
       type = "stdio";
@@ -22,7 +22,7 @@ in
 {
   module = {
     imports = [
-      inputs.davids-dotfiles-common.devenvModules.agents
+      inputs.bikeshed.devenvModules.agents
     ];
 
     agents = {
@@ -33,7 +33,7 @@ in
       skills = {
         enable = true;
         entries = {
-          shared = inputs.davids-dotfiles-common.lib.agents.mkSkill pkgs {
+          shared = inputs.bikeshed.lib.agents.mkSkill pkgs {
             name = "shared-skills";
             version = "unstable";
             src = ../users/shared;

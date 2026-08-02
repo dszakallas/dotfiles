@@ -1,6 +1,6 @@
 {
   self,
-  davids-dotfiles-common,
+  bikeshed,
   bikeshed-homelab,
   davids-bikeshed-pure,
   homeModules,
@@ -24,11 +24,11 @@
     { config, ... }:
     {
       imports = [
-        davids-dotfiles-common.homeModules.base
-        davids-dotfiles-common.homeModules.agents
-        davids-dotfiles-common.homeModules.emacs
-        davids-dotfiles-common.homeModules.github
-        davids-dotfiles-common.homeModules.ssh
+        bikeshed.homeModules.base
+        bikeshed.homeModules.agents
+        bikeshed.homeModules.emacs
+        bikeshed.homeModules.github
+        bikeshed.homeModules.ssh
         bikeshed-homelab.homeModules.default
         davids-bikeshed-pure.homeModules.default
         homeModules.id
@@ -57,20 +57,25 @@
 
       programs.home-manager.enable = true;
 
-      bikeshed.pure = {
+      davids.id = {
         enable = true;
-        python = {
-          enable = true;
-          setPurePypiMirrorAsDefault = true;
-          setPureExtraIndexes = true;
-        };
-        go = {
-          enable = true;
-          setPureGoProxy = true;
-        };
+        identity = [ "sk1" ];
       };
 
-      davids = {
+      bikeshed = {
+        pure = {
+          enable = true;
+          python = {
+            enable = true;
+            setPurePypiMirrorAsDefault = true;
+            setPureExtraIndexes = true;
+          };
+          go = {
+            enable = true;
+            setPureGoProxy = true;
+          };
+        };
+
         # Impure brew programs
         brew = {
           enable = true;
@@ -85,10 +90,6 @@
             enable = true;
           };
         };
-        id = {
-          enable = true;
-          identity = [ "sk1" ];
-        };
 
         agents =
           let
@@ -102,7 +103,7 @@
                 concatenatedMemory = pkgs.writeText "concatenated-memory" (
                   "# User-level memory\n\n"
                   + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
-                  + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-common.lib.agents.memory)
+                  + lib.concatStringsSep "\n" (lib.attrValues bikeshed.lib.agents.memory)
                   + lib.concatStringsSep "\n" (lib.attrValues davids-bikeshed-pure.lib.agents.memory)
                 );
               in
@@ -131,7 +132,7 @@
               };
             };
             mkMcp = agent: {
-              servers = davids-dotfiles-common.lib.agents.mcpServersForAgent agent mcpServers;
+              servers = bikeshed.lib.agents.mcpServersForAgent agent mcpServers;
             };
             mcpAgents = [
               "gemini"
@@ -166,7 +167,7 @@
                     else
                       {
                         enable = true;
-                        source = mkMemory config.davids.agents."${v}" { };
+                        source = mkMemory config.bikeshed.agents."${v}" { };
                       };
                 }
                 // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; }
@@ -181,10 +182,10 @@
               skills.enable = true;
               skills.entries = {
                 inherit (packages.${system}.agentskills) local;
-                dotfiles-common-skills = pkgs.mkSkill {
-                  name = "davids-dotfiles-common-skills";
+                bikeshed-skills = pkgs.mkSkill {
+                  name = "bikeshed-skills";
                   version = "unstable";
-                  src = davids-dotfiles-common;
+                  src = bikeshed;
                 };
               };
             }

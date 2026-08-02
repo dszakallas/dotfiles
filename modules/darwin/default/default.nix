@@ -53,7 +53,7 @@ in
       ChallengeResponseAuthentication no
     '';
 
-    davids.nix = {
+    bikeshed.nix = {
       enable = true;
       pinnedFlakes = flakeInputs;
     };
