@@ -2,7 +2,7 @@
   self,
   bikeshed,
   bikeshed-homelab,
-  davids-bikeshed-pure,
+  bikeshed-pure,
   homeModules,
   packages,
   ...
@@ -30,7 +30,7 @@
         bikeshed.homeModules.github
         bikeshed.homeModules.ssh
         bikeshed-homelab.homeModules.default
-        davids-bikeshed-pure.homeModules.default
+        bikeshed-pure.homeModules.default
         homeModules.id
         homeModules.spacemacs-config
       ];
@@ -104,7 +104,7 @@
                   "# User-level memory\n\n"
                   + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
                   + lib.concatStringsSep "\n" (lib.attrValues bikeshed.lib.agents.memory)
-                  + lib.concatStringsSep "\n" (lib.attrValues davids-bikeshed-pure.lib.agents.memory)
+                  + lib.concatStringsSep "\n" (lib.attrValues bikeshed-pure.lib.agents.memory)
                 );
               in
               (pkgs.replaceVars concatenatedMemory (
@@ -118,7 +118,7 @@
             # User-level (global) MCP servers, specified once in the generic
             # schema and transformed per agent.
             mcpServers = {
-              inherit (davids-bikeshed-pure.lib.agents.mcpServers) glean atlassian-mcp;
+              inherit (bikeshed-pure.lib.agents.mcpServers) glean atlassian-mcp;
               chrome-devtools = {
                 type = "stdio";
                 command = "npx";

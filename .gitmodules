@@ -1,5 +1,5 @@
-[submodule "deps/davids-bikeshed-pure"]
-	path = deps/davids-bikeshed-pure
+[submodule "deps/bikeshed-pure"]
+	path = deps/bikeshed-pure
 	url = https://github.com/dszakallas/bikeshed-pure.git
 [submodule "deps/bikeshed-homelab"]
 	path = deps/bikeshed-homelab

@@ -15,7 +15,7 @@ Reusable, generic config lives in three Git submodules under `deps/`:
 - `deps/bikeshed-homelab` — personal machines and accounts: git and SSH user presets, the
   `bikeshed.jupiter` and `bikeshed.kolobok` modules
   ([bikeshed-homelab](https://github.com/dszakallas/bikeshed-homelab)).
-- `deps/davids-bikeshed-pure` — Pure Storage work config: the `bikeshed.pure` module, internal
+- `deps/bikeshed-pure` — Pure Storage work config: the `bikeshed.pure` module, internal
   tooling packages, corporate agent memory and MCP servers
   ([bikeshed-pure](https://github.com/dszakallas/bikeshed-pure)).
 

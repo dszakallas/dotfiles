@@ -45,8 +45,8 @@ rec {
       inputs.flake-utils.follows = "flake-utils";
       inputs.bikeshed.follows = "bikeshed";
     };
-    davids-bikeshed-pure = {
-      url = "path:./deps/davids-bikeshed-pure";
+    bikeshed-pure = {
+      url = "path:./deps/bikeshed-pure";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
       inputs.flake-utils.follows = "flake-utils";
