@@ -1,7 +1,7 @@
 {
   self,
   davids-dotfiles-common,
-  davids-dotfiles-private,
+  bikeshed-homelab,
   darwinModules,
   systemModules,
   users,
@@ -18,7 +18,7 @@ in
 {
   imports = [
     davids-dotfiles-common.systemModules.default
-    davids-dotfiles-private.systemModules.jupiter
+    bikeshed-homelab.systemModules.jupiter
     systemModules.default
     darwinModules.default
     darwinModules.podman
@@ -69,7 +69,7 @@ in
       };
     };
 
-    davids.jupiter = {
+    bikeshed.jupiter = {
       enable = true;
       amalthea.staticIP.v4 = "192.168.1.244";
       callisto.staticIP.v4 = "192.168.1.144";

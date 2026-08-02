@@ -38,8 +38,8 @@ rec {
       inputs.home-manager.follows = "home-manager";
       inputs.flake-utils.follows = "flake-utils";
     };
-    davids-dotfiles-private = {
-      url = "path:./deps/davids-dotfiles-private";
+    bikeshed-homelab = {
+      url = "path:./deps/bikeshed-homelab";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
       inputs.flake-utils.follows = "flake-utils";

@@ -12,8 +12,9 @@ Reusable, generic config lives in three Git submodules under `deps/`:
 
 - `deps/davids-dotfiles-common` — public, shareable modules and lib functions
   ([dotfiles-common](https://github.com/dszakallas/dotfiles-common)).
-- `deps/davids-dotfiles-private` — non-public personal config
-  ([dotfiles-private](https://github.com/dszakallas/dotfiles-private)).
+- `deps/bikeshed-homelab` — personal machines and accounts: git and SSH user presets, the
+  `bikeshed.jupiter` and `bikeshed.kolobok` modules
+  ([bikeshed-homelab](https://github.com/dszakallas/bikeshed-homelab)).
 - `deps/davids-bikeshed-pure` — Pure Storage work config: the `bikeshed.pure` module, internal
   tooling packages, corporate agent memory and MCP servers
   ([bikeshed-pure](https://github.com/dszakallas/bikeshed-pure)).
@@ -61,7 +62,9 @@ module args. The common shape is:
 ```
 
 Custom options live under the `davids.*` namespace (e.g. `davids.id`, `davids.agents`).
-`deps/davids-bikeshed-pure` is the exception and uses `bikeshed.*` (`bikeshed.pure`).
+`deps/davids-bikeshed-pure` and `deps/bikeshed-homelab` own theirs under `bikeshed.*`
+(`bikeshed.pure`, `bikeshed.jupiter`, `bikeshed.kolobok`); the git and SSH user presets
+`bikeshed-homelab` declares still extend the `davids.git` tree owned by dotfiles-common.
 Gate them behind `lib.mkEnableOption` and `lib.mkIf`.
 
 ### Directory imports
@@ -142,7 +145,7 @@ Changes that span multiple repositories (this repo + submodules) require extra s
 
 #### Commit order
 
-1. **Commit inside the submodule first** (`deps/davids-dotfiles-common`, `deps/davids-dotfiles-private`).
+1. **Commit inside the submodule first** (`deps/davids-dotfiles-common`, `deps/bikeshed-homelab`).
 2. **Push the submodule** to its remote so the commit is reachable:
 
    ```bash

@@ -1,7 +1,7 @@
 {
   self,
   davids-dotfiles-common,
-  davids-dotfiles-private,
+  bikeshed-homelab,
   homeModules,
   packages,
   ...
@@ -36,9 +36,9 @@
         davids-dotfiles-common.homeModules.github
         davids-dotfiles-common.homeModules.agents
         davids-dotfiles-common.homeModules.ssh
-        davids-dotfiles-private.homeModules.default
-        davids-dotfiles-private.homeModules.jupiter
-        davids-dotfiles-private.homeModules.kolobok
+        bikeshed-homelab.homeModules.default
+        bikeshed-homelab.homeModules.jupiter
+        bikeshed-homelab.homeModules.kolobok
         homeModules.id
       ];
 
@@ -100,6 +100,11 @@
 
       programs.home-manager.enable = true;
 
+      bikeshed = {
+        jupiter.enable = true;
+        kolobok.enable = true;
+      };
+
       davids = {
         # Impure brew programs
         brew = {
@@ -116,8 +121,6 @@
             enable = true;
           };
         };
-        jupiter.enable = true;
-        kolobok.enable = true;
         id = {
           enable = true;
           identity = [ "sk1" ];
@@ -135,7 +138,7 @@
                   "# User-level memory\n\n"
                   + lib.concatMapStrings (f: builtins.readFile f + "\n") memory
                   + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-common.lib.agents.memory)
-                  + lib.concatStringsSep "\n" (lib.attrValues davids-dotfiles-private.lib.agents.memory)
+                  + lib.concatStringsSep "\n" (lib.attrValues bikeshed-homelab.lib.agents.memory)
                 );
               in
               (pkgs.replaceVars concatenatedMemory (

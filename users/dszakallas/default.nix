@@ -1,7 +1,7 @@
 {
   self,
   davids-dotfiles-common,
-  davids-dotfiles-private,
+  bikeshed-homelab,
   davids-bikeshed-pure,
   homeModules,
   packages,
@@ -29,7 +29,7 @@
         davids-dotfiles-common.homeModules.emacs
         davids-dotfiles-common.homeModules.github
         davids-dotfiles-common.homeModules.ssh
-        davids-dotfiles-private.homeModules.default
+        bikeshed-homelab.homeModules.default
         davids-bikeshed-pure.homeModules.default
         homeModules.id
         homeModules.spacemacs-config
