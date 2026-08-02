@@ -3,7 +3,7 @@
 My personal dotfiles as a flake.
 
 > [!NOTE]  
-> Most of my reusable config can be found in [dotfiles-common](https://github.com/dszakallas/dotfiles-common).
+> Most of my reusable config can be found in [bikeshed](https://github.com/dszakallas/bikeshed).
 
 Structure:
 
@@ -16,7 +16,7 @@ Structure:
 │   ├── system             # reusable modules for unix-like systems (nixOS, darwin, etc.)
 │   └── home               # reusable modules for home manager
 ├── overlays               # overlays to be applied to nixpkgs
-├── pkgs                   # packages to be called with `davids-dotfiles-common.lib.callPackageWithRec`
+├── pkgs                   # packages to be called with `bikeshed.lib.callPackageWithRec`
 └── users                  # user configurations (can be shared across hosts)
 ```
 
