@@ -1,6 +1,6 @@
 {
   "nodes": {
-    "davids-dotfiles-common": {
+    "bikeshed": {
       "inputs": {
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
@@ -11,11 +11,11 @@
       "locked": {
         "ref": "refs/heads/main",
         "type": "git",
-        "url": "file:deps/davids-dotfiles-common"
+        "url": "file:deps/bikeshed"
       },
       "original": {
         "type": "git",
-        "url": "file:deps/davids-dotfiles-common"
+        "url": "file:deps/bikeshed"
       }
     },
     "devenv": {
@@ -93,7 +93,7 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
-          "davids-dotfiles-common",
+          "bikeshed",
           "nixpkgs"
         ]
       },
@@ -149,7 +149,7 @@
     },
     "root": {
       "inputs": {
-        "davids-dotfiles-common": "davids-dotfiles-common",
+        "bikeshed": "bikeshed",
         "devenv": "devenv",
         "git-hooks": "git-hooks",
         "nixpkgs": "nixpkgs"
