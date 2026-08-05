@@ -25,6 +25,7 @@ in
     systemModules.default
     darwinModules.default
     darwinModules.podman
+    bikeshed-pure.darwinModules.default
   ];
 
   config = {
