@@ -96,69 +96,29 @@ in
             env = { };
           };
         };
-        mkMcp = agent: {
-          servers = bikeshed.lib.agents.mcpServersForAgent agent mcpServers;
-        };
-        mcpAgents = [
-          "gemini"
-          "claude"
-          "antigravity"
-          "opencode"
-        ];
-
-        shared-skills = pkgs.stdenvNoCC.mkDerivation {
-          name = "shared-skills";
-          src = ../shared;
-          dontBuild = true;
-          installPhase = ''
-            mkdir -p $out
-            cp -r $src/* $out/
-          '';
-        };
       in
-      lib.foldl'
-        (
-          a: v:
-          a
-          // {
-            "${v}" = {
-              enable = true;
-              memory =
-                if v == "gemini" then
-                  {
-                    enable = false;
-                  }
-                else
-                  {
-                    enable = true;
-                    source = mkMemory config.bikeshed.agents."${v}" { };
-                  };
-            }
-            // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; }
-            // lib.optionalAttrs (v == "claude") {
-              # Installed manually
-              package = null;
-            };
-          }
-        )
-        {
-          enable = true;
-          skills.enable = true;
-          skills.entries = {
-            inherit (packages.${system}.agentskills) local whobson-python-skills mattpocock-skills;
-            bikeshed-skills = pkgs.mkSkill {
-              name = "bikeshed-skills";
-              version = "unstable";
-              src = bikeshed;
-            };
+      {
+        enable = true;
+        skills.enable = true;
+        skills.entries = {
+          inherit (packages.${system}.agentskills) local whobson-python-skills mattpocock-skills;
+          bikeshed-skills = pkgs.mkSkill {
+            name = "bikeshed-skills";
+            version = "unstable";
+            src = bikeshed;
           };
-        }
-        [
-          "gemini"
-          "claude"
-          "antigravity"
-          "opencode"
-        ];
+        };
+        claude = {
+          enable = true;
+          memory = {
+            enable = true;
+            source = mkMemory config.bikeshed.agents.claude { };
+          };
+          mcp.servers = bikeshed.lib.agents.mcpServersForAgent "claude" mcpServers;
+          # Installed manually
+          package = null;
+        };
+      };
 
     git = {
       enable = true;
