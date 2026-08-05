@@ -81,6 +81,7 @@ rec {
       home-manager,
       flake-utils,
       bikeshed,
+      bikeshed-pure,
       ...
     }:
     let
@@ -159,12 +160,12 @@ rec {
                   overlays = [ overlays ];
                   config.allowUnfreePredicate =
                     pkg:
-                    builtins.elem (lib.getName pkg) [
-                      "vault"
-                      "terraform"
-                      "claude-code"
-                      "github-copilot-cli"
-                    ];
+                    builtins.elem (lib.getName pkg) (
+                      [
+                        "github-copilot-cli"
+                      ]
+                      ++ bikeshed-pure.lib.pure.unfreePackages
+                    );
                 };
                 hostPlatform = pkgs.stdenv.hostPlatform;
               in

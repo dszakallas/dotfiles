@@ -58,12 +58,12 @@ in
 
     nixpkgs.config.allowUnfreePredicate =
       pkg:
-      builtins.elem (lib.getName pkg) [
-        "vault"
-        "terraform"
-        "claude-code"
-        "github-copilot-cli"
-      ];
+      builtins.elem (lib.getName pkg) (
+        [
+          "github-copilot-cli"
+        ]
+        ++ bikeshed-pure.lib.pure.unfreePackages
+      );
 
     users.users.${primaryUser} = {
       name = primaryUser;
@@ -192,16 +192,6 @@ in
                 "antigravity"
                 "opencode"
               ];
-
-              shared-skills = pkgs.stdenvNoCC.mkDerivation {
-                name = "shared-skills";
-                src = ../shared;
-                dontBuild = true;
-                installPhase = ''
-                  mkdir -p $out
-                  cp -r $src/* $out/
-                '';
-              };
             in
             lib.foldl'
               (
