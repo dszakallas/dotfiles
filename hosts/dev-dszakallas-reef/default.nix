@@ -29,7 +29,7 @@ in
 
   home = {
     username = primaryUser;
-    homeDirectory = "/home/${primaryUser}";
+    homeDirectory = "/u/${primaryUser}";
     stateVersion = "24.05";
   };
 
