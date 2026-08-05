@@ -215,10 +215,20 @@ in
           git = {
             enable = true;
             userPresets = {
-              github-pure.enable = true;
+              github-pure = {
+                enable = true;
+                credential = {
+                  enable = true;
+                  username = "dszakallas_pure-all-ro";
+                };
+              };
               dszakallas = {
                 enable = true;
                 sshIdentity = [ "sk1" ];
+                credential = {
+                  enable = true;
+                  username = "dszakallas-all-ro";
+                };
               };
             };
           };

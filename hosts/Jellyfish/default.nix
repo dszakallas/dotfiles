@@ -280,6 +280,10 @@ in
               dszakallas = {
                 enable = true;
                 sshIdentity = [ "sk1" ];
+                credential = {
+                  enable = true;
+                  username = "dszakallas-all-ro";
+                };
               };
             };
           };
