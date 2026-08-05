@@ -134,7 +134,11 @@ in
                     source = mkMemory config.bikeshed.agents."${v}" { };
                   };
             }
-            // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; };
+            // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; }
+            // lib.optionalAttrs (v == "claude") {
+              # Installed manually
+              package = null;
+            };
           }
         )
         {
