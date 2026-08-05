@@ -62,7 +62,7 @@ in
           agentConf: extra:
           let
             memoryFiles = [
-              ../shared/instructions/home.md
+              ./home.md
               ../shared/instructions/worktrees.md
             ];
             concatenatedMemory = pkgs.writeText "concatenated-memory" (
