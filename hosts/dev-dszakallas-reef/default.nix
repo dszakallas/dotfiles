@@ -102,7 +102,6 @@ in
         mcpAgents = [
           "gemini"
           "claude"
-          "copilot"
           "antigravity"
           "opencode"
         ];
@@ -135,11 +134,7 @@ in
                     source = mkMemory config.bikeshed.agents."${v}" { };
                   };
             }
-            // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; }
-            // lib.optionalAttrs (v == "claude" || v == "copilot") {
-              # Installed with Homebrew
-              package = null;
-            };
+            // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; };
           }
         )
         {
@@ -157,7 +152,6 @@ in
         [
           "gemini"
           "claude"
-          "copilot"
           "antigravity"
           "opencode"
         ];
