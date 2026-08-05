@@ -118,7 +118,7 @@
             # User-level (global) MCP servers, specified once in the generic
             # schema and transformed per agent.
             mcpServers = {
-              inherit (bikeshed-pure.lib.agents.mcpServers) glean atlassian-mcp;
+              inherit (bikeshed-pure.lib.agents.mcpServers) glean atlassian-mcp atlassian-mcp-cloud;
               chrome-devtools = {
                 type = "stdio";
                 command = "npx";
@@ -181,7 +181,7 @@
               enable = true;
               skills.enable = true;
               skills.entries = {
-                inherit (packages.${system}.agentskills) local;
+                inherit (packages.${system}.agentskills) local whobson-python-skills mattpocock-skills;
                 bikeshed-skills = pkgs.mkSkill {
                   name = "bikeshed-skills";
                   version = "unstable";
