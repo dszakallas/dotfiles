@@ -44,7 +44,6 @@ in
     homebrew.casks = [
       "claude"
       "claude-code"
-      "copilot-cli"
       "google-gemini"
       "ollama-app"
       "plexamp"
