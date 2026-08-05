@@ -150,10 +150,26 @@ rec {
             "dszakallas@dev-dszakallas-reef" =
               let
                 system = "x86_64-linux";
-                hostPlatform = (pkgsFor system).stdenv.hostPlatform;
+                # Standalone home-manager configurations take a fixed `pkgs`
+                # value, so the unfree allowlist (mirroring the one set at
+                # the darwin system level for the other hosts) has to be
+                # baked in here rather than via a `nixpkgs.config` option.
+                pkgs = import nixpkgs {
+                  inherit system;
+                  overlays = [ overlays ];
+                  config.allowUnfreePredicate =
+                    pkg:
+                    builtins.elem (lib.getName pkg) [
+                      "vault"
+                      "terraform"
+                      "claude-code"
+                      "github-copilot-cli"
+                    ];
+                };
+                hostPlatform = pkgs.stdenv.hostPlatform;
               in
               home-manager.lib.homeManagerConfiguration {
-                pkgs = pkgsFor system;
+                inherit pkgs;
                 extraSpecialArgs = {
                   inherit system hostPlatform;
                 };
