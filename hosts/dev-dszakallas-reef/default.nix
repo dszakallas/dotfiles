@@ -33,6 +33,18 @@ in
     stateVersion = "24.05";
   };
 
+  # This is not a NixOS system, so home-manager needs to wire up nix's own
+  # profile scripts itself (PATH, etc.) instead of relying on the system.
+  targets.genericLinux.enable = true;
+
+  # targets.genericLinux only sources the nixpkgs-provided nix.sh, which adds
+  # ~/.nix-profile/bin but not the multi-user install's own profile
+  # (/nix/var/nix/profiles/default/bin, where `nix` itself lives). This
+  # system's Nix installer never wired that into zsh's startup files.
+  programs.zsh.envExtra = ''
+    [[ -s "/etc/profile.d/nix.sh" ]] && source "/etc/profile.d/nix.sh"
+  '';
+
   programs.home-manager.enable = true;
 
   davids.id = {
