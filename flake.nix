@@ -132,7 +132,6 @@ rec {
           # Extract to bikeshed once it is more generic
           darwinModules = importRec1 ./modules/darwin ctx;
           homeModules = importRec1 ./modules/home ctx;
-          users = importRec1 ./users ctx;
 
           inherit overlays;
 
@@ -145,6 +144,21 @@ rec {
               host = "dszakallas--Clownfish";
               arch = "aarch64";
             };
+          };
+
+          homeConfigurations = {
+            "dszakallas@dev-dszakallas-reef" =
+              let
+                system = "x86_64-linux";
+                hostPlatform = (pkgsFor system).stdenv.hostPlatform;
+              in
+              home-manager.lib.homeManagerConfiguration {
+                pkgs = pkgsFor system;
+                extraSpecialArgs = {
+                  inherit system hostPlatform;
+                };
+                modules = [ (import ./hosts/dev-dszakallas-reef ctx) ];
+              };
           };
         });
     in

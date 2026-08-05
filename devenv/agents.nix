@@ -36,7 +36,7 @@ in
           shared = inputs.bikeshed.lib.agents.mkSkill pkgs {
             name = "shared-skills";
             version = "unstable";
-            src = ../users/shared;
+            src = ../hosts/shared;
             include = [ "devenv" ];
           };
         };
