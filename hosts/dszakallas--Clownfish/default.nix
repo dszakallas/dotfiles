@@ -42,8 +42,6 @@ in
     };
 
     homebrew.casks = [
-      "antigravity"
-      "antigravity-cli"
       "claude"
       "claude-code"
       "copilot-cli"
