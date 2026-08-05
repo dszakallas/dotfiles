@@ -1,12 +1,30 @@
-{ bikeshed, ... }:
+{
+  bikeshed,
+  bikeshed-homelab,
+  bikeshed-pure,
+  homeModules,
+  packages,
+  ...
+}:
 let
   primaryUser = "dszakallas";
 in
+{
+  config,
+  pkgs,
+  lib,
+  system,
+  ...
+}:
 {
   imports = [
     bikeshed.homeModules.base
     bikeshed.homeModules.ssh
     bikeshed.homeModules.agents
+    bikeshed.homeModules.github
+    bikeshed-pure.homeModules.default
+    bikeshed-homelab.homeModules.default
+    homeModules.id
   ];
 
   home = {
@@ -16,4 +34,150 @@ in
   };
 
   programs.home-manager.enable = true;
+
+  davids.id = {
+    enable = true;
+    identity = [ "sk1" ];
+  };
+
+  bikeshed = {
+    pure = {
+      enable = true;
+      python = {
+        enable = true;
+        setPurePypiMirrorAsDefault = true;
+        setPureExtraIndexes = true;
+      };
+      go = {
+        enable = true;
+        setPureGoProxy = true;
+      };
+    };
+
+    k8stools.enable = true;
+
+    agents =
+      let
+        mkMemory =
+          agentConf: extra:
+          let
+            memoryFiles = [
+              ../shared/instructions/home.md
+              ../shared/instructions/worktrees.md
+            ];
+            concatenatedMemory = pkgs.writeText "concatenated-memory" (
+              "# User-level memory\n\n"
+              + lib.concatMapStrings (f: builtins.readFile f + "\n") memoryFiles
+              + lib.concatStringsSep "\n" (lib.attrValues bikeshed.lib.agents.memory)
+              + lib.concatStringsSep "\n" (lib.attrValues bikeshed-pure.lib.agents.memory)
+            );
+          in
+          (pkgs.replaceVars concatenatedMemory (
+            {
+              agentMemoryDirectory = agentConf.memory.directory;
+              agentMemoryFile = agentConf.memory.target;
+            }
+            // extra
+          ));
+
+        # User-level (global) MCP servers, specified once in the generic
+        # schema and transformed per agent.
+        mcpServers = {
+          inherit (bikeshed-pure.lib.agents.mcpServers) glean atlassian-mcp atlassian-mcp-cloud;
+          chrome-devtools = {
+            type = "stdio";
+            command = "npx";
+            args = [
+              "-y"
+              "chrome-devtools-mcp@latest"
+              "--no-usage-statistics"
+              "--no-performance-crux"
+            ];
+            env = { };
+          };
+        };
+        mkMcp = agent: {
+          servers = bikeshed.lib.agents.mcpServersForAgent agent mcpServers;
+        };
+        mcpAgents = [
+          "gemini"
+          "claude"
+          "copilot"
+          "antigravity"
+          "opencode"
+        ];
+
+        shared-skills = pkgs.stdenvNoCC.mkDerivation {
+          name = "shared-skills";
+          src = ../shared;
+          dontBuild = true;
+          installPhase = ''
+            mkdir -p $out
+            cp -r $src/* $out/
+          '';
+        };
+      in
+      lib.foldl'
+        (
+          a: v:
+          a
+          // {
+            "${v}" = {
+              enable = true;
+              memory =
+                if v == "gemini" then
+                  {
+                    enable = false;
+                  }
+                else
+                  {
+                    enable = true;
+                    source = mkMemory config.bikeshed.agents."${v}" { };
+                  };
+            }
+            // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; }
+            // lib.optionalAttrs (v == "claude" || v == "copilot") {
+              # Installed with Homebrew
+              package = null;
+            };
+          }
+        )
+        {
+          enable = true;
+          skills.enable = true;
+          skills.entries = {
+            inherit (packages.${system}.agentskills) local whobson-python-skills mattpocock-skills;
+            bikeshed-skills = pkgs.mkSkill {
+              name = "bikeshed-skills";
+              version = "unstable";
+              src = bikeshed;
+            };
+          };
+        }
+        [
+          "gemini"
+          "claude"
+          "copilot"
+          "antigravity"
+          "opencode"
+        ];
+
+    git = {
+      enable = true;
+      userPresets = {
+        github-pure.enable = true;
+        dszakallas = {
+          enable = true;
+          sshIdentity = [ "sk1" ];
+        };
+      };
+    };
+
+    github = {
+      enable = true;
+      ssh = {
+        enable = true;
+      };
+    };
+  };
 }
