@@ -64,6 +64,7 @@ in
         enable = true;
         setPureGoProxy = true;
       };
+      jira.enable = true;
     };
 
     k8stools.enable = true;

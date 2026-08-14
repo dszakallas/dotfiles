@@ -123,6 +123,7 @@ in
               enable = true;
               setPureGoProxy = true;
             };
+            jira.enable = true;
           };
 
           # Impure brew programs
