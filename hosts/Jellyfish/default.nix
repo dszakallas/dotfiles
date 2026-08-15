@@ -211,6 +211,7 @@ in
                   // extra
                 ));
               mcpServers = {
+                inherit (bikeshed-homelab.lib.agents.mcpServers) ibkr;
                 chrome-devtools = {
                   type = "stdio";
                   command = "npx";
