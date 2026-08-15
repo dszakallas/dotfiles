@@ -21,6 +21,7 @@ in
 {
   imports = [
     bikeshed.systemModules.default
+    bikeshed.darwinModules.litellm
     bikeshed-homelab.systemModules.jupiter
     systemModules.default
     darwinModules.default
@@ -28,6 +29,7 @@ in
   ];
 
   config = {
+    services.litellm.enable = true;
     system = { inherit primaryUser; };
 
     homebrew.casks = [
