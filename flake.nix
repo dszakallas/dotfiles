@@ -32,6 +32,10 @@ rec {
       inputs.uv2nix.follows = "uv2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     bikeshed = {
       url = "path:./deps/bikeshed";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -80,6 +84,7 @@ rec {
       nix-darwin,
       home-manager,
       flake-utils,
+      sops-nix,
       bikeshed,
       bikeshed-pure,
       ...
@@ -109,6 +114,7 @@ rec {
                 ;
             };
           modules = [
+            sops-nix.darwinModules.sops
             home-manager.darwinModules.home-manager
             (import ./hosts/${host} ctx)
             {

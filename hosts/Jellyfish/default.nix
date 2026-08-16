@@ -12,6 +12,7 @@
 {
   lib,
   pkgs,
+  config,
   system,
   ...
 }:
@@ -29,7 +30,20 @@ in
   ];
 
   config = {
-    services.litellm.enable = true;
+    sops = {
+      defaultSopsFile = ./secrets.sec.yaml;
+      secrets."litellm/master_key" = {
+        key = "litellm.master_key";
+      };
+      templates."litellm-env".content = ''
+        LITELLM_MASTER_KEY=${config.sops.placeholder."litellm/master_key"}
+      '';
+    };
+
+    services.litellm = {
+      enable = true;
+      environmentFile = config.sops.templates."litellm-env".path;
+    };
     system = { inherit primaryUser; };
 
     homebrew.casks = [
