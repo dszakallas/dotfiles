@@ -53,6 +53,7 @@ in
 
     services.litellm = {
       enable = true;
+      stateDir = "/Users/davidszakallas/.local/share/litellm";
       environmentFile = config.sops.templates."litellm-env".path;
     };
     system = { inherit primaryUser; };
