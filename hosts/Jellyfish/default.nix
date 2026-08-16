@@ -30,11 +30,22 @@ in
   ];
 
   config = {
+    services.postgresql = {
+      enable = true;
+      authentication = pkgs.lib.mkOverride 10 ''
+        # type database DBuser origin-address auth-method
+        local all all trust
+        host all all 127.0.0.1/32 trust
+        host all all ::1/128 trust
+      '';
+    };
+
     sops = {
       defaultSopsFile = ./secrets.sec.yaml;
       secrets."litellm/master_key" = { };
       templates."litellm-env".content = ''
         LITELLM_MASTER_KEY=${config.sops.placeholder."litellm/master_key"}
+        DATABASE_URL=postgresql://litellm@127.0.0.1:5432/litellm
       '';
     };
 
