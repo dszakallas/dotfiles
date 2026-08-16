@@ -44,11 +44,16 @@ in
 
     sops = {
       defaultSopsFile = ./secrets.sec.yaml;
-      secrets."litellm/master_key" = { };
-      templates."litellm-env".content = ''
-        LITELLM_MASTER_KEY=${config.sops.placeholder."litellm/master_key"}
-        DATABASE_URL=postgresql://litellm@127.0.0.1:5432/litellm
-      '';
+      secrets."litellm/master_key" = {
+        owner = primaryUser;
+      };
+      templates."litellm-env" = {
+        owner = primaryUser;
+        content = ''
+          LITELLM_MASTER_KEY=${config.sops.placeholder."litellm/master_key"}
+          DATABASE_URL=postgresql://litellm@127.0.0.1:5432/litellm
+        '';
+      };
     };
 
     services.litellm = {
