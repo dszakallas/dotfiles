@@ -32,9 +32,7 @@ in
   config = {
     sops = {
       defaultSopsFile = ./secrets.sec.yaml;
-      secrets."litellm/master_key" = {
-        key = "litellm.master_key";
-      };
+      secrets."litellm/master_key" = { };
       templates."litellm-env".content = ''
         LITELLM_MASTER_KEY=${config.sops.placeholder."litellm/master_key"}
       '';

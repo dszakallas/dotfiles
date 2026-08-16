@@ -1,10 +1,10 @@
 keys:
-  - &user age16qqrf0nxxcmtya960m9mcxkj827c8kwn7rp9qqka6chwpuvzwdfq425mmu
+  - &admin age1ame78x6gtx2xrfgm3w2wmm3q82cf7av0x9m7ds2dwg3raruts9lq7fqjqw 
   - &jellyfish age1yuyzwd05p62ftrc0mmernr4am3nr3cf3gevnmv5cml6ut84ttceqvjemhu
 
 creation_rules:
   - path_regex: hosts/Jellyfish/.*\.sec\.yaml$
     key_groups:
       - age:
-          - *user
+          - *admin
           - *jellyfish
