@@ -31,7 +31,7 @@ in
 
   config = {
     services.postgresql = {
-      enable = false;
+      enable = true;
       enableTCPIP = true;
       dataDir = "/Users/davidszakallas/.local/share/postgresql";
       authentication = pkgs.lib.mkOverride 10 ''
@@ -57,8 +57,8 @@ in
     };
 
     services.litellm = {
-      enable = false;
-      stateDir = "/Users/davidszakallas/.local/share/litellm";
+      enable = true;
+      stateDir = "/Users/${primaryUser}/.local/share/litellm";
       environmentFile = config.sops.templates."litellm-env".path;
     };
     system = { inherit primaryUser; };
@@ -89,7 +89,7 @@ in
         primaryUser
       ];
       linux-builder = {
-        enable = true;
+        enable = false;
         ephemeral = true;
         maxJobs = 8;
         config = {
