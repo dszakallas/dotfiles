@@ -144,6 +144,7 @@ in
           stateVersion = "24.05";
           packages = [
             packages.${system}.notebooklm-py
+            packages.${system}.happy-coder
           ]
           ++ (with pkgs; [
             (fluxcd.withPlugins (p: [
@@ -161,7 +162,6 @@ in
             google-cloud-sdk
             playwright-mcp
             gogcli
-            happy-coder
           ]);
         };
 
