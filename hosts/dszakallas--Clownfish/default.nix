@@ -168,18 +168,8 @@ in
               # User-level (global) MCP servers, specified once in the generic
               # schema and transformed per agent.
               mcpServers = {
-                inherit (bikeshed-pure.lib.agents.mcpServers) glean atlassian-mcp atlassian-mcp-cloud;
-                chrome-devtools = {
-                  type = "stdio";
-                  command = "npx";
-                  args = [
-                    "-y"
-                    "chrome-devtools-mcp@latest"
-                    "--no-usage-statistics"
-                    "--no-performance-crux"
-                  ];
-                  env = { };
-                };
+                inherit (bikeshed-pure.packages.${system}.mcp-servers) glean atlassian-mcp atlassian-mcp-cloud;
+                inherit (bikeshed.packages.${system}.mcp-servers) chrome-devtools;
               };
             in
             {

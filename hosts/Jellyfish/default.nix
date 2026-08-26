@@ -161,6 +161,7 @@ in
             google-cloud-sdk
             playwright-mcp
             gogcli
+            happy-coder
           ]);
         };
 
@@ -244,18 +245,8 @@ in
                   // extra
                 ));
               mcpServers = {
-                inherit (bikeshed-homelab.lib.agents.mcpServers) ibkr;
-                chrome-devtools = {
-                  type = "stdio";
-                  command = "npx";
-                  args = [
-                    "-y"
-                    "chrome-devtools-mcp@latest"
-                    "--no-usage-statistics"
-                    "--no-performance-crux"
-                  ];
-                  env = { };
-                };
+                inherit (bikeshed-homelab.packages.${system}.mcp-servers) ibkr;
+                inherit (bikeshed.packages.${system}.mcp-servers) chrome-devtools;
               };
               mkMcp = agent: {
                 servers = bikeshed.lib.agents.mcpServersForAgent agent mcpServers;
