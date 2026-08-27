@@ -123,6 +123,10 @@ in
         };
       };
 
+    ssh = {
+      enable = true;
+    };
+
     git = {
       enable = true;
       userPresets = {
