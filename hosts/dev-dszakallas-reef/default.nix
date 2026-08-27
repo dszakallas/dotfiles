@@ -158,6 +158,7 @@ in
       ssh = {
         enable = true;
       };
+      extensions = [ pkgs.gh-stack ];
     };
   };
 }
