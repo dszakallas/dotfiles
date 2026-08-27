@@ -69,6 +69,7 @@ in
       "calibre"
       "claude"
       "claude-code"
+      "codex"
       "discord"
       "google-drive"
       "google-gemini"
@@ -254,6 +255,7 @@ in
                 "copilot"
                 "antigravity"
                 "opencode"
+                "codex"
               ];
             in
             lib.foldl'
@@ -269,7 +271,7 @@ in
                     };
                   }
                   // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; }
-                  // lib.optionalAttrs (v == "claude" || v == "copilot" || v == "antigravity") {
+                  // lib.optionalAttrs (v == "claude" || v == "copilot" || v == "antigravity" || v == "codex") {
                     # non-free, self-updating tools, better installed with Homebrew
                     package = null;
                   };
@@ -291,6 +293,7 @@ in
                 "copilot"
                 "antigravity"
                 "opencode"
+                "codex"
               ];
           ssh = {
             enable = true;
