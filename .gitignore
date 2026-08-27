@@ -9,6 +9,7 @@
 .agents/skills
 .claude
 opencode.json
+.codex
 
 
 # Devenv
