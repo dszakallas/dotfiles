@@ -167,7 +167,12 @@ in
               enable = true;
               skills.enable = true;
               skills.entries = {
-                inherit (packages.${system}.agentskills) local whobson-python-skills mattpocock-skills;
+                inherit (packages.${system}.agentskills)
+                  local
+                  whobson-python-skills
+                  mattpocock-skills
+                  gh-stack
+                  ;
                 bikeshed-skills = pkgs.mkSkill {
                   name = "bikeshed-skills";
                   version = "unstable";
