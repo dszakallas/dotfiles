@@ -130,7 +130,7 @@ in
           enable = true;
           credential = {
             enable = true;
-            helper = ''!f() { cat >/dev/null; if [ "$1" = get ]; then printf 'username=%s\npassword=%s\n' "$PURE_PROD_KRYPTON_GITHUB_PRIVATE_USERNAME" "$PURE_PROD_KRYPTON_GITHUB_PRIVATE_PASSWORD"; fi; }; f'';
+            helper = bikeshed.lib.git.mkEnvCredentialHelper "PURE_PROD_KRYPTON_GITHUB_PRIVATE_";
           };
         };
         dszakallas = {
@@ -138,7 +138,7 @@ in
           sshIdentity = [ "sk1" ];
           credential = {
             enable = true;
-            helper = ''!f() { cat >/dev/null; if [ "$1" = get ]; then printf 'username=%s\npassword=%s\n' "$GITHUB_PRIVATE_USERNAME" "$GITHUB_PRIVATE_PASSWORD"; fi; }; f'';
+            helper = bikeshed.lib.git.mkEnvCredentialHelper "GITHUB_PRIVATE_";
           };
         };
       };

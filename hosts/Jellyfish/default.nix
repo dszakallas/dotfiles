@@ -300,6 +300,7 @@ in
           };
           git = {
             enable = true;
+            credentialHelper = "osxkeychain";
             userPresets = {
               github-user1.enable = true;
               dszakallas = {

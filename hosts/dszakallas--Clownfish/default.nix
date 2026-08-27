@@ -210,7 +210,7 @@ in
                 enable = true;
                 credential = {
                   enable = true;
-                  username = "dszakallas_pure-all-ro";
+                  helper = bikeshed.lib.git.mkEnvCredentialHelper "PURE_PROD_KRYPTON_GITHUB_PRIVATE_";
                 };
               };
               dszakallas = {
@@ -218,7 +218,7 @@ in
                 sshIdentity = [ "sk1" ];
                 credential = {
                   enable = true;
-                  username = "dszakallas-all-ro";
+                  helper = bikeshed.lib.git.mkEnvCredentialHelper "GITHUB_PRIVATE_";
                 };
               };
             };
