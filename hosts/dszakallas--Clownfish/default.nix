@@ -75,13 +75,11 @@ in
         imports = [
           bikeshed.homeModules.base
           bikeshed.homeModules.agents
-          bikeshed.homeModules.emacs
           bikeshed.homeModules.github
           bikeshed.homeModules.ssh
           bikeshed-homelab.homeModules.default
           bikeshed-pure.homeModules.default
           homeModules.id
-          homeModules.spacemacs-config
         ];
 
         home = {
@@ -133,13 +131,6 @@ in
           };
 
           k8stools.enable = true;
-          emacs = {
-            enable = true;
-            daemon.enable = true;
-            spacemacs = {
-              enable = true;
-            };
-          };
 
           agents =
             let
