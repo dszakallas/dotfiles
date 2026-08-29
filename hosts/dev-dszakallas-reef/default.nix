@@ -68,6 +68,8 @@ in
     };
 
     k8stools.enable = true;
+    devenv.enable = true;
+    direnv.enable = true;
 
     agents =
       let

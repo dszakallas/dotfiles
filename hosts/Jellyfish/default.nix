@@ -31,7 +31,7 @@ in
 
   config = {
     services.postgresql = {
-      enable = true;
+      enable = false;
       enableTCPIP = true;
       dataDir = "/Users/davidszakallas/.local/share/postgresql";
       authentication = pkgs.lib.mkOverride 10 ''
@@ -57,7 +57,7 @@ in
     };
 
     services.litellm = {
-      enable = true;
+      enable = false;
       stateDir = "/Users/${primaryUser}/.local/share/litellm";
       environmentFile = config.sops.templates."litellm-env".path;
     };
@@ -213,6 +213,8 @@ in
           k8stools = {
             enable = true;
           };
+          devenv.enable = true;
+          direnv.enable = true;
           emacs = {
             enable = true;
             daemon.enable = true;
