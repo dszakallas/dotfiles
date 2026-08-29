@@ -135,6 +135,7 @@ in
           bikeshed-homelab.homeModules.jupiter
           bikeshed-homelab.homeModules.kolobok
           homeModules.id
+          homeModules.git-operator
         ];
 
         home = {
