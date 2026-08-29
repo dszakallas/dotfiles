@@ -28,6 +28,28 @@ get_git_config_path() {
   return 1
 }
 
+validate_path_component() {
+  local kind="$1"
+  local name="$2"
+
+  case "$name" in
+    ""|.|..|-*|*/*|*\\*|*$'\n'*|*$'\r'*)
+      echo "error: invalid $kind '$name'" >&2
+      return 1
+      ;;
+  esac
+}
+
+validate_worktree_name() {
+  local wt_name="$1"
+
+  validate_path_component "worktree name" "$wt_name"
+  if ! git check-ref-format --branch "$wt_name" >/dev/null 2>&1; then
+    echo "error: invalid worktree branch name '$wt_name'" >&2
+    return 1
+  fi
+}
+
 resolve_repo_dir() {
   if [ -n "${GIT_OPERATOR_REPO_DIR:-}" ]; then
     expand_path "$GIT_OPERATOR_REPO_DIR"
@@ -103,6 +125,7 @@ cmd_create() {
 
   local remote_url="$1"
   local project_name="${2%.git}"
+  validate_path_component "project name" "$project_name"
   local target_repo="$REPO_DIR/${project_name}.git"
 
   if [ -d "$target_repo" ]; then
@@ -126,13 +149,29 @@ cmd_create() {
 }
 
 cmd_delete() {
-  if [ $# -lt 1 ] || [ -z "$1" ]; then
+  local force=false
+  local positional_args=()
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -f|--force)
+        force=true
+        shift
+        ;;
+      *)
+        positional_args+=("$1")
+        shift
+        ;;
+    esac
+  done
+
+  if [ ${#positional_args[@]} -ne 1 ] || [ -z "${positional_args[0]}" ]; then
     echo "error: delete requires <project-name>" >&2
-    echo "usage: git operator delete <project-name>" >&2
+    echo "usage: git operator delete [-f|--force] <project-name>" >&2
     return 1
   fi
 
-  local project_name="${1%.git}"
+  local project_name="${positional_args[0]%.git}"
+  validate_path_component "project name" "$project_name"
   local target_repo="$REPO_DIR/${project_name}.git"
 
   if [ ! -d "$target_repo" ]; then
@@ -164,12 +203,25 @@ cmd_delete() {
     esac
   done < <(cd "$target_repo" && git worktree list --porcelain)
 
-  for wt_dir in "${wt_dirs[@]}"; do
-    if [ -n "$wt_dir" ] && [ "$wt_dir" != "/" ] && [ "$wt_dir" != "$HOME" ]; then
-      echo "Deleting worktree: '$wt_dir'"
-      rm -rf "$wt_dir"
-    fi
-  done
+  if [ ${#wt_dirs[@]} -gt 0 ] && [ "$force" = false ]; then
+    echo "error: repository has active worktrees; rerun with --force to remove them" >&2
+    return 1
+  fi
+
+  if [ "$force" = true ]; then
+    for wt_dir in "${wt_dirs[@]}"; do
+      echo "Removing worktree: '$wt_dir'"
+      (
+        cd "$target_repo"
+        git worktree remove --force "$wt_dir"
+      )
+    done
+  fi
+
+  (
+    cd "$target_repo"
+    git worktree prune
+  )
 
   echo "Deleting bare repository: '$target_repo'"
   rm -rf "$target_repo"
@@ -177,15 +229,32 @@ cmd_delete() {
 }
 
 cmd_worktree_add() {
-  if [ $# -lt 2 ] || [ -z "$1" ] || [ -z "$2" ]; then
+  local fetch=false
+  local positional_args=()
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --fetch)
+        fetch=true
+        shift
+        ;;
+      *)
+        positional_args+=("$1")
+        shift
+        ;;
+    esac
+  done
+
+  if [ ${#positional_args[@]} -lt 2 ] || [ ${#positional_args[@]} -gt 3 ] || [ -z "${positional_args[0]}" ] || [ -z "${positional_args[1]}" ]; then
     echo "error: worktree add requires <project-name> and <wt-name>" >&2
-    echo "usage: git operator worktree add <project-name> <wt-name> [start-point]" >&2
+    echo "usage: git operator worktree add [--fetch] <project-name> <wt-name> [start-point]" >&2
     return 1
   fi
 
-  local project_name="${1%.git}"
-  local wt_name="$2"
-  local start_point="${3:-}"
+  local project_name="${positional_args[0]%.git}"
+  local wt_name="${positional_args[1]}"
+  local start_point="${positional_args[2]:-}"
+  validate_path_component "project name" "$project_name"
+  validate_worktree_name "$wt_name"
   local target_repo="$REPO_DIR/${project_name}.git"
   local target_worktree="$WORKTREE_DIR/$wt_name"
 
@@ -199,15 +268,20 @@ cmd_worktree_add() {
     return 1
   fi
 
+  if [ -n "$start_point" ] && git -C "$target_repo" rev-parse --verify --quiet "refs/heads/$wt_name" >/dev/null; then
+    echo "error: branch '$wt_name' already exists; omit the start point to attach it or choose a new worktree name" >&2
+    return 1
+  fi
+
   (
     cd "$target_repo"
+    if [ "$fetch" = true ]; then
+      echo "Fetching remote branches..."
+      git fetch --prune origin
+    fi
+
     if [ -n "$start_point" ]; then
-      if git rev-parse --verify --quiet "refs/heads/$wt_name" >/dev/null; then
-        echo "Branch '$wt_name' already exists. Adding worktree attached to existing branch..."
-        git worktree add "$target_worktree" "$wt_name"
-      else
-        git worktree add -b "$wt_name" "$target_worktree" "$start_point"
-      fi
+      git worktree add -b "$wt_name" "$target_worktree" "$start_point"
     else
       # No start-point provided: use worktree name, creating branch if necessary
       if git rev-parse --verify --quiet "refs/heads/$wt_name" >/dev/null; then
@@ -250,6 +324,8 @@ cmd_worktree_remove() {
 
   local project_name="${positional_args[0]%.git}"
   local wt_name="${positional_args[1]}"
+  validate_path_component "project name" "$project_name"
+  validate_worktree_name "$wt_name"
   local target_repo="$REPO_DIR/${project_name}.git"
   local target_worktree="$WORKTREE_DIR/$wt_name"
 
@@ -281,6 +357,7 @@ cmd_worktree_list() {
   fi
 
   local project_name="${1%.git}"
+  validate_path_component "project name" "$project_name"
   local target_repo="$REPO_DIR/${project_name}.git"
 
   if [ ! -d "$target_repo" ]; then
@@ -290,7 +367,7 @@ cmd_worktree_list() {
 
   (
     cd "$target_repo"
-    git worktree list "$@"
+    git worktree list
   )
 }
 
@@ -300,8 +377,8 @@ git-operator - Automate bare repositories and isolated agent worktrees
 
 Usage:
   git operator create <remote-url> <project-name>
-  git operator delete <project-name>
-  git operator worktree add <project-name> <wt-name> [start-point]
+  git operator delete [-f|--force] <project-name>
+  git operator worktree add [--fetch] <project-name> <wt-name> [start-point]
   git operator worktree remove [-f|--force] <project-name> <wt-name>
   git operator worktree list <project-name>
 
