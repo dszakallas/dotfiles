@@ -6,13 +6,13 @@
 
 python3Packages.buildPythonApplication rec {
   pname = "notebooklm-py";
-  version = "0.7.3";
+  version = "0.8.1";
   pyproject = true;
 
   src = fetchPypi {
     pname = "notebooklm_py";
     inherit version;
-    hash = "sha256-kYvNZ+rod+wzVl15iFAaWP1YL9Y/GcZIAiOvlfBlpeM=";
+    hash = "sha256-Q7pRqWCalTC/zZrQbBA17erEsOQBVqWn7n7jAmIWZs0=";
   };
 
   build-system = with python3Packages; [

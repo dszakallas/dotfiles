@@ -7,6 +7,52 @@ description: Complete API for Google NotebookLM - full programmatic access inclu
 
 Complete programmatic access to Google NotebookLM—including capabilities not exposed in the web UI. Create notebooks, add sources (URLs, YouTube, PDFs, audio, video, images), chat with content, generate all artifact types, and download results in multiple formats.
 
+## Installation
+
+**From PyPI (Recommended for AI agents — Python-version-aware):**
+```bash
+pip install "notebooklm-py[browser]"   # mandatory; errors must propagate
+
+# [cookies] (rookiepy) is optional and known to FAIL TO BUILD on Python 3.13+.
+# Skip it deliberately on 3.13+ rather than swallowing the error — that lets
+# *real* install failures (typos, network, PyPI outages) surface for the agent.
+if python -c "import sys; sys.exit(0 if sys.version_info < (3, 13) else 1)"; then
+    pip install "notebooklm-py[cookies]"   # errors propagate
+else
+    echo "Skipping [cookies] on Python 3.13+ (rookiepy unavailable). Use 'notebooklm login' interactively."
+fi
+```
+
+> Full install matrix (extras, headless servers, contributor flow): [Installation guide on GitHub](https://github.com/teng-lin/notebooklm-py/blob/main/docs/installation.md).
+
+**From GitHub (use latest release tag, NOT main branch):**
+```bash
+# Get the latest release tag (requires curl + jq)
+if ! command -v jq >/dev/null; then
+    echo "jq is required to read the latest release tag" >&2
+    exit 1
+fi
+LATEST_TAG=$(
+    curl -fsSL https://api.github.com/repos/teng-lin/notebooklm-py/releases/latest |
+    jq -r '.tag_name'
+)
+# Includes [browser] so the interactive `notebooklm login` flow works.
+pip install "notebooklm-py[browser] @ git+https://github.com/teng-lin/notebooklm-py@${LATEST_TAG}"
+```
+
+⚠️ **DO NOT install from main branch** (`pip install git+https://github.com/teng-lin/notebooklm-py`). The main branch may contain unreleased/unstable changes. Always use PyPI or a specific release tag, unless you are testing unreleased features.
+
+**Skill install methods:**
+
+- `notebooklm skill install` installs this skill into the supported local agent directories managed by the CLI.
+- `npx skills add teng-lin/notebooklm-py` installs this skill from the GitHub repository into compatible agent skill directories.
+- If you are already reading this file inside an agent skill directory, the skill is already installed. You only need the Python package and authentication below.
+
+**CLI-managed install:**
+```bash
+notebooklm skill install
+```
+
 ## Prerequisites
 
 **IMPORTANT:** Before using any command, you MUST authenticate:
@@ -39,6 +85,32 @@ For automated environments, multiple accounts, or parallel agent workflows:
 2. **Per-agent isolation via profiles:** `export NOTEBOOKLM_PROFILE=agent-$ID` (each profile gets its own context file)
 3. **Per-agent isolation via home:** Set unique `NOTEBOOKLM_HOME` per agent: `export NOTEBOOKLM_HOME=/tmp/agent-$ID`
 4. **Use full UUIDs:** Avoid partial IDs in automation (they can become ambiguous)
+
+### Sandboxed Agents (Claude Cowork / Headless)
+
+Sandboxed, no-display agent environments — **Claude Cowork** (Anthropic's desktop agent for non-developers) and similar headless sandboxes — can't run `notebooklm login` (it needs a browser), and they reset between sessions. Everything else works with two adjustments:
+
+1. **Bootstrap each session.** The sandbox resets, so install at the start of every session. You do **not** need `[browser]`/Playwright here — that extra exists only for the interactive `login` flow, which you run on a host machine, not in the sandbox. Chat, sources, generation, and download all run on the base install:
+   ```bash
+   pip install notebooklm-py   # no [browser] needed for queries/generation
+   ```
+   (This is the one place the mandatory `[browser]` install at the top of this file does not apply — you are reusing auth, not logging in here.)
+2. **Reuse a host-generated `storage_state.json`.** Log in once on a machine with a display (`notebooklm login`), then bring the resulting `storage_state.json` into a sandbox-accessible folder and point at it either way:
+   ```bash
+   # Per-invocation root flag (a persistent, sandbox-accessible path):
+   notebooklm --storage /path/to/storage_state.json list
+   # OR inline via env var (no file needed — e.g. from a Cowork-stored secret):
+   export NOTEBOOKLM_AUTH_JSON="$(cat /path/to/storage_state.json)"
+   notebooklm list
+   ```
+
+   > ⚠️ **`storage_state.json` / `NOTEBOOKLM_AUTH_JSON` are bearer credentials** — anyone holding them can act as your Google account. Keep the file `0600`, load it from the sandbox's secret store rather than a committed file, never print or log it, and `unset NOTEBOOKLM_AUTH_JSON` when finished.
+
+**Verify** as in [Agent Setup Verification](#agent-setup-verification) below — e.g. `notebooklm --storage <path> auth check --test --json` (require `"status": "ok"` AND `"checks.token_fetch": true`).
+
+**Context does not survive a reset** either: the selected-notebook context (`context.json`) is gone each session, so pass an explicit `-n/--notebook <id>` on notebook-scoped commands instead of relying on `notebooklm use`.
+
+If Cowork reads `~/.claude/skills/`, `notebooklm skill install` registers this skill there automatically; otherwise build the uploadable archive on the host with `notebooklm skill package` (writes `notebooklm-skill.zip`) and add it via **Claude Settings → Capabilities**. Full recipe (extras matrix, headless auth, CI env-var notes): [installation.md § AI Agent](https://github.com/teng-lin/notebooklm-py/blob/main/docs/installation.md#a-ai-agent-primary-persona).
 
 ## Agent Setup Verification
 
@@ -180,7 +252,7 @@ Before starting workflows, verify auth is in place. **Use `--test --json` (not b
 | Check artifact status | `notebooklm artifact list` |
 | Wait for completion | `notebooklm artifact wait <artifact_id>` |
 | Delete artifact | `notebooklm artifact delete <artifact_id> --yes` |
-| Download audio | `notebooklm download audio ./output.mp3` |
+| Download audio | `notebooklm download audio ./output.m4a` |
 | Download video | `notebooklm download video ./output.mp4` |
 | Download cinematic video | `notebooklm download cinematic-video ./cinematic.mp4` (alias for `download video`) |
 | Download infographic | `notebooklm download infographic ./infographic.png` |
@@ -274,8 +346,8 @@ Common generate options vary by subcommand:
 
 | Type | Command | Options | Download |
 |------|---------|---------|----------|
-| Podcast | `generate audio` | `--format [deep-dive\|brief\|critique\|debate]`, `--length [short\|default\|long]` | .mp3 |
-| Video | `generate video` | `--format [explainer\|brief\|cinematic]` (⁴), `--style [auto\|custom\|classic\|whiteboard\|kawaii\|anime\|watercolor\|retro-print\|heritage\|paper-craft]`, `--style-prompt` with `--style custom` | .mp4 |
+| Podcast | `generate audio` | `--format [deep-dive\|brief\|critique\|debate]`, `--length [short\|default\|long]` | .m4a |
+| Video | `generate video` | `--format [explainer\|brief\|cinematic\|short]` (⁴), `--style [auto\|custom\|classic\|whiteboard\|kawaii\|anime\|watercolor\|retro-print\|heritage\|paper-craft]`, `--style-prompt` with `--style custom` | .mp4 |
 | Slide Deck | `generate slide-deck` | `--format [detailed\|presenter]`, `--length [default\|short]` (²) | .pdf / .pptx |
 | Slide Revision | `generate revise-slide "prompt" --artifact <id> --slide N` | `--wait`, `--notebook` | *(re-downloads parent deck)* |
 | Infographic | `generate infographic` | `--orientation [landscape\|portrait\|square]`, `--detail [concise\|standard\|detailed]`, `--style [auto\|sketch-note\|professional\|bento-grid\|editorial\|instructional\|bricks\|clay\|anime\|kawaii\|scientific]` | .png |
@@ -330,7 +402,7 @@ These capabilities are available via CLI but not in NotebookLM's web interface:
 4. `notebooklm generate audio "Focus on [specific angle]"` (confirm when asked) — *if rate limited: wait 5 min, retry once*
 5. Note the artifact ID returned
 6. Check `notebooklm artifact list` later for status
-7. `notebooklm download audio ./podcast.mp3` when complete (confirm when asked)
+7. `notebooklm download audio ./podcast.m4a` when complete (confirm when asked)
 
 ### Research to Podcast (Automated with Subagent)
 **Time:** 5-10 minutes, but continues in background
@@ -345,7 +417,7 @@ When user wants full automation (generate and download when ready):
    Task(
      prompt="Wait for artifact {task_id} in notebook {notebook_id} to complete, then download.
              Use: notebooklm artifact wait {task_id} -n {notebook_id} --timeout 1200
-             Then: notebooklm download audio ./podcast.mp3 -a {task_id} -n {notebook_id}",
+             Then: notebooklm download audio ./podcast.m4a -a {task_id} -n {notebook_id}",
      subagent_type="general-purpose"
    )
    ```
@@ -633,3 +705,4 @@ notebooklm language --help     # Language settings
 **Diagnose auth:** `notebooklm auth check` - shows cookie domains, storage path, validation status
 **Re-authenticate:** `notebooklm login`
 **Check version:** `notebooklm --version`
+**Refresh a CLI-managed install:** `notebooklm skill install`
