@@ -116,21 +116,85 @@ run_init_worktree_hook() {
   )
 }
 
-cmd_create() {
-  if [ $# -lt 2 ] || [ -z "$1" ] || [ -z "$2" ]; then
-    echo "error: create requires <remote-url> and <project-name>" >&2
-    echo "usage: git operator create <remote-url> <project-name>" >&2
+parse_initial_worktree_options() {
+  INITIAL_NO_WORKTREE=false
+  INITIAL_WORKTREE_NAME=""
+  INITIAL_POSITIONAL_ARGS=()
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --no-worktree)
+        if [ "$INITIAL_NO_WORKTREE" = true ]; then
+          echo "error: --no-worktree may only be specified once" >&2
+          return 1
+        fi
+        INITIAL_NO_WORKTREE=true
+        shift
+        ;;
+      --worktree-name)
+        if [ $# -lt 2 ] || [ -z "$2" ]; then
+          echo "error: --worktree-name requires a value" >&2
+          return 1
+        fi
+        INITIAL_WORKTREE_NAME="$2"
+        shift 2
+        ;;
+      --worktree-name=*)
+        INITIAL_WORKTREE_NAME="${1#--worktree-name=}"
+        if [ -z "$INITIAL_WORKTREE_NAME" ]; then
+          echo "error: --worktree-name requires a value" >&2
+          return 1
+        fi
+        shift
+        ;;
+      --)
+        shift
+        INITIAL_POSITIONAL_ARGS+=("$@")
+        break
+        ;;
+      -*)
+        echo "error: unknown option '$1'" >&2
+        return 1
+        ;;
+      *)
+        INITIAL_POSITIONAL_ARGS+=("$1")
+        shift
+        ;;
+    esac
+  done
+
+  if [ "$INITIAL_NO_WORKTREE" = true ] && [ -n "$INITIAL_WORKTREE_NAME" ]; then
+    echo "error: --no-worktree and --worktree-name cannot be used together" >&2
+    return 1
+  fi
+}
+
+cmd_clone() {
+  parse_initial_worktree_options "$@" || return 1
+  if [ ${#INITIAL_POSITIONAL_ARGS[@]} -ne 2 ] || [ -z "${INITIAL_POSITIONAL_ARGS[0]}" ] || [ -z "${INITIAL_POSITIONAL_ARGS[1]}" ]; then
+    echo "error: clone requires <remote-url> and <project-name>" >&2
+    echo "usage: git operator clone [--no-worktree | --worktree-name <name>] <remote-url> <project-name>" >&2
     return 1
   fi
 
-  local remote_url="$1"
-  local project_name="${2%.git}"
+  local remote_url="${INITIAL_POSITIONAL_ARGS[0]}"
+  local project_name="${INITIAL_POSITIONAL_ARGS[1]%.git}"
   validate_path_component "project name" "$project_name"
   local target_repo="$REPO_DIR/${project_name}.git"
+  local wt_name="${INITIAL_WORKTREE_NAME:-$project_name}"
+  local target_worktree="$WORKTREE_DIR/$wt_name"
 
-  if [ -d "$target_repo" ]; then
-    echo "error: repository already exists at '$target_repo'" >&2
+  if [ -e "$target_repo" ]; then
+    echo "error: repository path already exists at '$target_repo'" >&2
     return 1
+  fi
+
+  if [ "$INITIAL_NO_WORKTREE" = false ]; then
+    validate_path_component "worktree name" "$wt_name"
+    if [ -e "$target_worktree" ]; then
+      echo "error: worktree path already exists at '$target_worktree'" >&2
+      return 1
+    fi
   fi
 
   echo "Cloning bare repository to '$target_repo'..."
@@ -145,7 +209,71 @@ cmd_create() {
     git remote set-head origin --auto 2>/dev/null || true
   )
 
-  echo "Successfully created bare repository at '$target_repo'."
+  if [ "$INITIAL_NO_WORKTREE" = true ]; then
+    echo "Successfully cloned bare repository at '$target_repo'."
+    return 0
+  fi
+
+  echo "Creating initial worktree at '$target_worktree'..."
+  if git -C "$target_repo" rev-parse --verify --quiet HEAD >/dev/null; then
+    local initial_branch
+    if ! initial_branch=$(git -C "$target_repo" symbolic-ref --quiet --short HEAD); then
+      echo "error: could not determine the remote default branch" >&2
+      return 1
+    fi
+    git -C "$target_repo" branch --set-upstream-to="origin/$initial_branch" "$initial_branch"
+    git -C "$target_repo" worktree add "$target_worktree" "$initial_branch"
+  else
+    git -C "$target_repo" worktree add --orphan -b main "$target_worktree"
+  fi
+
+  run_init_worktree_hook "$project_name" "$wt_name" "$target_worktree" "$target_repo"
+  echo "Successfully cloned '$project_name' with worktree at '$target_worktree'."
+}
+
+cmd_init() {
+  parse_initial_worktree_options "$@" || return 1
+  if [ ${#INITIAL_POSITIONAL_ARGS[@]} -ne 1 ] || [ -z "${INITIAL_POSITIONAL_ARGS[0]}" ]; then
+    echo "error: init requires <project-name>" >&2
+    echo "usage: git operator init [--no-worktree | --worktree-name <name>] <project-name>" >&2
+    return 1
+  fi
+
+  local project_name="${INITIAL_POSITIONAL_ARGS[0]%.git}"
+  validate_path_component "project name" "$project_name"
+  local target_repo="$REPO_DIR/${project_name}.git"
+  local wt_name="${INITIAL_WORKTREE_NAME:-$project_name}"
+  local target_worktree="$WORKTREE_DIR/$wt_name"
+
+  if [ -e "$target_repo" ]; then
+    echo "error: repository path already exists at '$target_repo'" >&2
+    return 1
+  fi
+
+  if [ "$INITIAL_NO_WORKTREE" = false ]; then
+    validate_path_component "worktree name" "$wt_name"
+    if [ -e "$target_worktree" ]; then
+      echo "error: worktree path already exists at '$target_worktree'" >&2
+      return 1
+    fi
+  fi
+
+  echo "Initializing bare repository at '$target_repo'..."
+  git init --bare --initial-branch=main "$target_repo"
+
+  if [ "$INITIAL_NO_WORKTREE" = true ]; then
+    echo "Successfully initialized bare repository at '$target_repo'."
+    return 0
+  fi
+
+  echo "Creating initial worktree at '$target_worktree'..."
+  (
+    cd "$target_repo"
+    git worktree add --orphan -b main "$target_worktree"
+  )
+
+  run_init_worktree_hook "$project_name" "$wt_name" "$target_worktree" "$target_repo"
+  echo "Successfully initialized '$project_name' with worktree at '$target_worktree'."
 }
 
 cmd_delete() {
@@ -376,7 +504,8 @@ usage() {
 git-operator - Automate bare repositories and isolated agent worktrees
 
 Usage:
-  git operator create <remote-url> <project-name>
+  git operator clone [--no-worktree | --worktree-name <name>] <remote-url> <project-name>
+  git operator init [--no-worktree | --worktree-name <name>] <project-name>
   git operator delete [-f|--force] <project-name>
   git operator worktree add [--fetch] <project-name> <wt-name> [start-point]
   git operator worktree remove [-f|--force] <project-name> <wt-name>
@@ -409,8 +538,11 @@ main() {
   shift
 
   case "$cmd" in
-    create)
-      cmd_create "$@"
+    clone)
+      cmd_clone "$@"
+      ;;
+    init)
+      cmd_init "$@"
       ;;
     delete)
       cmd_delete "$@"
