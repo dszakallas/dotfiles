@@ -30,37 +30,10 @@ in
   ];
 
   config = {
-    services.postgresql = {
-      enable = false;
-      enableTCPIP = true;
-      dataDir = "/Users/davidszakallas/.local/share/postgresql";
-      authentication = pkgs.lib.mkOverride 10 ''
-        # type database DBuser origin-address auth-method
-        local all all trust
-        host all all 127.0.0.1/32 trust
-        host all all ::1/128 trust
-      '';
-    };
-
     sops = {
       defaultSopsFile = ./secrets.sec.yaml;
-      secrets."litellm/master_key" = {
-        owner = primaryUser;
-      };
-      templates."litellm-env" = {
-        owner = primaryUser;
-        content = ''
-          LITELLM_MASTER_KEY=${config.sops.placeholder."litellm/master_key"}
-          DATABASE_URL=postgresql://litellm@127.0.0.1:5432/litellm
-        '';
-      };
     };
 
-    services.litellm = {
-      enable = false;
-      stateDir = "/Users/${primaryUser}/.local/share/litellm";
-      environmentFile = config.sops.templates."litellm-env".path;
-    };
     system = { inherit primaryUser; };
 
     homebrew.casks = [
@@ -89,9 +62,12 @@ in
       ];
       linux-builder = {
         enable = false;
+        package = pkgs.darwin.linux-builder-vz;
         ephemeral = true;
         maxJobs = 8;
         config = {
+          nix.settings.build-dir = "/nix/var/nix/builds";
+
           virtualisation = {
             darwin-builder = {
               diskSize = 64 * 1024;
@@ -304,7 +280,6 @@ in
           };
           git = {
             enable = true;
-            credentialHelper = "osxkeychain";
             userPresets = {
               github-user1.enable = true;
               dszakallas = {
@@ -312,7 +287,7 @@ in
                 sshIdentity = [ "sk1" ];
                 credential = {
                   enable = true;
-                  username = "dszakallas-all-ro";
+                  helper = bikeshed.lib.git.mkEnvCredentialHelper "GITHUB_PRIVATE_";
                 };
               };
             };
