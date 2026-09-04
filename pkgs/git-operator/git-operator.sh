@@ -76,46 +76,6 @@ resolve_worktree_dir() {
   expand_path "$HOME/worktrees"
 }
 
-get_init_worktree_hook() {
-  local project_name="${1:-}"
-  local hook_exec=""
-  if [ -n "$project_name" ]; then
-    hook_exec=$(git config --get "operator.hooks.$project_name.init_worktree.exec" 2>/dev/null || true)
-  fi
-  if [ -z "$hook_exec" ]; then
-    hook_exec=$(git config --get 'operator.hooks.*.init_worktree.exec' 2>/dev/null || true)
-  fi
-  if [ -z "$hook_exec" ]; then
-    hook_exec=$(git config --get 'operator.hooks.*.init-worktree.exec' 2>/dev/null || true)
-  fi
-  printf "%s" "$hook_exec"
-}
-
-run_init_worktree_hook() {
-  local project_name="$1"
-  local wt_name="$2"
-  local target_worktree="$3"
-  local target_repo="$4"
-
-  local hook_exec
-  hook_exec=$(get_init_worktree_hook "$project_name")
-  if [ -z "$hook_exec" ]; then
-    return 0
-  fi
-
-  echo "Executing init_worktree hook..."
-  (
-    cd "$target_worktree"
-    export REPO_NAME="$project_name"
-    export WORKTREE_NAME="$wt_name"
-    export GIT_OPERATOR_REPO_NAME="$project_name"
-    export GIT_OPERATOR_WORKTREE_NAME="$wt_name"
-    export GIT_OPERATOR_WORKTREE_PATH="$target_worktree"
-    export GIT_OPERATOR_REPO_PATH="$target_repo"
-    bash -c "$hook_exec"
-  )
-}
-
 parse_initial_worktree_options() {
   INITIAL_NO_WORKTREE=false
   INITIAL_WORKTREE_NAME=""
@@ -227,7 +187,6 @@ cmd_clone() {
     git -C "$target_repo" worktree add --orphan -b main "$target_worktree"
   fi
 
-  run_init_worktree_hook "$project_name" "$wt_name" "$target_worktree" "$target_repo"
   echo "Successfully cloned '$project_name' with worktree at '$target_worktree'."
 }
 
@@ -272,7 +231,6 @@ cmd_init() {
     git worktree add --orphan -b main "$target_worktree"
   )
 
-  run_init_worktree_hook "$project_name" "$wt_name" "$target_worktree" "$target_repo"
   echo "Successfully initialized '$project_name' with worktree at '$target_worktree'."
 }
 
@@ -424,8 +382,6 @@ cmd_worktree_add() {
       fi
     fi
   )
-
-  run_init_worktree_hook "$project_name" "$wt_name" "$target_worktree" "$target_repo"
 }
 
 cmd_worktree_remove() {
@@ -499,6 +455,37 @@ cmd_worktree_list() {
   )
 }
 
+cmd_get_reponame() {
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "error: not inside a git worktree" >&2
+    return 1
+  fi
+
+  local toplevel
+  toplevel=$(git rev-parse --show-toplevel 2>/dev/null)
+  if [ -z "$toplevel" ]; then
+    echo "error: unable to determine worktree top-level" >&2
+    return 1
+  fi
+
+  if [ -d "$toplevel/.git" ]; then
+    basename "$toplevel"
+  elif [ -f "$toplevel/.git" ]; then
+    local common_dir
+    common_dir=$(cd "$toplevel" && cd "$(git rev-parse --git-common-dir)" && pwd -P)
+    if [ "$(git --git-dir="$common_dir" rev-parse --is-bare-repository 2>/dev/null)" = "true" ]; then
+      local repo_name
+      repo_name=$(basename "$common_dir")
+      echo "${repo_name%.git}"
+    else
+      basename "$(dirname "$common_dir")"
+    fi
+  else
+    echo "error: unknown git layout in $toplevel" >&2
+    return 1
+  fi
+}
+
 usage() {
   cat <<'EOF'
 git-operator - Automate bare repositories and isolated agent worktrees
@@ -510,6 +497,7 @@ Usage:
   git operator worktree add [--fetch] <project-name> <wt-name> [start-point]
   git operator worktree remove [-f|--force] <project-name> <wt-name>
   git operator worktree list <project-name>
+  git operator get-reponame
 
 Configuration (in order of precedence):
   1. Environment variables:
@@ -546,6 +534,9 @@ main() {
       ;;
     delete)
       cmd_delete "$@"
+      ;;
+    get-reponame)
+      cmd_get_reponame "$@"
       ;;
     worktree)
       if [ $# -lt 1 ]; then

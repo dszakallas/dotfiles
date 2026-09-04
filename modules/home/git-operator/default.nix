@@ -16,4 +16,18 @@ in
     executable = true;
     source = ./git-operator-init-worktree-hook.sh;
   };
+
+  home.file.".bikeshed/share/git/template/hooks/post-checkout" = {
+    executable = true;
+    source = ./post-checkout.sh;
+  };
+
+  bikeshed.git.includes = [
+    {
+      path = pkgs.writeText "git-template-config" ''
+        [init]
+        	templateDir = ~/.bikeshed/share/git/template
+      '';
+    }
+  ];
 }

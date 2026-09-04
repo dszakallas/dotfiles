@@ -25,6 +25,7 @@ in
     bikeshed-pure.homeModules.default
     bikeshed-homelab.homeModules.default
     homeModules.id
+    homeModules.git-operator
   ];
 
   home = {

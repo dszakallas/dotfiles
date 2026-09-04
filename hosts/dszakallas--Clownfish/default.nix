@@ -80,6 +80,7 @@ in
           bikeshed-homelab.homeModules.default
           bikeshed-pure.homeModules.default
           homeModules.id
+          homeModules.git-operator
         ];
 
         home = {
