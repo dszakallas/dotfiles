@@ -100,6 +100,7 @@ in
             temporal-cli
             gogcli
             uv
+            poppler-utils
           ]);
         };
 

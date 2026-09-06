@@ -138,6 +138,7 @@ in
             google-cloud-sdk
             playwright-mcp
             gogcli
+            poppler-utils
           ]);
         };
 

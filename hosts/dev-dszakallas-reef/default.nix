@@ -32,6 +32,9 @@ in
     username = primaryUser;
     homeDirectory = "/u/${primaryUser}";
     stateVersion = "24.05";
+    packages = with pkgs; [
+      poppler-utils
+    ];
   };
 
   # This is not a NixOS system, so home-manager needs to wire up nix's own
