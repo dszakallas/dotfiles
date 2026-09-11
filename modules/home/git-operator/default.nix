@@ -24,9 +24,12 @@ in
 
   bikeshed.git.includes = [
     {
-      path = pkgs.writeText "git-template-config" ''
+      path = pkgs.writeText "git-operator-config" ''
         [init]
         	templateDir = ~/.bikeshed/share/git/template
+        [operator]
+        	repos = ${config.home.homeDirectory}/Repos
+        	worktrees = ${config.home.homeDirectory}/Worktrees
       '';
     }
   ];

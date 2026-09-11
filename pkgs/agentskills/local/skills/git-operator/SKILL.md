@@ -62,6 +62,41 @@ git operator worktree remove <project> <worktree-name>
 Remove a worktree only after confirming it is clean. Do not use `--force`
 unless the user explicitly accepts losing its uncommitted work.
 
+## Migrating existing checkouts
+
+`git operator migrate <path>` converts a plain clone into a bare repository
+under `~/Repos` and reattaches its checkouts as linked worktrees. It moves the
+git directory instead of re-cloning, so uncommitted changes, untracked and
+ignored files, stashes, local-only branches and reflogs all survive.
+
+```bash
+git operator migrate ~/Worktrees/<project>
+git operator migrate --all
+```
+
+The project name comes from the basename of the `origin` fetch URL, which
+need not match the directory name: a checkout at `~/Worktrees/<dir>` whose
+origin ends in `<project>.git` becomes `~/Repos/<project>.git` while the
+worktree keeps the name `<dir>`. Pass `--project-name <name>` when there is no
+`origin` remote, or when two repositories would claim the same name.
+
+Migration works on whole repositories. Name the primary worktree, not one of
+its linked worktrees; every worktree of the repository must be a direct child
+of `~/Worktrees`, and migrate refuses the repository outright when one is not,
+naming the offenders.
+
+`--all` walks `~/Worktrees`, reports every repository it cannot take, and is a
+dry run unless `--yes` is given. Read the plan before applying it. Add
+`--keep-backup` to keep a copy of the original git directory under
+`~/Repos/.migrate-backup`, and `--fsck` to verify object connectivity after
+each conversion.
+
+A failed verification rolls that repository back to its original layout; other
+repositories in the same run are unaffected.
+
+Migrated worktrees do not run the `post-checkout` template hook, so anything in
+`~/.local/share/worktrees/<project>/` is not copied into them.
+
 ## Repository deletion
 
 `git operator delete <project>` refuses to delete repositories with active
