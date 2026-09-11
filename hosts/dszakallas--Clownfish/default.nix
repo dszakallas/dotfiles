@@ -162,7 +162,13 @@ in
               # User-level (global) MCP servers, specified once in the generic
               # schema and transformed per agent.
               mcpServers = {
-                inherit (bikeshed-pure.packages.${system}.mcp-servers) glean atlassian-mcp atlassian-mcp-cloud;
+                inherit (bikeshed-pure.packages.${system}.mcp-servers)
+                  glean
+                  atlassian-mcp
+                  atlassian-mcp-cloud
+                  elasticsearch-dev
+                  elasticsearch-prod
+                  ;
                 inherit (bikeshed.packages.${system}.mcp-servers) chrome-devtools;
               };
             in
@@ -181,6 +187,7 @@ in
                   version = "unstable";
                   src = bikeshed;
                 };
+                kryptonSkills = bikeshed-pure.packages.${system}.krypton-skills;
               };
               claude = {
                 enable = true;
@@ -207,6 +214,11 @@ in
             userPresets = {
               github-pure = {
                 enable = true;
+                identity = {
+                  name = "Dávid Szakállas";
+                  email = "dszakallas@purestorage.com";
+                  githubUser = "dszakallas_pure";
+                };
                 credential = {
                   enable = true;
                   helper = bikeshed.lib.git.mkEnvCredentialHelper "PURE_PROD_KRYPTON_GITHUB_PRIVATE_";
