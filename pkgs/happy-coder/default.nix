@@ -8,18 +8,18 @@
 
 buildNpmPackage rec {
   pname = "happy-coder";
-  version = "1.2.1";
+  version = "1.2.3";
 
   src = fetchurl {
     url = "https://registry.npmjs.org/happy/-/happy-${version}.tgz";
-    hash = "sha256-/Fm/nKYAOoFuybwokqEozyUucs5gFQTj1U9Lif7zM80=";
+    hash = "sha256-cS9s+OPka2eAIK5IRPhDO0MNdnBQis7jCdLxzN74Omk=";
   };
 
   postPatch = ''
     cp ${./package-lock.json} ./package-lock.json
   '';
 
-  npmDepsHash = "sha256-9WP+ahGxHpaYnDwKITSXhDAW9xtT2AdqIa/pvUgJqQ0=";
+  npmDepsHash = "sha256-UB/eKNeFs5k7vgWeTQVLBOXnx5TrRIV3Ae2Gm9+gAqY=";
 
   dontNpmBuild = true;
 
