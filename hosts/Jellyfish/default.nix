@@ -66,12 +66,22 @@ in
         ephemeral = true;
         maxJobs = 8;
         config = {
-          nix.settings.build-dir = "/nix/var/nix/builds";
+          fileSystems."/" = lib.mkForce {
+            device = "tmpfs";
+            fsType = "tmpfs";
+            neededForBoot = true;
+            options = [
+              "mode=0755"
+              "size=32G"
+            ];
+          };
+
+          nix.settings.build-dir = "/nix/.rw-store/builds";
 
           virtualisation = {
             darwin-builder = {
               diskSize = 64 * 1024;
-              memorySize = 12 * 1024;
+              memorySize = 16 * 1024;
             };
             cores = 8;
           };
