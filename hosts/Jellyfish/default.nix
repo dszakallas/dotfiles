@@ -22,7 +22,6 @@ in
 {
   imports = [
     bikeshed.systemModules.default
-    bikeshed.darwinModules.litellm
     bikeshed-homelab.systemModules.jupiter
     systemModules.default
     darwinModules.default
