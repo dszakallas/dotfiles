@@ -233,7 +233,6 @@ in
                   // extra
                 ));
               mcpServers = {
-                inherit (bikeshed-homelab.packages.${system}.mcp-servers) ibkr;
                 inherit (bikeshed.packages.${system}.mcp-servers) chrome-devtools;
               };
               mkMcp = agent: {
