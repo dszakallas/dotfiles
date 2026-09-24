@@ -45,6 +45,7 @@ in
       "discord"
       "google-drive"
       "google-gemini"
+      "paseo"
       "plexamp"
       "signal"
       "slack"
