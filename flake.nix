@@ -92,7 +92,13 @@ rec {
     let
       inherit (bikeshed.lib) importRec importRec1 callPackageWithRec;
       inherit (nixpkgs) lib;
-      pkgsFor = system: nixpkgs.legacyPackages.${system}.extend overlays;
+      pkgsFor =
+        system:
+        import nixpkgs {
+          inherit system;
+          overlays = [ overlays ];
+          config.allowUnfree = true;
+        };
       overlays = lib.foldl' lib.composeExtensions (_: _: { }) (
         lib.attrValues (importRec1 ./overlays ctx)
       );
@@ -168,6 +174,7 @@ rec {
                     pkg:
                     builtins.elem (lib.getName pkg) (
                       [
+                        "antigravity-par"
                         "github-copilot-cli"
                       ]
                       ++ bikeshed-pure.lib.pure.unfreePackages

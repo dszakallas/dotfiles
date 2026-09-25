@@ -98,6 +98,7 @@ in
     nixpkgs.config.allowUnfreePredicate =
       pkg:
       builtins.elem (lib.getName pkg) [
+        "antigravity-par"
         "claude-code"
         "github-copilot-cli"
       ];
@@ -129,8 +130,8 @@ in
           homeDirectory = "/Users/${primaryUser}";
           stateVersion = "24.05";
           packages = [
+            packages.${system}.antigravity-par
             packages.${system}.notebooklm-py
-            packages.${system}.happy-coder
           ]
           ++ (with pkgs; [
             (fluxcd.withPlugins (p: [
@@ -151,6 +152,12 @@ in
             poppler-utils
           ]);
         };
+
+        programs.zsh.envExtra = ''
+          export PASEO_AGY_ACP_BIN="${
+            packages.${system}.antigravity-par
+          }/libexec/antigravity-par/agy_acp_server.par"
+        '';
 
         programs.ssh.settings =
           builtins.listToAttrs (

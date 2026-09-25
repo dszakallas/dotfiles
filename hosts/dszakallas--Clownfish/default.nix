@@ -58,6 +58,7 @@ in
       pkg:
       builtins.elem (lib.getName pkg) (
         [
+          "antigravity-par"
           "github-copilot-cli"
         ]
         ++ bikeshed-pure.lib.pure.unfreePackages
