@@ -1,6 +1,3 @@
-[submodule "deps/bikeshed-pure"]
-	path = deps/bikeshed-pure
-	url = https://github.com/dszakallas/bikeshed-pure.git
 [submodule "deps/bikeshed-homelab"]
 	path = deps/bikeshed-homelab
 	url = https://github.com/dszakallas/bikeshed-homelab.git

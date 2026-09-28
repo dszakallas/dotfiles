@@ -47,40 +47,6 @@
       },
       "parent": []
     },
-    "bikeshed-pure": {
-      "inputs": {
-        "bikeshed": [
-          "bikeshed"
-        ],
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "home-manager": [
-          "home-manager"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "pyproject-build-systems": [
-          "pyproject-build-systems"
-        ],
-        "pyproject-nix": [
-          "pyproject-nix"
-        ],
-        "uv2nix": [
-          "uv2nix"
-        ]
-      },
-      "locked": {
-        "path": "./deps/bikeshed-pure",
-        "type": "path"
-      },
-      "original": {
-        "path": "./deps/bikeshed-pure",
-        "type": "path"
-      },
-      "parent": []
-    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -205,7 +171,6 @@
       "inputs": {
         "bikeshed": "bikeshed",
         "bikeshed-homelab": "bikeshed-homelab",
-        "bikeshed-pure": "bikeshed-pure",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",

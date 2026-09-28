@@ -49,16 +49,7 @@ rec {
       inputs.flake-utils.follows = "flake-utils";
       inputs.bikeshed.follows = "bikeshed";
     };
-    bikeshed-pure = {
-      url = "path:./deps/bikeshed-pure";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-      inputs.flake-utils.follows = "flake-utils";
-      inputs.pyproject-nix.follows = "pyproject-nix";
-      inputs.pyproject-build-systems.follows = "pyproject-build-systems";
-      inputs.uv2nix.follows = "uv2nix";
-      inputs.bikeshed.follows = "bikeshed";
-    };
+
   };
 
   nixConfig = {
@@ -86,7 +77,6 @@ rec {
       flake-utils,
       sops-nix,
       bikeshed,
-      bikeshed-pure,
       ...
     }:
     let
@@ -153,42 +143,6 @@ rec {
               host = "Jellyfish";
               arch = "aarch64";
             };
-            "dszakallas--Clownfish" = mkDarwin {
-              host = "dszakallas--Clownfish";
-              arch = "aarch64";
-            };
-          };
-
-          homeConfigurations = {
-            "dszakallas@dev-dszakallas-reef" =
-              let
-                system = "x86_64-linux";
-                # Standalone home-manager configurations take a fixed `pkgs`
-                # value, so the unfree allowlist (mirroring the one set at
-                # the darwin system level for the other hosts) has to be
-                # baked in here rather than via a `nixpkgs.config` option.
-                pkgs = import nixpkgs {
-                  inherit system;
-                  overlays = [ overlays ];
-                  config.allowUnfreePredicate =
-                    pkg:
-                    builtins.elem (lib.getName pkg) (
-                      [
-                        "antigravity-par"
-                        "github-copilot-cli"
-                      ]
-                      ++ bikeshed-pure.lib.pure.unfreePackages
-                    );
-                };
-                hostPlatform = pkgs.stdenv.hostPlatform;
-              in
-              home-manager.lib.homeManagerConfiguration {
-                inherit pkgs;
-                extraSpecialArgs = {
-                  inherit system hostPlatform;
-                };
-                modules = [ (import ./hosts/dev-dszakallas-reef ctx) ];
-              };
           };
         });
     in
