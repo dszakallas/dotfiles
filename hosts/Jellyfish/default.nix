@@ -276,13 +276,16 @@ in
               {
                 enable = true;
                 skills.enable = true;
-                skills.entries = packages.${system}.agentskills // {
-                  bikeshed-skills = pkgs.mkSkill {
-                    name = "bikeshed-skills";
-                    version = "unstable";
-                    src = bikeshed;
+                skills.entries =
+                  bikeshed.packages.${system}.agentskills
+                  // packages.${system}.agentskills
+                  // {
+                    bikeshed-skills = pkgs.mkSkill {
+                      name = "bikeshed-skills";
+                      version = "unstable";
+                      src = bikeshed;
+                    };
                   };
-                };
               }
               [
                 "claude"
