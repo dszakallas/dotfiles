@@ -123,6 +123,7 @@ in
           bikeshed-homelab.homeModules.kolobok
           homeModules.id
           homeModules.git-operator
+          homeModules.doom-config
         ];
 
         home = {
@@ -214,7 +215,7 @@ in
             enable = true;
             daemon.enable = true;
             spacemacs = {
-              enable = true;
+              enable = false;
             };
           };
           agents =
