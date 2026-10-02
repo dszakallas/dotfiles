@@ -15,5 +15,6 @@ ctx:
 
   home.packages = with pkgs; [
     vscode-langservers-extracted
+    fd
   ];
 }
