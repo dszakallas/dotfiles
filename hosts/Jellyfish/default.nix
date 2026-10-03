@@ -2,6 +2,7 @@
   self,
   bikeshed,
   bikeshed-homelab,
+  bikeshed-emacs,
   darwinModules,
   systemModules,
   homeModules,
@@ -114,7 +115,7 @@ in
       {
         imports = [
           bikeshed.homeModules.base
-          bikeshed.homeModules.emacs
+          bikeshed-emacs.homeModules.emacs
           bikeshed.homeModules.github
           bikeshed.homeModules.agents
           bikeshed.homeModules.ssh

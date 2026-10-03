@@ -8,13 +8,15 @@ A personal Nix flake that configures macOS hosts via [nix-darwin](https://github
 and [home-manager](https://github.com/nix-community/home-manager). It builds `darwinConfigurations`
 for each machine and composes reusable modules, overlays, packages, and per-user home configs.
 
-Reusable, generic config lives in three Git submodules under `deps/`:
+Reusable, generic config lives in four Git submodules under `deps/`:
 
 - `deps/bikeshed` — public, shareable modules and lib functions
   ([bikeshed](https://github.com/dszakallas/bikeshed)).
 - `deps/bikeshed-homelab` — personal machines and accounts: git and SSH user presets, the
   `bikeshed.jupiter` and `bikeshed.kolobok` modules
   ([bikeshed-homelab](https://github.com/dszakallas/bikeshed-homelab)).
+- `deps/bikeshed-emacs` — Emacs packages and configuration: `davids-emacs`, `spacemacs`,
+  and Doom Emacs integration ([bikeshed-emacs](https://github.com/dszakallas/bikeshed-emacs)).
 - `deps/bikeshed-pure` — Pure Storage work config: the `bikeshed.pure` module, internal
   tooling packages, corporate agent memory and MCP servers
   ([bikeshed-pure](https://github.com/dszakallas/bikeshed-pure)).

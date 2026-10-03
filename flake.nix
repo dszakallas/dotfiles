@@ -49,7 +49,13 @@ rec {
       inputs.flake-utils.follows = "flake-utils";
       inputs.bikeshed.follows = "bikeshed";
     };
-
+    bikeshed-emacs = {
+      url = "path:./deps/bikeshed-emacs";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.bikeshed.follows = "bikeshed";
+    };
   };
 
   nixConfig = {

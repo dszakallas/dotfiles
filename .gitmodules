@@ -4,3 +4,6 @@
 [submodule "deps/bikeshed"]
 	path = deps/bikeshed
 	url = https://github.com/dszakallas/bikeshed.git
+[submodule "deps/bikeshed-emacs"]
+	path = deps/bikeshed-emacs
+	url = https://github.com/dszakallas/bikeshed-emacs.git
