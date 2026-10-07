@@ -10,6 +10,19 @@ ctx:
       git
       fd
       vscode-langservers-extracted
+      nil
+      rust-analyzer
+      gopls
+      pyright
+      typescript-language-server
+      dart
+      yaml-language-server
+      taplo
+      terraform-ls
+      bash-language-server
+      marksman
+      buf
+      vim-language-server
     ];
   };
 

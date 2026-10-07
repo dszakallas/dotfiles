@@ -17,13 +17,27 @@
 ;; - `doom-symbol-font' -- for symbols
 ;; - `doom-serif-font' -- for the `fixed-pitch-serif' face
 ;;
-(setq doom-font (font-spec :family "Monaco" :size 13))
+(setq doom-font (font-spec :family "Mononoki Nerd Font" :size 13))
 
 ;; Appearance & Theme
 (setq doom-theme 'sanityinc-tomorrow-bright)
 
 ;; Display line numbers
 (setq display-line-numbers-type t)
+
+;; Disable menu bar in terminal
+(defun my/disable-menu-bar-in-terminal (&optional frame)
+  (unless (display-graphic-p frame)
+    (set-frame-parameter frame 'menu-bar-lines 0)))
+
+(add-hook 'after-make-frame-functions #'my/disable-menu-bar-in-terminal 'append)
+(add-hook 'tty-setup-hook (lambda () (set-frame-parameter nil 'menu-bar-lines 0)))
+(my/disable-menu-bar-in-terminal)
+
+;; Use scratch buffer as fallback instead of *doom* dashboard
+(setq doom-fallback-buffer-name "*scratch*")
+(when (daemonp)
+  (set-buffer (doom-fallback-buffer)))
 
 ;; Use emacsclient as editor in terminals
 (setenv "EDITOR" "ec")
@@ -48,8 +62,18 @@
 (after! flycheck
   (setq flycheck-check-syntax-automatically '(save)))
 
-;; Clojure refactoring preferences
-(setq cljr-favor-prefix-notation t)
+;; Disable LSP server download prompts
+(after! lsp-mode
+  (setq lsp-enable-suggest-server-download nil))
+
+;; TOML LSP support via taplo
+(add-hook 'conf-toml-mode-hook #'lsp-deferred)
+
+;; Protobuf LSP support via buf
+(add-hook 'protobuf-mode-hook #'lsp-deferred)
+
+;; Vimscript LSP support via vim-language-server
+(add-hook 'vimrc-mode-hook #'lsp-deferred)
 
 ;; Mouse wheel scroll amount
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 20)))

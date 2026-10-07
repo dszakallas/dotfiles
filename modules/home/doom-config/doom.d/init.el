@@ -53,7 +53,7 @@
        (lsp +peek)               ; M-x vscode
        (magit +forge)            ; a git porcelain for Emacs
        make                      ; run make tasks from Emacs
-       terraform                 ; infrastructure as code
+       (terraform +lsp)          ; infrastructure as code
        tree-sitter               ; syntax and parsing, sitting in a tree...
 
        :os
@@ -61,13 +61,14 @@
 
        :lang
        (cc +lsp)                 ; C > C++ == 1
-       (clojure +lsp)            ; a dialect of Lisp, on the JVM
        common-lisp               ; if you've seen one Lisp, you've seen them all
+       (dart +lsp)               ; paint ui and not much else
        data                      ; config/data formats (csv, sql, etc.)
        emacs-lisp                ; drown in parentheses
        (go +lsp)                 ; the hipster's brew
        (javascript +lsp)         ; all(hope(leave(ye(who(enter(here))))))
        (json +lsp)               ; At least it ain't XML
+       (markdown +lsp)           ; write docs for people to ignore
        (nix +lsp)                ; I hereby declare "nix geht mehr!"
        (org +pretty)             ; organize your plain life in plain text
        (python +lsp +pyright)    ; beautiful is better than ugly

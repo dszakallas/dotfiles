@@ -44,6 +44,8 @@ in
       "claude-code"
       "codex"
       "discord"
+      "font-mononoki-nerd-font"
+      "font-symbols-only-nerd-font"
       "google-drive"
       "google-gemini"
       "paseo"

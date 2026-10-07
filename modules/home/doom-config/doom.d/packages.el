@@ -9,3 +9,4 @@
 (package! ein)
 (package! color-theme-sanityinc-tomorrow)
 (package! protobuf-mode)
+(package! vimrc-mode)
