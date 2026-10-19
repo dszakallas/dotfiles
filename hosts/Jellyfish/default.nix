@@ -127,6 +127,7 @@ in
           homeModules.id
           homeModules.git-operator
           homeModules.doom-config
+          homeModules.reverse-engineering
         ];
 
         home = {
@@ -246,17 +247,12 @@ in
                 ));
               mcpServers = {
                 inherit (bikeshed.packages.${system}.mcp-servers) chrome-devtools;
+                inherit (packages.${system}.mcp-servers) rea;
               };
               mkMcp = agent: {
                 servers = bikeshed.lib.agents.mcpServersForAgent agent mcpServers;
               };
-              mcpAgents = [
-                "claude"
-                "copilot"
-                "antigravity"
-                "opencode"
-                "codex"
-              ];
+              mcpAgents = bikeshed.lib.agents.popularHarnesses;
             in
             lib.foldl'
               (
