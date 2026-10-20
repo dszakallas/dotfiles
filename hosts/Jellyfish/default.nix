@@ -310,6 +310,11 @@ in
                   helper = bikeshed.lib.git.mkEnvCredentialHelper "GITHUB_PRIVATE_";
                 };
               };
+              dszakallas-kolobok = {
+                enable = true;
+                sshIdentity = [ "sk1" ];
+                credential.enable = true;
+              };
             };
           };
           github = {
