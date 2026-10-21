@@ -131,27 +131,27 @@ let
 
       operator = mkFluxPlugin {
         pname = "flux-operator";
-        version = "0.56.0";
+        version = "0.61.0";
         bin = "flux-operator";
         description = "Flux Operator CLI";
         homepage = "https://fluxoperator.dev/";
         src = fix.fetchurl (
           {
             "darwin-amd64" = {
-              url = "https://github.com/controlplaneio-fluxcd/flux-operator/releases/download/v0.56.0/flux-operator_0.56.0_darwin_amd64.tar.gz";
-              hash = "sha256-byRRbdu5KNbLUifGv9s4HBIN6plFfq5vzWnaf85aEDY=";
+              url = "https://github.com/controlplaneio-fluxcd/flux-operator/releases/download/v0.61.0/flux-operator_0.61.0_darwin_amd64.tar.gz";
+              hash = "sha256-FGAcU+j0ITVQN2UcsSw0DhW3/bUwwl4f0krL9KUrRFY=";
             };
             "darwin-arm64" = {
-              url = "https://github.com/controlplaneio-fluxcd/flux-operator/releases/download/v0.56.0/flux-operator_0.56.0_darwin_arm64.tar.gz";
-              hash = "sha256-JpwMz6vJhmC5nw38qAzh7vs87SvEQgenxIWPuh0/KfM=";
+              url = "https://github.com/controlplaneio-fluxcd/flux-operator/releases/download/v0.61.0/flux-operator_0.61.0_darwin_arm64.tar.gz";
+              hash = "sha256-1Z4rrGw0FjxAJJbgjfspuLVM7bDsuLsgNuQnIczw6FI=";
             };
             "linux-amd64" = {
-              url = "https://github.com/controlplaneio-fluxcd/flux-operator/releases/download/v0.56.0/flux-operator_0.56.0_linux_amd64.tar.gz";
-              hash = "sha256-AvZ9FbJGsK8BFQzXKsLctJ5yWo8bT6lpq+8UcDOANAQ=";
+              url = "https://github.com/controlplaneio-fluxcd/flux-operator/releases/download/v0.61.0/flux-operator_0.61.0_linux_amd64.tar.gz";
+              hash = "sha256-VyCms45I+VDdl8sG9pJpVwDgI5soUD4ZJswoz4MQFFw=";
             };
             "linux-arm64" = {
-              url = "https://github.com/controlplaneio-fluxcd/flux-operator/releases/download/v0.56.0/flux-operator_0.56.0_linux_arm64.tar.gz";
-              hash = "sha256-4FGQuX9c+LjoDA7OLNxbfUn0zwkgaACtrfW58vY1xIY=";
+              url = "https://github.com/controlplaneio-fluxcd/flux-operator/releases/download/v0.61.0/flux-operator_0.61.0_linux_arm64.tar.gz";
+              hash = "sha256-SZmCs0RkUriUyfSHpJwY05ayvcK0j+uWJMoSqn7aMAE=";
             };
           }
           ."${plat.os}-${plat.arch}"
