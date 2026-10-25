@@ -42,7 +42,7 @@ in
         };
       };
     }
-    // lib.genAttrs [ "vscode" "claude" "copilot" "gemini" "opencode" "codex" ] (name: {
+    // lib.genAttrs lib'.agents.popularHarnesses (name: {
       enable = true;
       mcp = {
         enable = true;
