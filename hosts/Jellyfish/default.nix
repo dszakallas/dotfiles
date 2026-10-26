@@ -147,7 +147,6 @@ in
             ffmpeg
             asciinema
             awscli2
-            minio-client
             backblaze-b2
             rclone
             yt-dlp
