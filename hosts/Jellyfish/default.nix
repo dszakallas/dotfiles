@@ -142,6 +142,7 @@ in
             (fluxcd.withPlugins (p: [
               p.schema
               p.mirror
+              p.operator
             ]))
             fluxcd-operator
             ffmpeg
