@@ -6,12 +6,12 @@
 }:
 mkSkill {
   name = "paseo-progress";
-  version = "1.3.1";
+  version = "1.8.0";
   src = fetchFromGitHub {
     owner = "stevecastaneda";
     repo = "paseo-plugins";
-    rev = "8ace23617207c47fdb809d87ebc75895a7405e75";
-    hash = "sha256-IeggA8zfQMCZFumei/fyEmtLVF/2VrbeZHq7cs9EJdM=";
+    rev = "0cbe39cc953f67415407c602c7f865eedcd76461";
+    hash = "sha256-tmoRIY5qPDbY1Yk4/dlOaC1/llWHwXVF8acyMdJZ4Ec=";
   };
   sourceRoot = "progress";
   inherit include exclude;
