@@ -234,6 +234,7 @@ in
                   concatenatedMemory = pkgs.writeText "concatenated-memory" (
                     "# User-level memory\n\n"
                     + lib.concatMapStrings (f: builtins.readFile f + "\n") memory
+                    # Include every shared memory fragment for each configured agent.
                     + lib.concatStringsSep "\n" (lib.attrValues bikeshed.lib.agents.memory)
                     + lib.concatStringsSep "\n" (lib.attrValues bikeshed-homelab.lib.agents.memory)
                   );
