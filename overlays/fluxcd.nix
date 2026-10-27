@@ -72,7 +72,9 @@ let
     };
 
     operator = lib.makeOverridable (
-      { withMcp ? true }:
+      {
+        withMcp ? true,
+      }:
       fix.buildGo127Module rec {
         pname = "flux-operator";
         version = "0.62.0";
