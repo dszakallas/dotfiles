@@ -8,27 +8,27 @@
 }:
 
 let
-  version = "1.4.0";
+  version = "1.4.4";
 
   platforms = {
     "aarch64-darwin" = {
       url = "https://dl.google.com/agy-extensions/releases/macos/agy-acp-server-${version}-darwin-arm64.zip";
-      hash = "sha256-IaMu6rhbOUpRVRDIRTm9pLJQS/KRfgogH1xBMLE1gaU=";
+      hash = "sha256-o88yQEY5Y4D82MBVpKTIOsTqdKOOqIPMv85coemSeuk=";
       args = [ ];
     };
     "x86_64-darwin" = {
       url = "https://dl.google.com/agy-extensions/releases/macos/agy-acp-server-${version}-darwin-x86_64.zip";
-      hash = "sha256-QHtrjvFnuyB9Hv/b1Ii6z2O6fasrR9SkfY6jcQqMD1U=";
+      hash = "sha256-AZ5s4wz5BrqUt2HXUsfM0BoyT0cB78oxVC3gS2C+j9c=";
       args = [ ];
     };
     "aarch64-linux" = {
       url = "https://dl.google.com/agy-extensions/releases/linux/agy-acp-server-${version}-linux-arm64.zip";
-      hash = "sha256-PcQ6IfVAKyOk26ezIKZ0Xp2/S26tkSzp/HYBHqOgin4=";
+      hash = "sha256-sCcyJ8B8+h6lwdn/hptkxbKzm5iGIIH81MWX7DFuDFc=";
       args = [ "--uid=" ];
     };
     "x86_64-linux" = {
       url = "https://dl.google.com/agy-extensions/releases/linux/agy-acp-server-${version}-linux-x86_64.zip";
-      hash = "sha256-+7LVTdlPuJeEUwjTtrRhh8Yn8cYAeN7YGt7q+LkMXXo=";
+      hash = "sha256-uvMbepdgLe41nPKkP3K24Rxr81S+h0mH2AZgzTUmu2o=";
       args = [ "--uid=" ];
     };
   };
