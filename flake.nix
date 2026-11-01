@@ -111,6 +111,17 @@ rec {
             }
           ];
         };
+      dockerImages = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (
+        system:
+        let
+          pkgs = pkgsFor system;
+        in
+        rec {
+          codebox = bikeshed.lib.agents.mkPaseoSandboxImage pkgs {
+            modules = [ (import ./hosts/codebox ctx) ];
+          };
+        }
+      );
       outputs =
         (flake-utils.lib.eachDefaultSystem (
           system:
@@ -127,7 +138,7 @@ rec {
           darwinModules = importRec1 ./modules/darwin ctx;
           homeModules = importRec1 ./modules/home ctx;
 
-          inherit overlays;
+          inherit overlays dockerImages;
 
           darwinConfigurations = {
             Jellyfish = mkDarwin {

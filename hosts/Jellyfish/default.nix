@@ -64,23 +64,11 @@ in
         primaryUser
       ];
       linux-builder = {
-        enable = false;
+        enable = true;
         package = pkgs.darwin.linux-builder-vz;
         ephemeral = true;
         maxJobs = 8;
         config = {
-          fileSystems."/" = lib.mkForce {
-            device = "tmpfs";
-            fsType = "tmpfs";
-            neededForBoot = true;
-            options = [
-              "mode=0755"
-              "size=32G"
-            ];
-          };
-
-          nix.settings.build-dir = "/nix/.rw-store/builds";
-
           virtualisation = {
             darwin-builder = {
               diskSize = 64 * 1024;
@@ -222,79 +210,80 @@ in
               enable = false;
             };
           };
-          agents =
-            let
-              mkMemory =
-                agentConf: extra:
-                let
-                  memory = [
-                    ./home.md
-                    ../shared/instructions/worktrees.md
-                  ];
-                  concatenatedMemory = pkgs.writeText "concatenated-memory" (
-                    "# User-level memory\n\n"
-                    + lib.concatMapStrings (f: builtins.readFile f + "\n") memory
-                    # Include every shared memory fragment for each configured agent.
-                    + lib.concatStringsSep "\n" (lib.attrValues bikeshed.lib.agents.memory)
-                    + lib.concatStringsSep "\n" (lib.attrValues bikeshed-homelab.lib.agents.memory)
-                  );
-                in
-                (pkgs.replaceVars concatenatedMemory (
-                  {
-                    agentMemoryDirectory = agentConf.memory.directory;
-                    agentMemoryFile = agentConf.memory.target;
-                  }
-                  // extra
-                ));
-              mcpServers = {
-                inherit (bikeshed.packages.${system}.mcp-servers) chrome-devtools;
-                inherit (packages.${system}.mcp-servers) rea;
+          agents = {
+            enable = true;
+            skills.enable = true;
+            skills.entries =
+              bikeshed.packages.${system}.agentskills
+              // packages.${system}.agentskills
+              // {
+                bikeshed-skills = pkgs.mkSkill {
+                  name = "bikeshed-skills";
+                  version = "unstable";
+                  src = bikeshed;
+                };
               };
-              mkMcp = agent: {
-                servers = bikeshed.lib.agents.mcpServersForAgent agent mcpServers;
-              };
-              mcpAgents = bikeshed.lib.agents.popularHarnesses;
-            in
-            lib.foldl'
-              (
-                a: v:
-                a
-                // {
-                  "${v}" = {
-                    enable = true;
-                    memory = {
-                      enable = true;
-                      source = mkMemory config.bikeshed.agents."${v}" { };
-                    };
-                  }
-                  // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; }
-                  // lib.optionalAttrs (v == "claude" || v == "copilot" || v == "antigravity" || v == "codex") {
-                    # non-free, self-updating tools, better installed with Homebrew
-                    package = null;
-                  };
-                }
-              )
-              {
-                enable = true;
-                skills.enable = true;
-                skills.entries =
-                  bikeshed.packages.${system}.agentskills
-                  // packages.${system}.agentskills
+            harnesses =
+              let
+                mkMemory =
+                  agentConf: extra:
+                  let
+                    memory = [
+                      ./home.md
+                      ../shared/instructions/worktrees.md
+                    ];
+                    concatenatedMemory = pkgs.writeText "concatenated-memory" (
+                      "# User-level memory\n\n"
+                      + lib.concatMapStrings (f: builtins.readFile f + "\n") memory
+                      # Include every shared memory fragment for each configured agent.
+                      + lib.concatStringsSep "\n" (lib.attrValues bikeshed.lib.agents.memory)
+                      + lib.concatStringsSep "\n" (lib.attrValues bikeshed-homelab.lib.agents.memory)
+                    );
+                  in
+                  (pkgs.replaceVars concatenatedMemory (
+                    {
+                      agentMemoryDirectory = agentConf.memory.directory;
+                      agentMemoryFile = agentConf.memory.target;
+                    }
+                    // extra
+                  ));
+                mcpServers = {
+                  inherit (bikeshed.packages.${system}.mcp-servers) chrome-devtools;
+                  inherit (packages.${system}.mcp-servers) rea;
+                };
+                mkMcp = agent: {
+                  servers = bikeshed.lib.agents.mcpServersForAgent agent mcpServers;
+                };
+                mcpAgents = bikeshed.lib.agents.popularHarnesses;
+              in
+              lib.foldl'
+                (
+                  a: v:
+                  a
                   // {
-                    bikeshed-skills = pkgs.mkSkill {
-                      name = "bikeshed-skills";
-                      version = "unstable";
-                      src = bikeshed;
+                    "${v}" = {
+                      enable = true;
+                      memory = {
+                        enable = true;
+                        source = mkMemory config.bikeshed.agents.harnesses."${v}" { };
+                      };
+                    }
+                    // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp v; }
+                    // lib.optionalAttrs (v == "claude" || v == "copilot" || v == "antigravity" || v == "codex") {
+                      # non-free, self-updating tools, better installed with Homebrew
+                      package = null;
                     };
-                  };
-              }
-              [
-                "claude"
-                "copilot"
-                "antigravity"
-                "opencode"
-                "codex"
-              ];
+                  }
+                )
+                { }
+                [
+                  "claude"
+                  "copilot"
+                  "antigravity"
+                  "opencode"
+                  "codex"
+                ];
+          };
           ssh = {
             enable = true;
             agent.enable = true;
