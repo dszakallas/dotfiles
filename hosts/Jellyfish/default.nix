@@ -9,7 +9,7 @@
   overlays,
   packages,
   ...
-}:
+}@ctx:
 {
   lib,
   pkgs,
@@ -108,7 +108,6 @@ in
           bikeshed.homeModules.podman
           bikeshed-emacs.homeModules.emacs
           bikeshed.homeModules.github
-          bikeshed.homeModules.agents
           bikeshed.homeModules.ssh
           bikeshed-homelab.homeModules.default
           bikeshed-homelab.homeModules.jupiter
@@ -116,7 +115,7 @@ in
           homeModules.id
           homeModules.git-operator
           homeModules.doom-config
-          homeModules.reverse-engineering
+          (import ./agents.nix ctx)
         ];
 
         home = {
@@ -124,7 +123,6 @@ in
           homeDirectory = "/Users/${primaryUser}";
           stateVersion = "24.05";
           packages = [
-            packages.${system}.antigravity-par
             packages.${system}.notebooklm-py
           ]
           ++ (with pkgs; [
@@ -141,17 +139,10 @@ in
             rclone
             yt-dlp
             google-cloud-sdk
-            playwright-mcp
             gogcli
             poppler-utils
           ]);
         };
-
-        programs.zsh.envExtra = ''
-          export PASEO_AGY_ACP_BIN="${
-            packages.${system}.antigravity-par
-          }/libexec/antigravity-par/agy_acp_server.par"
-        '';
 
         programs.ssh.settings =
           builtins.listToAttrs (
@@ -211,113 +202,6 @@ in
               enable = false;
             };
           };
-          agents =
-            let
-              mkMemory =
-                agentConf: extra:
-                let
-                  memory = [
-                    ./home.md
-                    ../shared/instructions/worktrees.md
-                  ];
-                  concatenatedMemory = pkgs.writeText "concatenated-memory" (
-                    "# User-level memory\n\n"
-                    + lib.concatMapStrings (f: builtins.readFile f + "\n") memory
-                    # Include every shared memory fragment for each configured agent.
-                    + lib.concatStringsSep "\n" (lib.attrValues bikeshed.lib.agents.memory)
-                    + lib.concatStringsSep "\n" (lib.attrValues bikeshed-homelab.lib.agents.memory)
-                  );
-                in
-                (pkgs.replaceVars concatenatedMemory (
-                  {
-                    agentMemoryDirectory = agentConf.memory.directory;
-                    agentMemoryFile = agentConf.memory.target;
-                  }
-                  // extra
-                ));
-              mcpServers = {
-                inherit (bikeshed.packages.${system}.mcp-servers) chrome-devtools;
-                inherit (packages.${system}.mcp-servers) rea;
-              };
-              mkMcp = {
-                servers = mcpServers;
-              };
-              mcpAgents = bikeshed.lib.agents.popularHarnesses;
-            in
-            {
-              enable = true;
-              skills.enable = true;
-              skills.entries =
-                bikeshed.packages.${system}.agentskills
-                // packages.${system}.agentskills
-                // {
-                  bikeshed-skills = pkgs.mkSkill {
-                    name = "bikeshed-skills";
-                    version = "unstable";
-                    src = bikeshed;
-                  };
-                };
-              harnesses =
-                (lib.foldl'
-                  (
-                    a: v:
-                    a
-                    // {
-                      "${v}" = {
-                        enable = true;
-                        memory = {
-                          enable = true;
-                          source =
-                            let
-                              homeConf = bikeshed.lib.agents.harnesses.${v}.homeConfiguration;
-                              agentConf = {
-                                memory = {
-                                  directory = homeConf.defaultMemoryDirectory or homeConf.defaultUserDirectory;
-                                  target = homeConf.defaultMemoryFile;
-                                };
-                              };
-                            in
-                            mkMemory agentConf { };
-                        };
-                      }
-                      // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp; }
-                      // lib.optionalAttrs (v == "claude" || v == "copilot" || v == "antigravity" || v == "codex") {
-                        # non-free, self-updating tools, better installed with Homebrew
-                        package = null;
-                      }
-                      // lib.optionalAttrs (v == "claude") {
-                        wrapper.executable = "${config.bikeshed.brew.prefix}/bin/claude";
-                      };
-                    }
-                  )
-                  { }
-                  [
-                    "claude"
-                    "copilot"
-                    "antigravity"
-                    "opencode"
-                    "codex"
-                  ]
-                )
-                // {
-                  claude-qwen = {
-                    enable = true;
-                    type = "claude";
-                    package = null;
-                    wrapper.executable = "${config.bikeshed.brew.prefix}/bin/claude";
-                    wrapper.initExtra = ''
-                      export ANTHROPIC_BASE_URL="''${BAILIAN_BASE_URL}"
-                      export ANTHROPIC_AUTH_TOKEN="''${BAILIAN_API_KEY}"
-                      export ANTHROPIC_API_KEY=""
-                      export ANTHROPIC_DEFAULT_OPUS_MODEL="qwen3.7-max"
-                      export ANTHROPIC_DEFAULT_SONNET_MODEL="qwen3.7-plus"
-                      export ANTHROPIC_DEFAULT_HAIKU_MODEL="qwen3.7-flash"
-                      export CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1
-                      export CLAUDE_CODE_DISABLE_TELEMETRY=1
-                    '';
-                  };
-                };
-            };
           ssh = {
             enable = true;
             agent.enable = true;
