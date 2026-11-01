@@ -105,6 +105,7 @@ in
       {
         imports = [
           bikeshed.homeModules.base
+          bikeshed.homeModules.podman
           bikeshed-emacs.homeModules.emacs
           bikeshed.homeModules.github
           bikeshed.homeModules.agents
