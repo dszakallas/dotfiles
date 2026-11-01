@@ -110,7 +110,7 @@ in
       // {
         claude-qwen = {
           enable = true;
-          type = "claude";
+          harness = "claude";
           package = null;
           wrapper.executable = "${config.bikeshed.brew.prefix}/bin/claude";
           wrapper.initExtra = ''
