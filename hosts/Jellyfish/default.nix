@@ -26,7 +26,6 @@ in
     bikeshed-homelab.systemModules.jupiter
     systemModules.default
     darwinModules.default
-    darwinModules.podman
   ];
 
   config = {
@@ -105,6 +104,7 @@ in
       {
         imports = [
           bikeshed.homeModules.base
+          bikeshed.homeModules.git
           bikeshed.homeModules.podman
           bikeshed-emacs.homeModules.emacs
           bikeshed.homeModules.github
@@ -205,6 +205,11 @@ in
           ssh = {
             enable = true;
             agent.enable = true;
+          };
+          podman = {
+            enable = true;
+            desktop.enable = true;
+            dockerCompat.enable = true;
           };
           git = {
             enable = true;

@@ -15,6 +15,7 @@
 {
   imports = [
     bikeshed.homeModules.base
+    bikeshed.homeModules.git
     bikeshed.homeModules.ssh
     bikeshed.homeModules.agents
     bikeshed.homeModules.github

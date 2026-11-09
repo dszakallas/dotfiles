@@ -45,6 +45,7 @@ in
     security.sudo.extraConfig = ''
       # Added by dotfiles/darwin/default
       Defaults:root,%admin env_keep+=NIX_CONFIG
+      Defaults:root,%admin env_keep+=SSH_AUTH_SOCK
     '';
 
     services.openssh.extraConfig = ''
