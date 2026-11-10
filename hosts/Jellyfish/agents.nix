@@ -134,14 +134,4 @@ in
         };
       };
   };
-
-  home.packages = [
-    packages.${system}.antigravity-par
-  ];
-
-  programs.zsh.envExtra = ''
-    export PASEO_AGY_ACP_BIN="${
-      packages.${system}.antigravity-par
-    }/libexec/antigravity-par/agy_acp_server.par"
-  '';
 }

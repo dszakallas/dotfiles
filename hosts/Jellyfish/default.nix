@@ -89,7 +89,6 @@ in
     nixpkgs.config.allowUnfreePredicate =
       pkg:
       builtins.elem (lib.getName pkg) [
-        "antigravity-par"
         "claude-code"
         "github-copilot-cli"
       ];
