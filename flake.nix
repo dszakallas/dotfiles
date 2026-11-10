@@ -41,6 +41,10 @@ rec {
       inputs.flake-utils.follows = "flake-utils";
       inputs.bikeshed.follows = "bikeshed";
     };
+    beads = {
+      url = "github:gastownhall/beads";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   nixConfig = {

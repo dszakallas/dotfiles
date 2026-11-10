@@ -1,5 +1,6 @@
 {
   self,
+  beads,
   bikeshed,
   bikeshed-homelab,
   bikeshed-emacs,
@@ -124,6 +125,7 @@ in
           stateVersion = "24.05";
           packages = [
             packages.${system}.notebooklm-py
+            beads.packages.${system}.bd
           ]
           ++ (with pkgs; [
             (fluxcd.withPlugins (p: [

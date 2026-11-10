@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "beads": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794293236,
+        "narHash": "sha256-vx/4mqwL9SF/NSnYCdb8De7bA/CNVQpP/ercO+6diTA=",
+        "owner": "gastownhall",
+        "repo": "beads",
+        "rev": "9d4ebf42f0496cdd0f0d7fdc6062c0981f374a70",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gastownhall",
+        "repo": "beads",
+        "type": "github"
+      }
+    },
     "bikeshed": {
       "inputs": {
         "flake-utils": [
@@ -248,6 +268,7 @@
     },
     "root": {
       "inputs": {
+        "beads": "beads",
         "bikeshed": "bikeshed",
         "bikeshed-emacs": "bikeshed-emacs",
         "bikeshed-homelab": "bikeshed-homelab",

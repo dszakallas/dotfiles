@@ -1,4 +1,5 @@
 {
+  beads,
   bikeshed,
   bikeshed-homelab,
   homeModules,
@@ -43,6 +44,12 @@ let
     servers = mcpServers;
   };
   mcpAgents = bikeshed.lib.agents.popularHarnesses;
+  beadsSkill = pkgs.mkSkill {
+    name = "beads";
+    version = beads.packages.${system}.bd.version;
+    src = beads;
+    sourceRoot = "plugins/beads";
+  };
 in
 {
   imports = [
@@ -57,6 +64,7 @@ in
       bikeshed.packages.${system}.agentskills
       // packages.${system}.agentskills
       // {
+        beads = beadsSkill;
         bikeshed-skills = pkgs.mkSkill {
           name = "bikeshed-skills";
           version = "unstable";
