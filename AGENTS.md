@@ -76,6 +76,21 @@ containing `default.nix`; its basename becomes the attribute name. Adding a file
 manual list to update. Do not create both a `foo.nix` and a `foo/` in the same directory
 (overlapping keys throw).
 
+### Agent skills
+
+Repo-local agent skills live in `pkgs/agentskills/local/skills/<name>/SKILL.md` and are
+packaged by `pkgs/agentskills/local`. `hosts/Jellyfish/agents.nix` merges
+`packages.<system>.agentskills` into `bikeshed.agents.skills.entries`, so dropping a
+skill directory there installs it for every agent harness on Jellyfish with no extra
+wiring. Frontmatter carries `name` and a `description` that states the trigger
+conditions; the directory name must match `name`.
+
+`larb-team-pattern` is one of these. Load it when coordinating multiple agents on an
+epic, when an agent team needs supervising, or when asked to run or continue a LARB
+team: one Leader supervising one active agent per role (Leader, Architect, Reviewer,
+Builder), tasks in beads, a commit gate on the Reviewer's ACCEPT plus instruction, and
+provider switching by reloading existing agents instead of creating new ones.
+
 ### Formatting and hooks
 
 Enforced by pre-commit hooks (`devenv`'s `git-hooks`):
