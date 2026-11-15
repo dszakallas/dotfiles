@@ -88,8 +88,9 @@ conditions; the directory name must match `name`.
 `larb-team-pattern` is one of these. Load it when coordinating multiple agents on an
 epic, when an agent team needs supervising, or when asked to run or continue a LARB
 team: one Leader supervising one active agent per role (Leader, Architect, Reviewer,
-Builder), tasks in beads, a commit gate on the Reviewer's ACCEPT plus instruction, and
-provider switching by reloading existing agents instead of creating new ones.
+Builder), agents built from Paseo agent profiles with those settings copied exactly,
+tasks in beads, a commit gate on the Reviewer's ACCEPT plus instruction, and provider
+switching by reloading the existing counterpart instead of creating new agents.
 
 ### Formatting and hooks
 
