@@ -7,10 +7,10 @@
 }:
 let
   system = pkgs.stdenv.hostPlatform.system;
-  cfg = config.modules.reverse-engineering;
+  cfg = config.modules.rea;
 in
 {
-  options.modules.reverse-engineering = {
+  options.modules.rea = {
     enable = lib.mkEnableOption "Reverse engineering tools and agent skills" // {
       default = true;
     };
@@ -32,7 +32,8 @@ in
     };
 
     bikeshed.agents.skills.entries = {
-      rea = "${packages.${system}.rea}/share/skills/rea";
+      # The rea package ships the skill next to the CLI it documents.
+      reverse-engineer-anything = "${packages.${system}.rea}/share/skills/rea/reverse-engineer-anything";
     };
   };
 }

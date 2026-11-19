@@ -1,5 +1,4 @@
 {
-  beads,
   bikeshed,
   bikeshed-homelab,
   homeModules,
@@ -36,41 +35,36 @@ let
       }
       // extra
     ));
-  mcpServers = {
-    inherit (bikeshed.packages.${system}.mcp-servers) chrome-devtools;
-    inherit (packages.${system}.mcp-servers) rea;
-  };
+  mcpServers =
+    lib.mapAttrs
+      (
+        _: s:
+        builtins.removeAttrs s [
+          "override"
+          "overrideDerivation"
+        ]
+      )
+      {
+        inherit (bikeshed.packages.${system}.mcp-servers) chrome-devtools;
+        inherit (packages.${system}.mcp-servers) rea open-pencil;
+      };
   mkMcp = {
     servers = mcpServers;
   };
   mcpAgents = bikeshed.lib.agents.popularHarnesses;
-  beadsSkill = pkgs.mkSkill {
-    name = "beads";
-    version = beads.packages.${system}.bd.version;
-    src = beads;
-    sourceRoot = "plugins/beads";
-  };
 in
 {
   imports = [
     bikeshed.homeModules.agents
-    homeModules.reverse-engineering
+    homeModules.rea
   ];
+
+  home.packages = with pkgs; [ claude-agent-acp ];
 
   bikeshed.agents = {
     enable = true;
     skills.enable = true;
-    skills.entries =
-      bikeshed.packages.${system}.agentskills
-      // packages.${system}.agentskills
-      // {
-        beads = beadsSkill;
-        bikeshed-skills = pkgs.mkSkill {
-          name = "bikeshed-skills";
-          version = "unstable";
-          src = bikeshed;
-        };
-      };
+    skills.entries = bikeshed.packages.${system}.agentskills // packages.${system}.agentskills;
     harnesses =
       (lib.foldl'
         (
@@ -79,6 +73,7 @@ in
           // {
             "${v}" = {
               enable = true;
+              linkSkills = true;
               memory = {
                 enable = true;
                 source =

@@ -63,21 +63,21 @@ in
       settings.trusted-users = [
         primaryUser
       ];
-      linux-builder = {
-        enable = true;
-        package = pkgs.darwin.linux-builder-vz;
-        ephemeral = true;
-        maxJobs = 8;
-        config = {
-          virtualisation = {
-            darwin-builder = {
-              diskSize = 64 * 1024;
-              memorySize = 16 * 1024;
-            };
-            cores = 8;
-          };
-        };
-      };
+      # linux-builder = {
+      #   enable = true;
+      #   package = pkgs.darwin.linux-builder-vz;
+      #   ephemeral = true;
+      #   maxJobs = 8;
+      #   config = {
+      #     virtualisation = {
+      #       darwin-builder = {
+      #         diskSize = 64 * 1024;
+      #         memorySize = 16 * 1024;
+      #       };
+      #       cores = 8;
+      #     };
+      #   };
+      # };
     };
 
     bikeshed.jupiter = {
@@ -124,6 +124,7 @@ in
           stateVersion = "24.05";
           packages = [
             packages.${system}.notebooklm-py
+            packages.${system}.open-pencil-mcp
             beads.packages.${system}.bd
           ]
           ++ (with pkgs; [
