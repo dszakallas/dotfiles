@@ -1,0 +1,212 @@
+#compdef git-project
+#description Automate bare repositories, isolated agent worktrees, and Beads
+
+__git_project_expand_path() {
+  local raw_path="$1"
+  case "$raw_path" in
+    '~')
+      printf '%s' "$HOME"
+      ;;
+    '~/'*)
+      printf '%s/%s' "$HOME" "${raw_path#\~/}"
+      ;;
+    *)
+      printf '%s' "$raw_path"
+      ;;
+  esac
+}
+
+__git_project_git_config_path() {
+  local val
+  if val=$(git config --path --get "$1" 2>/dev/null) && [[ -n "$val" ]]; then
+    printf '%s' "$val"
+    return 0
+  fi
+  return 1
+}
+
+__git_project_repo_dir() {
+  if [[ -n "${GIT_PROJECT_REPOS_ROOT:-}" ]]; then
+    __git_project_expand_path "$GIT_PROJECT_REPOS_ROOT"
+    return 0
+  fi
+  __git_project_git_config_path project.reposRoot && return 0
+  __git_project_expand_path "$HOME/projects/repos"
+}
+
+__git_project_worktree_dir() {
+  if [[ -n "${GIT_PROJECT_WORKTREES_ROOT:-}" ]]; then
+    __git_project_expand_path "$GIT_PROJECT_WORKTREES_ROOT"
+    return 0
+  fi
+  __git_project_git_config_path project.worktreesRoot && return 0
+  __git_project_expand_path "$HOME/projects/worktrees"
+}
+
+__git_project_projects() {
+  local repo_dir
+  repo_dir=$(__git_project_repo_dir)
+  [[ -d "$repo_dir" ]] || return 1
+
+  local -a projects
+  projects=( "$repo_dir"/*.git(N/:t:r) )
+  (( ${#projects} )) || return 1
+
+  local expl
+  _wanted projects expl 'project' compadd -a projects
+}
+
+__git_project_worktrees() {
+  local project="${1%.git}"
+  [[ -n "$project" ]] || return 1
+
+  local repo_dir wt_dir wt_dir_canon target_repo
+  repo_dir=$(__git_project_repo_dir)
+  wt_dir=$(__git_project_worktree_dir)
+  target_repo="$repo_dir/${project}.git"
+  [[ -d "$target_repo" ]] || return 1
+
+  wt_dir_canon=${wt_dir:A}
+  local target_repo_canon=${target_repo:A}
+
+  local -a worktrees
+  local line wt wt_canon
+  while IFS= read -r line; do
+    case "$line" in
+      'worktree '*)
+        wt="${line#worktree }"
+        wt_canon=${wt:A}
+        [[ "$wt_canon" == "$target_repo_canon" ]] && continue
+        if [[ "${wt_canon:h}" == "$wt_dir_canon" ]]; then
+          worktrees+=( "${wt_canon:t}" )
+        fi
+        ;;
+    esac
+  done < <(git -C "$target_repo" worktree list --porcelain 2>/dev/null)
+
+  (( ${#worktrees} )) || return 1
+  local expl
+  _wanted worktrees expl 'worktree' compadd -a worktrees
+}
+
+__git_project_refs() {
+  local project="${1%.git}"
+  [[ -n "$project" ]] || return 1
+
+  local repo_dir target_repo
+  repo_dir=$(__git_project_repo_dir)
+  target_repo="$repo_dir/${project}.git"
+  [[ -d "$target_repo" ]] || return 1
+
+  local -a refs
+  refs=( ${(f)"$(git -C "$target_repo" for-each-ref --format='%(refname:short)' refs/heads refs/remotes refs/tags 2>/dev/null)"} )
+  (( ${#refs} )) || return 1
+
+  local expl
+  _wanted refs expl 'start point' compadd -a refs
+}
+
+__git_project_subcommands() {
+  local -a commands
+  commands=(
+    'clone:Clone a remote repository into bare repo, worktree, and Beads'
+    'init:Initialize a new bare repo, worktree, and Beads workspace'
+    'delete:Delete a managed bare repository'
+    'migrate:Convert existing checkouts into managed bare-repo layout'
+    'worktree:Manage worktrees for a project'
+    'get-reponame:Print managed project name for current worktree'
+    'help:Show usage summary'
+  )
+  _describe -t commands 'git project command' commands
+}
+
+__git_project_worktree_subcommands() {
+  local -a subcommands
+  subcommands=(
+    'add:Create a new worktree for a project'
+    'remove:Remove an existing worktree'
+    'rm:Remove an existing worktree'
+    'list:List worktrees for a project'
+    'ls:List worktrees for a project'
+  )
+  _describe -t subcommands 'worktree subcommand' subcommands
+}
+
+_git-project() {
+  local context state state_descr line
+  typeset -A opt_args
+
+  _arguments -C \
+    '1: :__git_project_subcommands' \
+    '*::arg:->args' && return 0
+
+  case "$state" in
+    args)
+      case "$words[1]" in
+        clone)
+          _arguments \
+            '(--no-worktree --worktree-name)--no-worktree[create bare repository without initial worktree]' \
+            '(--no-worktree --worktree-name)--worktree-name=[name for initial worktree]:worktree name:' \
+            '--no-beads[skip initializing shared Beads workspace]' \
+            '1:remote URL:' \
+            '2:project name:'
+          ;;
+        init)
+          _arguments \
+            '(--all --no-worktree --worktree-name)--no-worktree[create bare repository without initial worktree]' \
+            '(--all --no-worktree --worktree-name)--worktree-name=[name for initial worktree]:worktree name:' \
+            '(--all)--no-beads[skip initializing shared Beads workspace]' \
+            '(--no-worktree --worktree-name --no-beads 1)--all[reinitialize all existing managed projects]' \
+            '1:project name:__git_project_projects'
+          ;;
+        delete)
+          _arguments \
+            '(-f --force)'{-f,--force}'[remove active worktrees before deleting repository]' \
+            '1:project:__git_project_projects'
+          ;;
+        migrate)
+          _arguments \
+            '--all[migrate all repositories in worktree directory]' \
+            '--dry-run[print migration plan without modifying repositories]' \
+            '--yes[apply migration plan when used with --all]' \
+            '--keep-backup[keep backup copy of original .git directory]' \
+            '--fsck[verify object connectivity after migration]' \
+            '--project-name=[explicit project name for single path]:project name:' \
+            '*:repository directory:_directories'
+          ;;
+        worktree)
+          _arguments -C \
+            '1: :__git_project_worktree_subcommands' \
+            '*::wtarg:->wtargs'
+          case "$state" in
+            wtargs)
+              case "$words[1]" in
+                add)
+                  _arguments \
+                    '--fetch[fetch remote branches before creating worktree]' \
+                    '1:project:__git_project_projects' \
+                    '2:worktree name:' \
+                    '3:start point:{__git_project_refs "$line[1]"}'
+                  ;;
+                remove|rm)
+                  _arguments \
+                    '(-f --force)'{-f,--force}'[force removal of dirty worktree]' \
+                    '1:project:__git_project_projects' \
+                    '2:worktree:{__git_project_worktrees "$line[1]"}'
+                  ;;
+                list|ls)
+                  _arguments \
+                    '1:project:__git_project_projects'
+                  ;;
+              esac
+              ;;
+          esac
+          ;;
+        get-reponame|help)
+          ;;
+      esac
+      ;;
+  esac
+}
+
+_git-project "$@"

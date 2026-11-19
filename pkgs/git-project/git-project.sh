@@ -17,14 +17,11 @@ expand_path() {
 }
 
 get_git_config_path() {
-  local key
-  for key in "$@"; do
-    local val
-    if val=$(git config --path --get "$key" 2>/dev/null) && [ -n "$val" ]; then
-      printf "%s" "$val"
-      return 0
-    fi
-  done
+  local val
+  if val=$(git config --path --get "$1" 2>/dev/null) && [ -n "$val" ]; then
+    printf "%s" "$val"
+    return 0
+  fi
   return 1
 }
 
@@ -51,34 +48,63 @@ validate_worktree_name() {
 }
 
 resolve_repo_dir() {
-  if [ -n "${GIT_OPERATOR_REPO_DIR:-}" ]; then
-    expand_path "$GIT_OPERATOR_REPO_DIR"
+  if [ -n "${GIT_PROJECT_REPOS_ROOT:-}" ]; then
+    expand_path "$GIT_PROJECT_REPOS_ROOT"
     return 0
   fi
   local cfg_path
-  if cfg_path=$(get_git_config_path "operator.repos" "operator.repodir" "operator.repoDir" "operator.repo-dir"); then
+  if cfg_path=$(get_git_config_path "project.reposRoot"); then
     printf "%s" "$cfg_path"
     return 0
   fi
-  expand_path "$HOME/repos"
+  expand_path "$HOME/projects/repos"
 }
 
 resolve_worktree_dir() {
-  if [ -n "${GIT_OPERATOR_WORKTREE_DIR:-}" ]; then
-    expand_path "$GIT_OPERATOR_WORKTREE_DIR"
+  if [ -n "${GIT_PROJECT_WORKTREES_ROOT:-}" ]; then
+    expand_path "$GIT_PROJECT_WORKTREES_ROOT"
     return 0
   fi
   local cfg_path
-  if cfg_path=$(get_git_config_path "operator.worktrees" "operator.worktreedir" "operator.worktreeDir" "operator.worktree-dir"); then
+  if cfg_path=$(get_git_config_path "project.worktreesRoot"); then
     printf "%s" "$cfg_path"
     return 0
   fi
-  expand_path "$HOME/worktrees"
+  expand_path "$HOME/projects/worktrees"
+}
+
+require_bd() {
+  if ! command -v bd >/dev/null 2>&1; then
+    echo "error: 'bd' command line utility is required" >&2
+    return 1
+  fi
+}
+
+init_project_beads() {
+  local project_name="$1"
+  local target_repo="$2"
+  local beads_dir="$target_repo/.beads"
+
+  if [ -f "$beads_dir/metadata.json" ]; then
+    echo "Beads already initialized at '$beads_dir'; skipping."
+    return 0
+  fi
+
+  require_bd || return 1
+
+  mkdir -p "$beads_dir"
+  echo "Initializing beads at '$beads_dir'..."
+  (
+    cd "$target_repo"
+    BEADS_DIR="$beads_dir" bd init --non-interactive --skip-agents --skip-hooks --init-if-missing --stealth --prefix "$project_name"
+  )
 }
 
 parse_initial_worktree_options() {
   INITIAL_NO_WORKTREE=false
   INITIAL_WORKTREE_NAME=""
+  INITIAL_NO_BEADS=false
+  INITIAL_ALL=false
   INITIAL_POSITIONAL_ARGS=()
 
   while [ $# -gt 0 ]; do
@@ -89,6 +115,22 @@ parse_initial_worktree_options() {
           return 1
         fi
         INITIAL_NO_WORKTREE=true
+        shift
+        ;;
+      --no-beads)
+        if [ "$INITIAL_NO_BEADS" = true ]; then
+          echo "error: --no-beads may only be specified once" >&2
+          return 1
+        fi
+        INITIAL_NO_BEADS=true
+        shift
+        ;;
+      --all)
+        if [ "$INITIAL_ALL" = true ]; then
+          echo "error: --all may only be specified once" >&2
+          return 1
+        fi
+        INITIAL_ALL=true
         shift
         ;;
       --worktree-name)
@@ -129,11 +171,35 @@ parse_initial_worktree_options() {
   fi
 }
 
+create_initial_worktree() {
+  local target_repo="$1"
+  local target_worktree="$2"
+
+  echo "Creating initial worktree at '$target_worktree'..."
+  if git -C "$target_repo" rev-parse --verify --quiet HEAD >/dev/null; then
+    local initial_branch
+    if ! initial_branch=$(git -C "$target_repo" symbolic-ref --quiet --short HEAD); then
+      echo "error: could not determine the default branch" >&2
+      return 1
+    fi
+    if git -C "$target_repo" show-ref --verify --quiet "refs/remotes/origin/$initial_branch"; then
+      git -C "$target_repo" branch --set-upstream-to="origin/$initial_branch" "$initial_branch" 2>/dev/null || true
+    fi
+    git -C "$target_repo" worktree add "$target_worktree" "$initial_branch"
+  else
+    git -C "$target_repo" worktree add --orphan -b main "$target_worktree"
+  fi
+}
+
 cmd_clone() {
   parse_initial_worktree_options "$@" || return 1
+  if [ "$INITIAL_ALL" = true ]; then
+    echo "error: unknown option '--all'" >&2
+    return 1
+  fi
   if [ ${#INITIAL_POSITIONAL_ARGS[@]} -ne 2 ] || [ -z "${INITIAL_POSITIONAL_ARGS[0]}" ] || [ -z "${INITIAL_POSITIONAL_ARGS[1]}" ]; then
     echo "error: clone requires <remote-url> and <project-name>" >&2
-    echo "usage: git operator clone [--no-worktree | --worktree-name <name>] <remote-url> <project-name>" >&2
+    echo "usage: git project clone [--no-worktree | --worktree-name <name>] [--no-beads] <remote-url> <project-name>" >&2
     return 1
   fi
 
@@ -157,6 +223,10 @@ cmd_clone() {
     fi
   fi
 
+  if [ "$INITIAL_NO_BEADS" = false ]; then
+    require_bd || return 1
+  fi
+
   echo "Cloning bare repository to '$target_repo'..."
   git clone --bare "$remote_url" "$target_repo"
 
@@ -170,21 +240,17 @@ cmd_clone() {
   )
 
   if [ "$INITIAL_NO_WORKTREE" = true ]; then
+    if [ "$INITIAL_NO_BEADS" = false ]; then
+      init_project_beads "$project_name" "$target_repo"
+    fi
     echo "Successfully cloned bare repository at '$target_repo'."
     return 0
   fi
 
-  echo "Creating initial worktree at '$target_worktree'..."
-  if git -C "$target_repo" rev-parse --verify --quiet HEAD >/dev/null; then
-    local initial_branch
-    if ! initial_branch=$(git -C "$target_repo" symbolic-ref --quiet --short HEAD); then
-      echo "error: could not determine the remote default branch" >&2
-      return 1
-    fi
-    git -C "$target_repo" branch --set-upstream-to="origin/$initial_branch" "$initial_branch"
-    git -C "$target_repo" worktree add "$target_worktree" "$initial_branch"
-  else
-    git -C "$target_repo" worktree add --orphan -b main "$target_worktree"
+  create_initial_worktree "$target_repo" "$target_worktree"
+
+  if [ "$INITIAL_NO_BEADS" = false ]; then
+    init_project_beads "$project_name" "$target_repo"
   fi
 
   echo "Successfully cloned '$project_name' with worktree at '$target_worktree'."
@@ -192,9 +258,38 @@ cmd_clone() {
 
 cmd_init() {
   parse_initial_worktree_options "$@" || return 1
+
+  if [ "$INITIAL_ALL" = true ]; then
+    if [ ${#INITIAL_POSITIONAL_ARGS[@]} -gt 0 ]; then
+      echo "error: --all does not take a <project-name> argument" >&2
+      return 1
+    fi
+    if [ -n "$INITIAL_WORKTREE_NAME" ]; then
+      echo "error: --all and --worktree-name cannot be used together" >&2
+      return 1
+    fi
+    if [ "$INITIAL_NO_BEADS" = false ]; then
+      require_bd || return 1
+    fi
+    local entry project_name count=0
+    for entry in "$REPO_DIR"/*.git; do
+      [ -d "$entry" ] || continue
+      [ "$(git --git-dir="$entry" rev-parse --is-bare-repository 2>/dev/null)" = "true" ] || continue
+      project_name=$(basename "$entry")
+      project_name="${project_name%.git}"
+      if [ "$INITIAL_NO_BEADS" = false ]; then
+        init_project_beads "$project_name" "$entry"
+      fi
+      count=$((count + 1))
+    done
+    echo "Reinitialized $count project(s) in '$REPO_DIR'."
+    return 0
+  fi
+
   if [ ${#INITIAL_POSITIONAL_ARGS[@]} -ne 1 ] || [ -z "${INITIAL_POSITIONAL_ARGS[0]}" ]; then
-    echo "error: init requires <project-name>" >&2
-    echo "usage: git operator init [--no-worktree | --worktree-name <name>] <project-name>" >&2
+    echo "error: init requires <project-name> or --all" >&2
+    echo "usage: git project init [--no-worktree | --worktree-name <name>] [--no-beads] <project-name>" >&2
+    echo "       git project init --all" >&2
     return 1
   fi
 
@@ -204,32 +299,58 @@ cmd_init() {
   local wt_name="${INITIAL_WORKTREE_NAME:-$project_name}"
   local target_worktree="$WORKTREE_DIR/$wt_name"
 
-  if [ -e "$target_repo" ]; then
-    echo "error: repository path already exists at '$target_repo'" >&2
-    return 1
-  fi
-
   if [ "$INITIAL_NO_WORKTREE" = false ]; then
     validate_path_component "worktree name" "$wt_name"
-    if [ -e "$target_worktree" ]; then
-      echo "error: worktree path already exists at '$target_worktree'" >&2
+  fi
+
+  if [ "$INITIAL_NO_BEADS" = false ]; then
+    require_bd || return 1
+  fi
+
+  if [ -e "$target_repo" ]; then
+    if [ ! -d "$target_repo" ] || [ "$(git --git-dir="$target_repo" rev-parse --is-bare-repository 2>/dev/null)" != "true" ]; then
+      echo "error: repository path '$target_repo' exists and is not a bare git repository" >&2
       return 1
     fi
+    echo "Bare repository already exists at '$target_repo'."
+
+    if [ "$INITIAL_NO_WORKTREE" = false ]; then
+      if [ -e "$target_worktree" ]; then
+        echo "Worktree already exists at '$target_worktree'; skipping."
+      elif [ -n "$INITIAL_WORKTREE_NAME" ] || [ "$(git -C "$target_repo" worktree list --porcelain | grep -c '^worktree ')" -le 1 ]; then
+        create_initial_worktree "$target_repo" "$target_worktree"
+      fi
+    fi
+
+    if [ "$INITIAL_NO_BEADS" = false ]; then
+      init_project_beads "$project_name" "$target_repo"
+    fi
+
+    echo "Successfully reinitialized '$project_name'."
+    return 0
+  fi
+
+  if [ "$INITIAL_NO_WORKTREE" = false ] && [ -e "$target_worktree" ]; then
+    echo "error: worktree path already exists at '$target_worktree'" >&2
+    return 1
   fi
 
   echo "Initializing bare repository at '$target_repo'..."
   git init --bare --initial-branch=main "$target_repo"
 
   if [ "$INITIAL_NO_WORKTREE" = true ]; then
+    if [ "$INITIAL_NO_BEADS" = false ]; then
+      init_project_beads "$project_name" "$target_repo"
+    fi
     echo "Successfully initialized bare repository at '$target_repo'."
     return 0
   fi
 
-  echo "Creating initial worktree at '$target_worktree'..."
-  (
-    cd "$target_repo"
-    git worktree add --orphan -b main "$target_worktree"
-  )
+  create_initial_worktree "$target_repo" "$target_worktree"
+
+  if [ "$INITIAL_NO_BEADS" = false ]; then
+    init_project_beads "$project_name" "$target_repo"
+  fi
 
   echo "Successfully initialized '$project_name' with worktree at '$target_worktree'."
 }
@@ -252,7 +373,7 @@ cmd_delete() {
 
   if [ ${#positional_args[@]} -ne 1 ] || [ -z "${positional_args[0]}" ]; then
     echo "error: delete requires <project-name>" >&2
-    echo "usage: git operator delete [-f|--force] <project-name>" >&2
+    echo "usage: git project delete [-f|--force] <project-name>" >&2
     return 1
   fi
 
@@ -332,7 +453,7 @@ cmd_worktree_add() {
 
   if [ ${#positional_args[@]} -lt 2 ] || [ ${#positional_args[@]} -gt 3 ] || [ -z "${positional_args[0]}" ] || [ -z "${positional_args[1]}" ]; then
     echo "error: worktree add requires <project-name> and <wt-name>" >&2
-    echo "usage: git operator worktree add [--fetch] <project-name> <wt-name> [start-point]" >&2
+    echo "usage: git project worktree add [--fetch] <project-name> <wt-name> [start-point]" >&2
     return 1
   fi
 
@@ -402,7 +523,7 @@ cmd_worktree_remove() {
 
   if [ ${#positional_args[@]} -lt 2 ] || [ -z "${positional_args[0]}" ] || [ -z "${positional_args[1]}" ]; then
     echo "error: worktree remove requires <project-name> and <wt-name>" >&2
-    echo "usage: git operator worktree remove [-f|--force] <project-name> <wt-name>" >&2
+    echo "usage: git project worktree remove [-f|--force] <project-name> <wt-name>" >&2
     return 1
   fi
 
@@ -436,7 +557,7 @@ cmd_worktree_remove() {
 cmd_worktree_list() {
   if [ $# -lt 1 ] || [ -z "$1" ]; then
     echo "error: worktree list requires <project-name>" >&2
-    echo "usage: git operator worktree list <project-name>" >&2
+    echo "usage: git project worktree list <project-name>" >&2
     return 1
   fi
 
@@ -662,7 +783,7 @@ plan_migration() {
 
   case "$common_dir" in
     "$REPO_DIR_CANON"/*)
-      migrate_warn "$canon: already managed by git operator; skipped"
+      migrate_warn "$canon: already managed by git project; skipped"
       return 2
       ;;
   esac
@@ -682,7 +803,7 @@ plan_migration() {
   # Rule 2.
   if [ "$primary" != "$canon" ]; then
     migrate_error "$canon: not a primary worktree; its repository is '$primary'
-  run: git operator migrate '$primary'"
+  run: git project migrate '$primary'"
     return 1
   fi
 
@@ -1061,7 +1182,7 @@ collect_migration_targets() {
     if common_dir=$(git -C "$canon" rev-parse --path-format=absolute --git-common-dir 2>/dev/null); then
       case "$(canonical_dir "$common_dir")" in
         "$REPO_DIR_CANON"/*)
-          migrate_warn "$canon: already managed by git operator; skipped"
+          migrate_warn "$canon: already managed by git project; skipped"
           continue
           ;;
       esac
@@ -1190,8 +1311,8 @@ cmd_migrate() {
   else
     if [ ${#positional_args[@]} -eq 0 ]; then
       echo "error: migrate requires <path> or --all" >&2
-      echo "usage: git operator migrate [--dry-run] [--project-name <name>] [--keep-backup] [--fsck] <path>..." >&2
-      echo "       git operator migrate --all [--yes] [--keep-backup] [--fsck]" >&2
+      echo "usage: git project migrate [--dry-run] [--project-name <name>] [--keep-backup] [--fsck] <path>..." >&2
+      echo "       git project migrate --all [--yes] [--keep-backup] [--fsck]" >&2
       return 1
     fi
     if [ -n "$explicit_project" ] && [ ${#positional_args[@]} -ne 1 ]; then
@@ -1253,29 +1374,30 @@ cmd_migrate() {
 
 usage() {
   cat <<'EOF'
-git-operator - Automate bare repositories and isolated agent worktrees
+git-project - Automate bare repositories, isolated agent worktrees, and beads
 
 Usage:
-  git operator clone [--no-worktree | --worktree-name <name>] <remote-url> <project-name>
-  git operator init [--no-worktree | --worktree-name <name>] <project-name>
-  git operator delete [-f|--force] <project-name>
-  git operator migrate [--dry-run] [--project-name <name>] [--keep-backup] [--fsck] <path>...
-  git operator migrate --all [--yes] [--keep-backup] [--fsck]
-  git operator worktree add [--fetch] <project-name> <wt-name> [start-point]
-  git operator worktree remove [-f|--force] <project-name> <wt-name>
-  git operator worktree list <project-name>
-  git operator get-reponame
+  git project clone [--no-worktree | --worktree-name <name>] [--no-beads] <remote-url> <project-name>
+  git project init [--no-worktree | --worktree-name <name>] [--no-beads] <project-name>
+  git project init --all
+  git project delete [-f|--force] <project-name>
+  git project migrate [--dry-run] [--project-name <name>] [--keep-backup] [--fsck] <path>...
+  git project migrate --all [--yes] [--keep-backup] [--fsck]
+  git project worktree add [--fetch] <project-name> <wt-name> [start-point]
+  git project worktree remove [-f|--force] <project-name> <wt-name>
+  git project worktree list <project-name>
+  git project get-reponame
 
 Configuration (in order of precedence):
   1. Environment variables:
-       GIT_OPERATOR_REPO_DIR       Path to bare repositories directory
-       GIT_OPERATOR_WORKTREE_DIR   Path to worktrees directory
-  2. Git configuration [operator] section:
-       git config operator.repos <path>
-       git config operator.worktrees <path>
+       GIT_PROJECT_REPOS_ROOT      Path to bare repositories directory
+       GIT_PROJECT_WORKTREES_ROOT  Path to worktrees directory
+  2. Git configuration [project] section:
+       git config project.reposRoot <path>
+       git config project.worktreesRoot <path>
   3. Defaults:
-       repos:     ~/repos
-       worktrees: ~/worktrees
+       reposRoot:     ~/projects/repos
+       worktreesRoot: ~/projects/worktrees
 EOF
 }
 

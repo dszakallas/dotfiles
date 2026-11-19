@@ -1,0 +1,164 @@
+.TH GIT-PROJECT 1 "2026-11-19" "git-project" "Git Manual"
+.SH NAME
+git-project \- Automate bare repositories, isolated agent worktrees, and Beads
+.SH SYNOPSIS
+.nf
+\fIgit project\fR clone [--no-worktree | --worktree-name <name>] [--no-beads] <remote-url> <project-name>
+\fIgit project\fR init [--no-worktree | --worktree-name <name>] [--no-beads] <project-name>
+\fIgit project\fR init --all
+\fIgit project\fR delete [-f | --force] <project-name>
+\fIgit project\fR migrate [--dry-run] [--project-name <name>] [--keep-backup] [--fsck] <path>...
+\fIgit project\fR migrate --all [--yes] [--keep-backup] [--fsck]
+\fIgit project\fR worktree add [--fetch] <project-name> <wt-name> [start-point]
+\fIgit project\fR worktree (remove | rm) [-f | --force] <project-name> <wt-name>
+\fIgit project\fR worktree (list | ls) <project-name>
+\fIgit project\fR get-reponame
+\fIgit project\fR help
+.fi
+.SH DESCRIPTION
+\fBgit-project\fR manages Git projects using bare repositories for shared Git
+history, linked worktrees for isolated checkouts, and a shared Beads workspace
+inside the bare repository for issue tracking across all worktrees of a project.
+.PP
+Each managed project stores:
+.IP \(bu 2
+its bare Git repository at \fI<reposRoot>/<project-name>.git\fR,
+.IP \(bu 2
+its shared Beads workspace at \fI<reposRoot>/<project-name>.git/.beads\fR
+(automatically discovered by \fBbd\fR(1) from any linked worktree via Git's
+common directory), and
+.IP \(bu 2
+its worktrees under \fI<worktreesRoot>/<wt-name>\fR.
+.PP
+Running \fBgit project --help\fR displays this manual page via Git's help
+dispatch, while \fBgit project help\fR prints the built-in usage summary.
+.SH COMMANDS
+.TP
+\fBclone\fR [--no-worktree | --worktree-name <name>] [--no-beads] <remote-url> <project-name>
+Clone \fI<remote-url>\fR as a bare repository at \fI<reposRoot>/<project-name>.git\fR,
+configure \fBremote.origin.fetch\fR to fetch all remote branches, create an
+initial worktree at \fI<worktreesRoot>/<project-name>\fR (unless \fB--no-worktree\fR
+or \fB--worktree-name\fR is given), and initialize a shared Beads workspace at
+\fI<reposRoot>/<project-name>.git/.beads\fR with issue prefix
+\fI<project-name>\fR unless \fB--no-beads\fR is specified.
+.TP
+\fBinit\fR [--no-worktree | --worktree-name <name>] [--no-beads] <project-name>
+.TQ
+\fBinit\fR --all
+Initialize a new bare repository (default branch \fBmain\fR) at
+\fI<reposRoot>/<project-name>.git\fR, create an initial worktree (unless
+\fB--no-worktree\fR is given), and initialize a shared Beads workspace at
+\fI<reposRoot>/<project-name>.git/.beads\fR with issue prefix
+\fI<project-name>\fR unless \fB--no-beads\fR is specified.
+If \fI<reposRoot>/<project-name>.git\fR already exists, \fBinit\fR is idempotent
+and initializes the project's \fB.beads\fR database if it does not exist yet.
+With \fB--all\fR, reinitializes every bare repository in \fI<reposRoot>\fR,
+creating any missing \fB.beads\fR databases.
+.TP
+\fBdelete\fR [-f | --force] <project-name>
+Delete the bare repository \fI<reposRoot>/<project-name>.git\fR (including its
+colocated \fB.beads\fR directory). Refuses to delete if active linked worktrees
+exist unless \fB-f\fR or \fB--force\fR is given, in which case every active
+worktree is removed first.
+.TP
+\fBmigrate\fR [--dry-run] [--project-name <name>] [--keep-backup] [--fsck] <path>...
+.TQ
+\fBmigrate\fR --all [--yes] [--keep-backup] [--fsck]
+Convert existing standard clones into the bare-repository and linked-worktree
+layout by moving the \fB.git\fR directory while preserving uncommitted changes,
+untracked and ignored files, stashes, local branches, and reflogs.
+With \fB--all\fR, scans \fI<worktreesRoot>\fR and prints a dry-run plan unless
+\fB--yes\fR is supplied.
+.TP
+\fBworktree add\fR [--fetch] <project-name> <wt-name> [start-point]
+Create a linked worktree at \fI<worktreesRoot>/<wt-name>\fR from
+\fI<reposRoot>/<project-name>.git\fR. With \fB--fetch\fR, runs
+\fBgit fetch --prune origin\fR first. If \fI[start-point]\fR is provided, creates
+branch \fI<wt-name>\fR at that start point; otherwise attaches an existing local
+branch, tracks \fBorigin/<wt-name>\fR, or creates a new branch \fI<wt-name>\fR.
+.TP
+\fBworktree remove\fR [-f | --force] <project-name> <wt-name>
+.TQ
+\fBworktree rm\fR [-f | --force] <project-name> <wt-name>
+Remove the linked worktree \fI<worktreesRoot>/<wt-name>\fR. Pass \fB-f\fR or
+\fB--force\fR to remove a worktree with uncommitted changes.
+.TP
+\fBworktree list\fR <project-name>
+.TQ
+\fBworktree ls\fR <project-name>
+List worktrees registered with \fI<reposRoot>/<project-name>.git\fR.
+.TP
+\fBget-reponame\fR
+Print the managed project name for the current Git worktree.
+.TP
+\fBhelp\fR
+Print the built-in usage summary.
+.SH OPTIONS
+.TP
+\fB--no-worktree\fR
+For \fBclone\fR and \fBinit\fR, create only the bare repository without an
+initial worktree. Mutually exclusive with \fB--worktree-name\fR.
+.TP
+\fB--worktree-name\fR <name>
+For \fBclone\fR and \fBinit\fR, name the initial worktree \fI<name>\fR instead
+of \fI<project-name>\fR. Mutually exclusive with \fB--no-worktree\fR.
+.TP
+\fB--no-beads\fR
+For \fBclone\fR and \fBinit\fR, skip initializing a shared Beads workspace.
+.TP
+\fB-f\fR, \fB--force\fR
+For \fBdelete\fR and \fBworktree remove\fR, force removal of active or dirty
+worktrees.
+.TP
+\fB--fetch\fR
+For \fBworktree add\fR, fetch and prune \fBorigin\fR before creating the worktree.
+.TP
+\fB--all\fR
+For \fBmigrate\fR, inspect all directories under \fI<worktreesRoot>\fR. Dry-run by
+default unless \fB--yes\fR is also passed.
+.TP
+\fB--dry-run\fR
+For \fBmigrate\fR, print the migration plan without making changes.
+.TP
+\fB--yes\fR
+For \fBmigrate --all\fR, execute the migration plan instead of performing a dry run.
+.TP
+\fB--project-name\fR <name>
+For single-path \fBmigrate\fR, override the project name derived from
+\fBremote.origin.url\fR.
+.TP
+\fB--keep-backup\fR
+For \fBmigrate\fR, keep a backup copy of the original \fB.git\fR directory under
+\fI<reposRoot>/.migrate-backup\fR.
+.TP
+\fB--fsck\fR
+For \fBmigrate\fR, run \fBgit fsck --connectivity-only\fR after moving the
+repository.
+.SH CONFIGURATION
+Locations are resolved in the following order of precedence:
+.SS Environment variables
+.TP
+\fBGIT_PROJECT_REPOS_ROOT\fR
+Path to the bare repositories directory.
+.TP
+\fBGIT_PROJECT_WORKTREES_ROOT\fR
+Path to the worktrees directory.
+.SS Git configuration
+Keys in the \fB[project]\fR section:
+.TP
+\fBproject.reposRoot\fR
+Path to the bare repositories directory.
+.TP
+\fBproject.worktreesRoot\fR
+Path to the worktrees directory.
+.SS Defaults
+.TP
+\fBreposRoot\fR
+\fI~/projects/repos\fR
+.TP
+\fBworktreesRoot\fR
+\fI~/projects/worktrees\fR
+.SH SEE ALSO
+.BR git (1),
+.BR git-worktree (1),
+.BR bd (1)

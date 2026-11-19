@@ -133,7 +133,13 @@ rec {
             pkgs = pkgsFor system;
           in
           {
-            packages = callPackageWithRec (inputs // pkgs) ./pkgs;
+            packages = callPackageWithRec (
+              inputs
+              // pkgs
+              // {
+                bd = inputs.beads.packages.${system}.bd;
+              }
+            ) ./pkgs;
           }
         ))
         // flake-utils.lib.eachDefaultSystemPassThrough (system: {

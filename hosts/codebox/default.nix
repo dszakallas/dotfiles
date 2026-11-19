@@ -23,7 +23,7 @@
     (import "${bikeshed-homelab}/modules/home/default/dszakallas-kolobok.nix")
     (import "${bikeshed-homelab}/modules/home/default/github-user1.nix")
     homeModules.id
-    homeModules.git-operator
+    homeModules.git-project
   ];
 
   _module.args.bikeshed = bikeshed;

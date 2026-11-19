@@ -113,7 +113,7 @@ in
           bikeshed-homelab.homeModules.jupiter
           bikeshed-homelab.homeModules.kolobok
           homeModules.id
-          homeModules.git-operator
+          homeModules.git-project
           homeModules.doom-config
           (import ./agents.nix ctx)
         ];
@@ -214,6 +214,10 @@ in
           };
           git = {
             enable = true;
+            project = {
+              reposRoot = "${config.home.homeDirectory}/Repos";
+              worktreesRoot = "${config.home.homeDirectory}/Worktrees";
+            };
             userPresets = {
               github-user1.enable = true;
               dszakallas = {
