@@ -214,6 +214,8 @@ in
           };
           git = {
             enable = true;
+            # Clear system-level credential helpers (such as Darwin's default osxkeychain)
+            credentialHelper = "";
             project = {
               reposRoot = "${config.home.homeDirectory}/Repos";
               worktreesRoot = "${config.home.homeDirectory}/Worktrees";
