@@ -56,6 +56,7 @@ in
 {
   imports = [
     bikeshed.homeModules.agents
+    homeModules.notebooklm
     homeModules.rea
   ];
 

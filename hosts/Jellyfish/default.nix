@@ -123,7 +123,6 @@ in
           homeDirectory = "/Users/${primaryUser}";
           stateVersion = "24.05";
           packages = [
-            packages.${system}.notebooklm-py
             packages.${system}.open-pencil-mcp
             beads.packages.${system}.bd
           ]

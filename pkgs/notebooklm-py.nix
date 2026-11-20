@@ -2,17 +2,18 @@
   lib,
   python3Packages,
   fetchPypi,
+  installAgentSkills,
 }:
 
 python3Packages.buildPythonApplication rec {
   pname = "notebooklm-py";
-  version = "0.8.1";
+  version = "0.8.6";
   pyproject = true;
 
   src = fetchPypi {
     pname = "notebooklm_py";
     inherit version;
-    hash = "sha256-Q7pRqWCalTC/zZrQbBA17erEsOQBVqWn7n7jAmIWZs0=";
+    hash = "sha256-UaUKi0y5QlFHk+zSdoIonbme/OR1jRyzC+Is9SouSSU=";
   };
 
   build-system = with python3Packages; [
@@ -20,11 +21,19 @@ python3Packages.buildPythonApplication rec {
     hatch-fancy-pypi-readme
   ];
 
+  nativeBuildInputs = [
+    installAgentSkills
+  ];
+
+  dontInstallAgentSkills = true;
+
   dependencies = with python3Packages; [
     httpx
+    idna
     click
     rich
     filelock
+    typing-extensions
   ];
 
   optional-dependencies = with python3Packages; {
@@ -39,6 +48,12 @@ python3Packages.buildPythonApplication rec {
       python-multipart
     ];
   };
+
+  postInstall = ''
+    mkdir -p "$TMPDIR/skills/notebooklm"
+    cp SKILL.md "$TMPDIR/skills/notebooklm/SKILL.md"
+    installSkill "$TMPDIR/skills/notebooklm" notebooklm-py
+  '';
 
   # Disable tests since they require network access and API keys
   doCheck = false;
