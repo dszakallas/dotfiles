@@ -29,7 +29,7 @@ Paseo agent profiles encode provider, model, thinking level, mode and feature va
 ## Roles
 
 **Leader**
-- Create the team from profiles; revive existing agents with `paseo agent reload <id>` rather than creating duplicates.
+- Create the team from profiles and immediately detach every started team member (`paseo agent detach <id>`) so each runs as a top-level workspace tab instead of remaining nested as a subagent. Revive existing agents with `paseo agent reload <id>` rather than creating duplicates.
 - Assign epics to the Reviewer and design tasks to the Architect; schedule by dependency and user preference.
 - Record new epics and tickets from the user; keep beads and the progress tracker current.
 - Create a Paseo heartbeat for periodic supervision.
@@ -38,7 +38,7 @@ Paseo agent profiles encode provider, model, thinking level, mode and feature va
 - Never edit product code, never commit on an agent's behalf, never carry technical messages between agents.
 
 **Architect**
-- Design epics: design document, ticket breakdown, acceptance criteria.
+- Design epics: store the design and plan in the owning bead's `design` field (not as markdown files in the worktree), create the ticket breakdown, and record acceptance criteria.
 - Short feasibility probes with ephemeral subagents, web research, GitHub search.
 - Review epic implementations: if revision is needed, file follow-up bug tickets and send the work back through the Reviewer; if accepted, close the epic and report to the Leader.
 
@@ -66,6 +66,7 @@ paseo logs <id>                           # what the agent actually did
 paseo send <id> "<message>"               # task, brief, correction
 paseo wait <id>                           # block until idle
 paseo attach <id>                         # follow output live
+paseo agent detach <id>                   # make a started team member independent (top-level tab)
 paseo agent reload <id>                   # revive an existing agent (never create a duplicate)
 paseo archive <id>                        # retire an agent
 ```
@@ -80,13 +81,26 @@ Everything scheduled is a bead: epics (`9rm`), children (`9rm.7`), bugs (`7hd`),
 
 ```bash
 bd create "title" -d "description and acceptance" -p 1 -t bug
-bd show <id>
+bd create "title" -t epic -p 1 --design-file - -d "…"   # store design from stdin at creation
+bd show <id>                                           # renders DESIGN (--json may return an array; unwrap [0])
+bd update <id> --design-file -                         # replace design field from stdin (or --design-file <path> / --design "…")
 bd update <id> --append-notes "…"
+bd comment <id> --file <path>                          # append-only evidence, investigations, verdicts (or --stdin)
+bd comments <id>                                       # list comments
 bd dep add <child> <parent>
+bd dep relate <id1> <id2>                              # link beads sharing a design
 bd close <id> --reason "committed as <hash>: what shipped, gate result, deferrals"
+bd dolt push                                           # push bead/design history off-machine
 ```
 
-Record in the bead: acceptance criteria, design links, deferrals with reasons, and a tracking bead for anything not fixed now. Never absorb a fix for a closed bead into the current ticket — commit it separately and reference the tracking bead.
+Store designs, investigation results, concrete plans for agentic development, evidence, and review verdicts in beads—not as `.md` files in the worktree by default—so every worktree reads one shared copy. Keep only general-audience user or developer documentation in the repository (requirements, specifications, code docs, runbooks).
+
+- **Canonical plan (`design` field):** write via `--design-file <path>` (or `-` for stdin) or `--design`. Updates replace `design` wholesale; do not duplicate the plan in comments or files.
+- **Long append-only material:** write investigations, evidence, and review verdicts via `bd comment <id> --file <path>` (or `--stdin`); read with `bd comments <id>`.
+- **Shared plans:** store once on the primary bead (or a dedicated `decision` bead) and link related beads with `bd dep relate <id1> <id2>`.
+- **Durability & migration:** run `bd dolt push` for off-machine durability since bead designs sit outside git. Before deleting a legacy plan file, wait until no in-flight work references its path and verify `bd show <id>` matches.
+
+Record in the bead: acceptance criteria, the design, deferrals with reasons, and a tracking bead for anything not fixed now. Never absorb a fix for a closed bead into the current ticket — commit it separately and reference the tracking bead.
 
 ## Commit gate
 
@@ -147,6 +161,8 @@ Do not use the tick to relay technical messages; if two agents disagree, they re
 ## Signs the pattern is failing
 
 - The Leader forwards findings between agents.
+- Started team members remain attached as subagents instead of detached.
+- Agentic plans, designs, or investigation notes are written as markdown files in the worktree instead of stored in beads.
 - Two agents share a role or provider pair.
 - Live settings drift from the profiles.
 - Rounds end "accepted" and the same defect returns under a new name.
