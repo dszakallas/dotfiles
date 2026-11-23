@@ -95,6 +95,13 @@ in
               package = null;
             }
             // lib.optionalAttrs (v == "claude") {
+              settings = {
+                target = ".claude/settings.json";
+                entries.attribution.value = {
+                  commit = "";
+                  pr = "";
+                };
+              };
               # Claude is wrapped to use ~/.claude/.claude.json instead of ~/.claude.json for its configuration.
               # With package = null, the wrapper needs to know the path to the executable.
               wrapper.executable = "${config.bikeshed.brew.prefix}/bin/claude";
