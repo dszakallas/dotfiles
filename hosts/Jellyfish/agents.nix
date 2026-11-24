@@ -13,45 +13,13 @@
 }:
 let
   system = pkgs.stdenv.hostPlatform.system;
-  mkMemory =
-    agentConf: extra:
-    let
-      memory = [
-        ./home.md
-        ../shared/instructions/worktrees.md
-      ];
-      concatenatedMemory = pkgs.writeText "concatenated-memory" (
-        "# User-level memory\n\n"
-        + lib.concatMapStrings (f: builtins.readFile f + "\n") memory
-        # Include every shared memory fragment for each configured agent.
-        + lib.concatStringsSep "\n" (lib.attrValues bikeshed.lib.agents.memory)
-        + lib.concatStringsSep "\n" (lib.attrValues bikeshed-homelab.lib.agents.memory)
-      );
-    in
-    (pkgs.replaceVars concatenatedMemory (
-      {
-        agentMemoryDirectory = agentConf.memory.directory;
-        agentMemoryFile = agentConf.memory.target;
-      }
-      // extra
-    ));
-  mcpServers =
-    lib.mapAttrs
-      (
-        _: s:
-        builtins.removeAttrs s [
-          "override"
-          "overrideDerivation"
-        ]
-      )
-      {
-        inherit (bikeshed.packages.${system}.mcp-servers) chrome-devtools;
-        inherit (packages.${system}.mcp-servers) rea open-pencil;
-      };
-  mkMcp = {
-    servers = mcpServers;
-  };
-  mcpAgents = bikeshed.lib.agents.popularHarnesses;
+  localAgentMemory = import ../../lib/agents;
+  agentMemory = pkgs.writeText "agent-memory" (
+    "# User-level memory\n\n"
+    # Include every local memory fragment for each configured agent.
+    + lib.concatStringsSep "\n" (lib.attrValues localAgentMemory.memory)
+    + lib.concatStringsSep "\n" (lib.attrValues bikeshed-homelab.lib.agents.memory)
+  );
 in
 {
   imports = [
@@ -76,27 +44,25 @@ in
               linkSkills = true;
               memory = {
                 enable = true;
-                source =
-                  let
-                    homeConf = bikeshed.lib.agents.harnesses.${v}.homeConfiguration;
-                    agentConf = {
-                      memory = {
-                        directory = homeConf.defaultMemoryDirectory or homeConf.defaultUserDirectory;
-                        target = homeConf.defaultMemoryFile;
-                      };
-                    };
-                  in
-                  mkMemory agentConf { };
+                source = agentMemory;
+              };
+              mcp = {
+                servers = {
+                  chrome-devtools = bikeshed.lib.agents.mcpServers.chrome-devtools pkgs;
+                  rea = localAgentMemory.mcpServers.rea (pkgs // { inherit (packages.${system}) rea; });
+                  open-pencil = localAgentMemory.mcpServers.open-pencil (
+                    pkgs // { inherit (packages.${system}) open-pencil-mcp; }
+                  );
+                };
               };
             }
-            // lib.optionalAttrs (builtins.elem v mcpAgents) { mcp = mkMcp; }
-            // lib.optionalAttrs (v == "claude" || v == "copilot" || v == "antigravity" || v == "codex") {
-              # non-free, self-updating tools, better installed with Homebrew
+            // lib.optionalAttrs (v == "claude" || v == "antigravity" || v == "codex") {
+              # self-updating tools, I prefer to install them with Homebrew
+              # on personal workstation (containers are a different story)
               package = null;
             }
             // lib.optionalAttrs (v == "claude") {
               settings = {
-                target = ".claude/settings.json";
                 entries.attribution.value = {
                   commit = "";
                   pr = "";
@@ -111,7 +77,6 @@ in
         { }
         [
           "claude"
-          "copilot"
           "antigravity"
           "opencode"
           "codex"

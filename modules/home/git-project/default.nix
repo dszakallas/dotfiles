@@ -8,10 +8,10 @@
 let
   system = pkgs.stdenv.hostPlatform.system;
   git-project-pkg = packages.${system}.git-project;
-  cfg = config.bikeshed.git.project;
+  cfg = config.dotfiles.git.project;
 in
 {
-  options.bikeshed.git.project = {
+  options.dotfiles.git.project = {
     enable = lib.mkEnableOption "git-project bare repository, worktree, and Beads management" // {
       default = true;
     };

@@ -36,9 +36,9 @@ modules/
   home/                   # home-manager modules
 overlays/                 # nixpkgs overlays (applied to all systems)
 pkgs/                     # packages, built via callPackageWithRec
+lib/agents/memory/        # local agent memory fragments
 users/
   <user>/                 # user + home-manager wiring per host
-  instructions/           # agent memory fragments (user.md, worktrees.md, tropes.md)
   skills/                 # agent skills (devenv, lang-cz, skill-creator, ...)
 deps/                     # dependency flakes (see above)
 ```

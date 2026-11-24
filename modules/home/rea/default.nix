@@ -7,10 +7,10 @@
 }:
 let
   system = pkgs.stdenv.hostPlatform.system;
-  cfg = config.modules.rea;
+  cfg = config.dotfiles.rea;
 in
 {
-  options.modules.rea = {
+  options.dotfiles.rea = {
     enable = lib.mkEnableOption "Reverse engineering tools and agent skills" // {
       default = true;
     };

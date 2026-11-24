@@ -32,7 +32,7 @@
 
   programs.home-manager.enable = true;
 
-  davids.id = {
+  dotfiles.id = {
     enable = true;
     identity = [ "sk1" ];
   };

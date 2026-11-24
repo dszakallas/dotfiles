@@ -2,10 +2,10 @@
 { lib, config, ... }:
 let
   identities =
-    if lib.isList config.davids.id.identity then
-      config.davids.id.identity
+    if lib.isList config.dotfiles.id.identity then
+      config.dotfiles.id.identity
     else
-      [ config.davids.id.identity ];
+      [ config.dotfiles.id.identity ];
 
   identityFiles = builtins.concatMap (identity: [
     {
@@ -20,7 +20,7 @@ let
 in
 {
   options = {
-    davids.id = {
+    dotfiles.id = {
       enable = lib.mkEnableOption "SSH identity management";
       identity = lib.mkOption {
         type = lib.types.oneOf [
@@ -32,7 +32,7 @@ in
     };
   };
 
-  config = lib.mkIf config.davids.id.enable {
+  config = lib.mkIf config.dotfiles.id.enable {
     home = {
       # Let's put the keys into to the SSH folder so we have a stable
       # identity for the macOS Keychain

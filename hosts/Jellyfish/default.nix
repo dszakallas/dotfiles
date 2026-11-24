@@ -178,9 +178,13 @@ in
 
         programs.home-manager.enable = true;
 
-        davids.id = {
+        dotfiles.id = {
           enable = true;
           identity = [ "sk1" ];
+        };
+        dotfiles.git.project = {
+          reposRoot = "${config.home.homeDirectory}/Repos";
+          worktreesRoot = "${config.home.homeDirectory}/Worktrees";
         };
 
         bikeshed = {
@@ -215,10 +219,6 @@ in
           };
           git = {
             enable = true;
-            project = {
-              reposRoot = "${config.home.homeDirectory}/Repos";
-              worktreesRoot = "${config.home.homeDirectory}/Worktrees";
-            };
             userPresets = {
               github-user1.enable = true;
               dszakallas = {
